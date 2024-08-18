@@ -65,7 +65,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
         shrinkWrap: true,
         childAspectRatio: 1.618, // 宽高比
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2, // 每行显示2个卡片
+        crossAxisCount: 4, // 每行显示2个卡片
         crossAxisSpacing: 16.0, // 水平间距
         mainAxisSpacing: 12.0, // 垂直间距
         children: assistants
@@ -143,7 +143,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
     conversationController.addConversation(Conversation(
       name: "new ${newConversationUuid.substring(0, 8)}",
       uuid: newConversationUuid,
-      assistantUuid: assistant.uuid,
+      assistantName: assistant.name,
     ));
     conversationController.setCurrentConversationUuid(newConversationUuid);
 

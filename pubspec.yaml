@@ -40,6 +40,10 @@ dependencies:
   sqflite: ^2.3.3+1
   uuid: ^4.4.2
   sqflite_common_ffi: ^2.3.3
+  # window_size:
+  #   git:
+  #     url: https://github.com/google/flutter-desktop-embedding
+  #     path: plugins/window_size
 
 dev_dependencies:
   flutter_test:

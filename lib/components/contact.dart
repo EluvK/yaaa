@@ -18,7 +18,7 @@ class _ContactCardState extends State<ContactCard> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (conversationController.conversationList.isEmpty) {
-        return const Expanded(child: Text('No conversation'));
+        return const Expanded(child: Center(child: Text('No conversation')));
       }
       return Expanded(
         child: ListView.builder(
@@ -56,7 +56,7 @@ class _ContactCardState extends State<ContactCard> {
     return Card(
       child: ListTile(
         title: Text(conversation.name),
-        subtitle: Text(conversation.assistantUuid),
+        subtitle: Text(conversation.assistantName),
         onTap: () {
           _funcTabConversation(index);
         },

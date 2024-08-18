@@ -34,7 +34,7 @@ class _ConversationCardState extends State<ConversationCard> {
       }
       if (currentConversationUuid.isEmpty) {
         // todo maybe add some quick guide module
-        return const Expanded(child: Text('No conversation'));
+        return const Expanded(child: Center(child: Text('No conversation')));
       }
       return Expanded(
           child: _buildConversation(conversationController.conversationList

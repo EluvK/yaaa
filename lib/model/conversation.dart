@@ -5,10 +5,10 @@ import 'package:sqflite/sqflite.dart';
 class Conversation {
   String name;
   String uuid;
-  String assistantUuid;
+  String assistantName;
 
   Conversation(
-      {required this.name, required this.uuid, required this.assistantUuid});
+      {required this.name, required this.uuid, required this.assistantName});
 }
 
 class Message {
@@ -37,7 +37,7 @@ class ConversationRepository {
   static const String _tableConversationName = 'conversations';
   static const String _columnUuid = 'uuid';
   static const String _columnName = 'name';
-  static const String _columnContactUuid = 'contact_uuid';
+  static const String _columnAssistantName = 'assistant_name';
 
   static const String _tableMessageName = 'messages';
   static const String _columnMessageUuid = 'uuid';
@@ -57,7 +57,7 @@ class ConversationRepository {
             CREATE TABLE $_tableConversationName (
               $_columnUuid TEXT PRIMARY KEY,
               $_columnName TEXT NOT NULL,
-              $_columnContactUuid TEXT NOT NULL
+              $_columnAssistantName TEXT NOT NULL
             )
           ''');
         await db.execute('''
@@ -84,7 +84,7 @@ class ConversationRepository {
       return Conversation(
         name: maps[i][_columnName],
         uuid: maps[i][_columnUuid],
-        assistantUuid: maps[i][_columnContactUuid],
+        assistantName: maps[i][_columnAssistantName],
       );
     });
   }
@@ -96,7 +96,7 @@ class ConversationRepository {
       {
         _columnUuid: conversation.uuid,
         _columnName: conversation.name,
-        _columnContactUuid: conversation.assistantUuid,
+        _columnAssistantName: conversation.assistantName,
       },
     );
   }
@@ -108,7 +108,7 @@ class ConversationRepository {
       {
         _columnUuid: conversation.uuid,
         _columnName: conversation.name,
-        _columnContactUuid: conversation.assistantUuid,
+        _columnAssistantName: conversation.assistantName,
       },
       where: '$_columnUuid = ?',
       whereArgs: [conversation.uuid],
