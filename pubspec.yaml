@@ -39,6 +39,7 @@ dependencies:
   get_storage: ^2.1.1
   sqflite: ^2.3.3+1
   uuid: ^4.4.2
+  sqflite_common_ffi: ^2.3.3
 
 dev_dependencies:
   flutter_test:

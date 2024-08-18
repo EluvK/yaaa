@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
+import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/home.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
 
 void main() {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   runApp(const MyApp());
 }
 

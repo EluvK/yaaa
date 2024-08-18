@@ -10,7 +10,7 @@ class HomePage extends GetResponsiveView {
   Widget? phone() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page For Phone'),
+        title: const Center(child: Text('Yaaa')),
         actions: [
           IconButton(
             onPressed: () {
@@ -29,13 +29,38 @@ class HomePage extends GetResponsiveView {
   @override
   Widget? desktop() {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Home Page'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: const Text('Yaaa'),
+        // toolbarHeight: 50,
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+        actionsIconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Colors.transparent,
+        actions: [
+          // todo
+          IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+        ],
       ),
       body: const Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           ContactPage(),
-          ConversationPage(),
+          Flexible(child: ConversationPage()),
         ],
       ),
     );

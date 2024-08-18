@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yaaa/components/chatbox.dart';
+import 'package:yaaa/components/clearcontext.dart';
 import 'package:yaaa/components/conversation.dart';
 
 class ConversationPage extends StatelessWidget {
@@ -7,22 +8,13 @@ class ConversationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
       child: Column(children: [
-        const ConversationCard(),
-        const SizedBox(height: 16.0),
-        ElevatedButton(
-          // onPressed: () {},
-          onPressed: _addSeparator,
-          child: const Icon(Icons.wrap_text),
-        ),
-        const ChatboxCard(),
+        ConversationCard(),
+        ClearContextCard(),
+        ChatboxCard(),
       ]),
     );
-  }
-
-  void _addSeparator() {
-    // todo
   }
 }

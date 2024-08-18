@@ -29,14 +29,14 @@ class ContactPage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          const SizedBox(height: 20),
+          const ContactCard(), // for contact list
+          // const SizedBox(height: 20),
           ListTile(
-            title: const Text('Edit Prompt'),
+            title: const Text('Assistants'),
             leading: const Icon(Icons.line_axis),
             onTap: () =>
-                PageOpener.openPage(context, AssistantsPage(), sizeRate: 0.8),
+                PageOpener.openPage(context, const AssistantsPage(), sizeRate: 0.8),
           ),
-          const ContactCard(), // for contact list
           ListTile(
             title: const Text('Setting'),
             leading: const Icon(Icons.settings),
