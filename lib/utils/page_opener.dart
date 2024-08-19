@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class PageOpener {
   // 静态方法，用于打开页面
-  static void openPage(BuildContext context, Widget page,
-      {double? sizeRate}) {
+  static void openPage(BuildContext context, Widget page, {double? sizeRate}) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -25,10 +24,18 @@ class PageOpener {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            child: SizedBox(
-              width: screenWidth * (sizeRate ?? 0.8),
-              height: screenHeight * (sizeRate ?? 0.8),
-              child: page,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            elevation: 16,
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: screenWidth * (sizeRate ?? 0.8),
+                height: screenHeight * (sizeRate ?? 0.8),
+                child: page,
+              ),
             ),
           );
         },

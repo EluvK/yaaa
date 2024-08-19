@@ -18,16 +18,14 @@ class _ContactCardState extends State<ContactCard> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (conversationController.conversationList.isEmpty) {
-        return const Expanded(child: Center(child: Text('No conversation')));
+        return const Center(child: Text('No conversation'));
       }
-      return Expanded(
-        child: ListView.builder(
-          itemCount: conversationController.conversationList.length,
-          itemBuilder: (context, index) {
-            return _compConversation(
-                conversationController.conversationList[index], index);
-          },
-        ),
+      return ListView.builder(
+        itemCount: conversationController.conversationList.length,
+        itemBuilder: (context, index) {
+          return _compConversation(
+              conversationController.conversationList[index], index);
+        },
       );
     });
   }

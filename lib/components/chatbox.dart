@@ -38,7 +38,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
                 });
               },
               minLines: 1,
-              maxLines: 15,
+              maxLines: 10,
               keyboardType: TextInputType.multiline,
               decoration: const InputDecoration(
                 // hintText: 'Type a message',
