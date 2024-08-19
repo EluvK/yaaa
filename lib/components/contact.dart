@@ -117,7 +117,7 @@ class _ContactCardState extends State<ContactCard> {
     conversationController.setCurrentConversationUuid(uuid);
     final messageController = Get.find<MessageController>();
     messageController.loadMessages(uuid);
-    if (GetPlatform.isMobile) {
+    if (GetPlatform.isMobile || MediaQuery.of(context).size.width < 600) {
       Get.back();
     }
   }

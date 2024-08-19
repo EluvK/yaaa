@@ -10,7 +10,8 @@ class HomePage extends GetResponsiveView {
   Widget? phone() {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Yaaa')),
+        title: Center(child: title()),
+        titleTextStyle: titleStyle(),
         actions: [
           IconButton(
             onPressed: () {
@@ -41,13 +42,9 @@ class HomePage extends GetResponsiveView {
           ),
         ),
         centerTitle: true,
-        title: const Text('Yaaa'),
         // toolbarHeight: 50,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
+        title: title(),
+        titleTextStyle: titleStyle(),
         actionsIconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.transparent,
         actions: [
@@ -63,6 +60,18 @@ class HomePage extends GetResponsiveView {
           Flexible(child: ConversationPage()),
         ],
       ),
+    );
+  }
+
+  Widget title() {
+    return const Text('Yaaa');
+  }
+
+  TextStyle titleStyle() {
+    return const TextStyle(
+      color: Colors.black87,
+      fontSize: 24,
+      fontFamily: 'lxgw',
     );
   }
 }

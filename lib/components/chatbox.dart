@@ -27,7 +27,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
         children: [
           // const SizedBox(width: 8.0),
           Expanded(
-            child: TextFormField(
+            child: TextField(
               controller: _textController,
               onChanged: (text) {
                 setState(() {
@@ -41,7 +41,13 @@ class _ChatboxCardState extends State<ChatboxCard> {
               maxLines: 15,
               keyboardType: TextInputType.multiline,
               decoration: const InputDecoration(
-                hintText: 'Type a message',
+                // hintText: 'Type a message',
+                labelText: 'Type a message',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                // prefixIcon: Icon(Icons.person),
+                // filled: true,
               ),
             ),
           ),

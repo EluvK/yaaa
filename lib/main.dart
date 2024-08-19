@@ -38,6 +38,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/setting', page: () => const SettingPage()),
         GetPage(name: '/assistants', page: () => const AssistantsPage()),
       ],
+      theme: ThemeData(
+        fontFamily: 'lxgw',
+      ),
     );
   }
 }
