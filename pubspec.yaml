@@ -86,7 +86,7 @@ flutter:
   fonts:  
     - family: lxgw
       fonts:
-        - asset: assets/fonts/LXGWWenKaiMono-Bold.ttf
+        - asset: assets/font/LXGWWenKaiMono-Bold.ttf
 
   #
   # For details regarding fonts from package dependencies,
