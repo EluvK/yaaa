@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:yaaa/controller/conversation.dart';
@@ -60,9 +61,45 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   Widget _compMessage(Message message) {
+    bool isUser = message.role == MessageRole.user;
     return ListTile(
-      title: Text(message.text),
-      subtitle: Text(message.createdAt.toString()),
+      leading: isUser
+          ? const SizedBox(width: 25)
+          : const Icon(Icons.computer, size: 25),
+      trailing: isUser
+          ? const Icon(Icons.person, size: 25)
+          : const SizedBox(width: 25),
+      title: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isUser ? Colors.blue[100] : Colors.grey[300],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectableText(message.text),
+            const SizedBox(height: 5),
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // !this row have a little big minimum width because of this timestamp, use expanded can avoid it.
+                Expanded(
+                  child: Text(message.createdAt.toString().split('.')[0],
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                ),
+                IconButton(
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: message.text));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Copied to clipboard')));
+                    },
+                    icon: const Icon(Icons.copy, size: 16))
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

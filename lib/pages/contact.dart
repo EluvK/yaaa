@@ -34,8 +34,7 @@ class ContactPage extends StatelessWidget {
           ListTile(
             title: const Text('Assistants'),
             leading: const Icon(Icons.line_axis),
-            onTap: () =>
-                PageOpener.openPage(context, const AssistantsPage(), sizeRate: 0.8),
+            onTap: () => PageOpener.openPage(context, const AssistantsPage()),
           ),
           ListTile(
             title: const Text('Setting'),
