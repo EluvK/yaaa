@@ -11,7 +11,7 @@ class ConversationPage extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(children: [
-        ConversationCard(),
+        Expanded(child: ConversationCard()),
         ClearContextCard(),
         ChatboxCard(),
       ]),

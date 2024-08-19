@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -65,7 +67,8 @@ class _AssistantsCardState extends State<AssistantsCard> {
         shrinkWrap: true,
         childAspectRatio: 1.618, // 宽高比
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 4, // 每行显示2个卡片
+        crossAxisCount:
+            (Platform.isAndroid || Platform.isIOS) ? 2 : 4, // 每行显示卡片数量
         crossAxisSpacing: 16.0, // 水平间距
         mainAxisSpacing: 12.0, // 垂直间距
         children: assistants

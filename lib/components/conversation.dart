@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:yaaa/components/markdown_message.dart';
 
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
@@ -35,28 +36,21 @@ class _ConversationCardState extends State<ConversationCard> {
       }
       if (currentConversationUuid.isEmpty) {
         // todo maybe add some quick guide module
-        return const Expanded(child: Center(child: Text('No conversation')));
+        return const Center(child: Text('No conversation'));
       }
-      return Expanded(
-          child: _buildConversation(conversationController.conversationList
-              .firstWhere(
-                  (element) => element.uuid == currentConversationUuid)));
+      return _buildConversation(conversationController.conversationList
+          .firstWhere((element) => element.uuid == currentConversationUuid));
     });
   }
 
   Widget _buildConversation(Conversation conversation) {
-    return ListView(
+    return ListView.builder(
       shrinkWrap: true,
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          controller: _conversationScrollController,
-          itemCount: messageController.messageList.length,
-          itemBuilder: (context, index) {
-            return _compMessage(messageController.messageList[index]);
-          },
-        ),
-      ],
+      controller: _conversationScrollController,
+      itemCount: messageController.messageList.length,
+      itemBuilder: (context, index) {
+        return _compMessage(messageController.messageList[index]);
+      },
     );
   }
 
@@ -78,7 +72,7 @@ class _ConversationCardState extends State<ConversationCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SelectableText(message.text),
+            MarkdownRenderer(data: message.text),
             const SizedBox(height: 5),
             Row(
               // mainAxisAlignment: MainAxisAlignment.start,
