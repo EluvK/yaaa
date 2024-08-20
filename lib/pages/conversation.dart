@@ -8,13 +8,18 @@ class ConversationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(2.0),
-      child: Column(children: [
-        Expanded(child: ConversationCard()),
-        ClearContextCard(),
-        ChatboxCard(),
-      ]),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(2.0),
+        child: Column(children: [
+          Expanded(child: ConversationCard()),
+          ClearContextCard(),
+          ChatboxCard(),
+        ]),
+      ),
     );
   }
 }

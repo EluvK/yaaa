@@ -5,6 +5,7 @@ import 'package:yaaa/pages/conversation.dart';
 
 class HomePage extends GetResponsiveView {
   HomePage({super.key});
+  final colorScheme = Theme.of(Get.context!).colorScheme;
 
   @override
   Widget? phone() {
@@ -31,27 +32,26 @@ class HomePage extends GetResponsiveView {
   Widget? desktop() {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.purple],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56.0), // AppBar 的高度
+        child: Align(
+          alignment: Alignment.centerLeft, // 对齐到左边
+          child: SizedBox(
+              width: 350.0, // 设置 AppBar 的宽度为 350
+              child: AppBar(
+                centerTitle: true,
+                // toolbarHeight: 56,
+                title: title(),
+                titleTextStyle: titleStyle(),
+                flexibleSpace: Container(color: colorScheme.surface),
+                actions: [
+                  // todo
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
+                  IconButton(
+                      onPressed: () {}, icon: const Icon(Icons.settings)),
+                ],
+              )),
         ),
-        centerTitle: true,
-        // toolbarHeight: 50,
-        title: title(),
-        titleTextStyle: titleStyle(),
-        actionsIconTheme: const IconThemeData(color: Colors.black),
-        backgroundColor: Colors.transparent,
-        actions: [
-          // todo
-          IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-        ],
       ),
       body: const Row(
         mainAxisSize: MainAxisSize.min,
@@ -68,8 +68,8 @@ class HomePage extends GetResponsiveView {
   }
 
   TextStyle titleStyle() {
-    return const TextStyle(
-      color: Colors.black87,
+    return TextStyle(
+      color: colorScheme.inverseSurface,
       fontSize: 24,
       fontFamily: 'lxgw',
     );

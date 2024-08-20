@@ -19,6 +19,8 @@ class _ConversationCardState extends State<ConversationCard> {
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
 
+  final colorScheme = Get.theme.colorScheme;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -64,9 +66,11 @@ class _ConversationCardState extends State<ConversationCard> {
           ? const Icon(Icons.person, size: 25)
           : const SizedBox(width: 25),
       title: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         decoration: BoxDecoration(
-          color: isUser ? Colors.blue[100] : Colors.grey[300],
+          color: isUser
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(

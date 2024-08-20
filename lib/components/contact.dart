@@ -30,26 +30,6 @@ class _ContactCardState extends State<ContactCard> {
     });
   }
 
-  // Widget _compNewConversation() {
-  //   return Row(
-  //     children: [
-  //       const SizedBox(width: 8.0),
-  //       ElevatedButton(
-  //         onPressed: () {
-  //           final newConversationUuid = const Uuid().v4();
-  //           conversationController.addConversation(Conversation(
-  //               name: "---",
-  //               uuid: newConversationUuid,
-  //               contactUuid: "contactUuid"));
-  //           conversationController
-  //               .setCurrentConversationUuid(newConversationUuid);
-  //         },
-  //         child: const Icon(Icons.add),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget _compConversation(Conversation conversation, int index) {
     return Card(
       child: ListTile(

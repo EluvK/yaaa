@@ -41,6 +41,7 @@ dependencies:
   uuid: ^4.4.2
   sqflite_common_ffi: ^2.3.3
   markdown_widget: ^2.3.2+6
+  flex_color_scheme: ^7.3.1
   # window_size:
   #   git:
   #     url: https://github.com/google/flutter-desktop-embedding

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -42,9 +43,49 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/setting', page: () => const SettingPage()),
         GetPage(name: '/assistants', page: () => const AssistantsPage()),
       ],
-      theme: ThemeData(
+      theme: FlexThemeData.light(
+        scheme: FlexScheme.blueM3,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 7,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 10,
+          useTextTheme: true,
+          useM2StyleDividerInM3: true,
+          alignedDropdown: true,
+          useInputDecoratorThemeInDialogs: true,
+        ),
+        keyColors: const FlexKeyColors(
+          useSecondary: true,
+        ),
+        tones: FlexTones.material(Brightness.light).onMainsUseBW(),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        swapLegacyOnMaterial3: true,
         fontFamily: 'lxgw',
       ),
+      darkTheme: FlexThemeData.dark(
+        scheme: FlexScheme.blueM3,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 7,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 20,
+          useTextTheme: true,
+          useM2StyleDividerInM3: true,
+          alignedDropdown: true,
+          useInputDecoratorThemeInDialogs: true,
+        ),
+        keyColors: const FlexKeyColors(
+          useSecondary: true,
+        ),
+        tones: FlexTones.material(Brightness.dark).onMainsUseBW(),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        swapLegacyOnMaterial3: true,
+        fontFamily: 'lxgw',
+      ),
+
+      themeMode: ThemeMode.light,
+      // themeMode: ThemeMode.system,
     );
   }
 }

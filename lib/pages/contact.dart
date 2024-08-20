@@ -9,33 +9,38 @@ class ContactPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.only(right: 4.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 5,
+            color: colorScheme.shadow.withOpacity(0.3),
             blurRadius: 7,
-            offset: const Offset(0, 3),
           ),
         ],
       ),
       constraints: const BoxConstraints(maxWidth: 350),
-      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           const Expanded(child: ContactCard()), // for contact list
-          ListTile(
-            title: const Text('Assistants'),
-            leading: const Icon(Icons.line_axis),
-            onTap: () => PageOpener.openPage(context, const AssistantsPage()),
+          TextButton(
+            child: const ListTile(
+              title: Text('Assistants'),
+              leading: Icon(Icons.line_axis),
+            ),
+            onPressed: () =>
+                PageOpener.openPage(context, const AssistantsPage()),
           ),
-          ListTile(
-            title: const Text('Setting'),
-            leading: const Icon(Icons.settings),
-            onTap: () => PageOpener.openPage(context, const SettingPage()),
+          TextButton(
+            child: const ListTile(
+              title: Text('Setting'),
+              leading: Icon(Icons.settings),
+            ),
+            onPressed: () => PageOpener.openPage(context, const SettingPage()),
           ),
           const SizedBox(height: 20),
         ],
