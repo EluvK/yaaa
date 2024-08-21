@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class PageOpener {
   // 静态方法，用于打开页面
@@ -7,13 +7,8 @@ class PageOpener {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // 判断是否为移动端
-    final isMobile = !kIsWeb &&
-        (Theme.of(context).platform == TargetPlatform.iOS ||
-            Theme.of(context).platform == TargetPlatform.android);
-
     // 如果是移动端，或者屏幕宽度较小，则全屏打开
-    if (isMobile || screenWidth < 600) {
+    if (isMobile(context)) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => page),

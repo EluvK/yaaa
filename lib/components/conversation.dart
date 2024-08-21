@@ -26,16 +26,6 @@ class _ConversationCardState extends State<ConversationCard> {
     return Obx(() {
       var currentConversationUuid =
           conversationController.currentConversationUuid.value;
-      if (conversationController.conversationList.isNotEmpty &&
-          conversationController.currentConversationUuid.value.isEmpty) {
-        currentConversationUuid =
-            conversationController.conversationList.first.uuid;
-        conversationController
-            .setCurrentConversationUuid(currentConversationUuid);
-        messageController.loadMessages(currentConversationUuid);
-        print(("build _compConversation", currentConversationUuid));
-        // return const Center(child: CircularProgressIndicator());
-      }
       if (currentConversationUuid.isEmpty) {
         // todo maybe add some quick guide module
         return const Center(child: Text('No conversation'));

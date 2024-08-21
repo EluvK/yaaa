@@ -10,12 +10,33 @@ import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/pages/home.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
+import 'package:yaaa/utils/init.dart';
 
-void main() {
+void main() async {
   if (!Platform.isAndroid && !Platform.isIOS) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+
+  await Get.putAsync(() async {
+    final controller = ConversationController();
+    await controller.onInit();
+    return controller;
+  });
+  await Get.putAsync(() async {
+    final controller = MessageController();
+    await controller.onInit();
+    return controller;
+  });
+  await Get.putAsync(() async {
+    final controller = AssistantController();
+    await controller.onInit();
+    return controller;
+  });
+  Get.put(MessageController());
+  Get.put(AssistantController());
+  initConversation();
+
   runApp(const MyApp());
 }
 
@@ -24,10 +45,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ConversationController());
-    Get.put(MessageController());
-    Get.put(AssistantController());
-
 // debug print all messages
     // ConversationRepository().showAllDatabases();
     // ConversationRepository().printAllMessages();

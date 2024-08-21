@@ -9,51 +9,21 @@ class HomePage extends GetResponsiveView {
 
   @override
   Widget? phone() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: title()),
-        titleTextStyle: titleStyle(),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Get.toNamed('/assistants');
-              // addConversation();
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
+    return const Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56.0),
+        child: ConversationAppBar(),
       ),
-      body: const ConversationPage(),
-      drawer: const ContactPage(),
+      body: ConversationPage(),
+      drawer: ContactPage(),
     );
   }
 
   @override
   Widget? desktop() {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56.0), // AppBar 的高度
-        child: Align(
-          alignment: Alignment.centerLeft, // 对齐到左边
-          child: SizedBox(
-              width: 350.0, // 设置 AppBar 的宽度为 350
-              child: AppBar(
-                centerTitle: true,
-                // toolbarHeight: 56,
-                title: title(),
-                titleTextStyle: titleStyle(),
-                flexibleSpace: Container(color: colorScheme.surface),
-                actions: [
-                  // todo
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
-                  IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.settings)),
-                ],
-              )),
-        ),
-      ),
-      body: const Row(
+    return Container(
+      color: colorScheme.surface,
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           ContactPage(),

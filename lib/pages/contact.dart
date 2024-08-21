@@ -23,9 +23,10 @@ class ContactPage extends StatelessWidget {
           ),
         ],
       ),
-      constraints: const BoxConstraints(maxWidth: 350),
+      constraints: const BoxConstraints(maxWidth: 300),
       child: Column(
         children: [
+          const ContactBar(),
           const Expanded(child: ContactCard()), // for contact list
           TextButton(
             child: const ListTile(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class ContactCard extends StatefulWidget {
   const ContactCard({super.key});
@@ -91,12 +92,43 @@ class _ContactCardState extends State<ContactCard> {
   }
 
   void _funcTabConversation(int index) {
-    String uuid = conversationController.conversationList[index].uuid;
-    conversationController.setCurrentConversationUuid(uuid);
+    Conversation conversation = conversationController.conversationList[index];
+    String uuid = conversation.uuid;
+    conversationController.setCurrentConversation(
+        uuid, conversation.assistantName);
     final messageController = Get.find<MessageController>();
     messageController.loadMessages(uuid);
-    if (GetPlatform.isMobile || MediaQuery.of(context).size.width < 600) {
+    if (isMobile(context)) {
       Get.back();
     }
+  }
+}
+
+class ContactBar extends StatefulWidget {
+  const ContactBar({super.key});
+
+  @override
+  State<ContactBar> createState() => _ContactBarState();
+}
+
+class _ContactBarState extends State<ContactBar> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 56,
+      child: AppBar(
+        centerTitle: true,
+        title: const Text('Contact'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.toNamed('/assistants');
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -148,7 +148,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
       uuid: newConversationUuid,
       assistantName: assistant.name,
     ));
-    conversationController.setCurrentConversationUuid(newConversationUuid);
+    conversationController.setCurrentConversation(newConversationUuid, assistant.name);
 
     messageController.addMessage(Message(
       uuid: const Uuid().v4(),

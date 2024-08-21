@@ -8,7 +8,7 @@ class AssistantController extends GetxController {
   static AssistantController get to => Get.find<AssistantController>();
 
   @override
-  void onInit() async {
+  Future<void> onInit() async {
     assistantList.value = await AssistantRepository().getAllAssistants();
     super.onInit();
   }
