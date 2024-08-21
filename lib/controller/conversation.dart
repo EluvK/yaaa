@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:yaaa/client/client.dart';
 import 'package:yaaa/model/conversation.dart';
 
 class ConversationController extends GetxController {
@@ -51,12 +52,43 @@ class MessageController extends GetxController {
   }
 
   void addMessage(Message message) async {
+    // save user message to db
     await ConversationRepository().addMessage(message);
     final messages =
         await ConversationRepository().getMessages(message.conversationUuid);
     messageList.value = messages;
 
+    // for prompt message, no need to do the rest.
+    if (message.role == MessageRole.system) {
+      return;
+    }
+
+    // not finished yet.
+    return;
+
+    // the message that need to be sent through api,
+    // should be from the latest role.system message
+    // to the latest message, copy this list
+    int latestSystemMessageIndex =
+        messageList.lastIndexWhere((msg) => msg.role == MessageRole.system);
+    assert(latestSystemMessageIndex != -1);
+    final messageListCopy = messageList.sublist(latestSystemMessageIndex);
+    print(("messageTobeSent", messageListCopy));
+
     // todo post message and wait for response
+    Client().postMessage(
+      messageListCopy,
+      (message) {
+        messageList.value = [...messageList, message];
+      },
+      (message) async {
+        // on success save response message to db
+        await ConversationRepository().addMessage(message);
+        final messages = await ConversationRepository()
+            .getMessages(message.conversationUuid);
+        messageList.value = messages;
+      },
+    );
   }
 
   void deleteConversationMessages(String conversationUuid) {
