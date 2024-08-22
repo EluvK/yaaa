@@ -40,6 +40,8 @@ class ConversationController extends GetxController {
 class MessageController extends GetxController {
   final messageList = <Message>[].obs;
 
+  bool waitingForResponse = false;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -62,6 +64,8 @@ class MessageController extends GetxController {
     if (message.role == MessageRole.system) {
       return;
     }
+    // print("message controller set waitingForResponse to true");
+    waitingForResponse = true;
 
     // the message that need to be sent through api,
     // should be from the latest role.system message
@@ -87,6 +91,8 @@ class MessageController extends GetxController {
         final messages = await ConversationRepository()
             .getMessages(message.conversationUuid);
         messageList.value = messages;
+        // print("message controller set waitingForResponse to false");
+        waitingForResponse = false;
       },
     );
   }

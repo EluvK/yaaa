@@ -14,6 +14,7 @@ class ContactCard extends StatefulWidget {
 class _ContactCardState extends State<ContactCard> {
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
+  int _selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,10 @@ class _ContactCardState extends State<ContactCard> {
       if (conversationController.conversationList.isEmpty) {
         return const Center(child: Text('No conversation'));
       }
+      _selectedIndex = conversationController.conversationList.indexWhere(
+          (element) =>
+              element.uuid ==
+              conversationController.currentConversationUuid.value);
       return ListView.builder(
         itemCount: conversationController.conversationList.length,
         itemBuilder: (context, index) {
@@ -33,6 +38,9 @@ class _ContactCardState extends State<ContactCard> {
 
   Widget _compConversation(Conversation conversation, int index) {
     return Card(
+      color: _selectedIndex == index
+          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.2)
+          : null,
       child: ListTile(
         title: Text(conversation.name),
         subtitle: Text(conversation.assistantName),
@@ -96,7 +104,7 @@ class _ContactCardState extends State<ContactCard> {
     String uuid = conversation.uuid;
     conversationController.setCurrentConversation(
         uuid, conversation.assistantName);
-    final messageController = Get.find<MessageController>();
+
     messageController.loadMessages(uuid);
     if (isMobile(context)) {
       Get.back();

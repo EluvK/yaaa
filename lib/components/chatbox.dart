@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaaa/controller/conversation.dart';
@@ -14,13 +15,38 @@ class ChatboxCard extends StatefulWidget {
 class _ChatboxCardState extends State<ChatboxCard> {
   final _textController = TextEditingController();
   final conversationController = Get.find<ConversationController>();
+  final messageController = Get.find<MessageController>();
 
   bool _canSendMessage = false;
 
-  final bool _waitingForResponse = false;
-
   @override
   Widget build(BuildContext context) {
+    return KeyboardListener(
+      focusNode: FocusNode(),
+      autofocus: true,
+      child: buildChatBoxCard(context),
+      onKeyEvent: (event) {
+        // shift + enter
+        if (event is KeyUpEvent &&
+            event.logicalKey == LogicalKeyboardKey.enter &&
+            HardwareKeyboard.instance.isShiftPressed) {
+          if (_canSendMessage) {
+            _sendMessage();
+          }
+          return;
+        }
+        if (event is KeyUpEvent &&
+            event.logicalKey == LogicalKeyboardKey.keyR &&
+            HardwareKeyboard.instance.isControlPressed) {
+          // print("add_seperator");
+          // todo
+          return;
+        }
+      },
+    );
+  }
+
+  Widget buildChatBoxCard(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -32,7 +58,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
               onChanged: (text) {
                 setState(() {
                   _canSendMessage = text.trim().isNotEmpty &&
-                      !_waitingForResponse &&
+                      !messageController.waitingForResponse &&
                       conversationController
                           .currentConversationUuid.value.isNotEmpty;
                 });
@@ -54,7 +80,9 @@ class _ChatboxCardState extends State<ChatboxCard> {
           const SizedBox(width: 8.0),
           ElevatedButton(
             onPressed: _canSendMessage ? _sendMessage : null,
-            child: const Icon(Icons.send),
+            child: _canSendMessage
+                ? const Icon(Icons.send)
+                : const Icon(Icons.do_not_disturb_on),
           ),
         ],
       ),
@@ -67,6 +95,9 @@ class _ChatboxCardState extends State<ChatboxCard> {
     if (message.isEmpty) {
       return;
     }
+    setState(() {
+      _textController.clear();
+    });
     final messageController = Get.find<MessageController>();
     var conversationUuid = conversationController.currentConversationUuid.value;
 
@@ -78,6 +109,5 @@ class _ChatboxCardState extends State<ChatboxCard> {
       role: MessageRole.user,
     );
     messageController.addMessage(newMessage);
-    _textController.clear();
   }
 }
