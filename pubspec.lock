@@ -65,14 +65,6 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "1.0.8"
-  dart_openai:
-    dependency: "direct main"
-    description:
-      name: dart_openai
-      sha256: "853bb57fed6a71c3ba0324af5cb40c16d196cf3aa55b91d244964ae4a241ccf1"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
-    source: hosted
-    version: "5.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -160,6 +152,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "2.4.4"
   get:
     dependency: "direct main"
     description:
@@ -200,6 +200,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "4.0.2"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -272,6 +280,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "1.15.0"
+  openai_dart:
+    dependency: "direct main"
+    description:
+      name: openai_dart
+      sha256: a2acfe7e7945694af6d8733bdd268ad7c8ac4b1ab3f434769a82ef9d74b67174
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "0.4.0"
   path:
     dependency: transitive
     description:
