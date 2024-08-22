@@ -1,26 +1,28 @@
-import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
-import 'package:yaaa/client/deepseek.dart';
+import 'package:yaaa/client/llm/deepseek.dart';
 import 'package:yaaa/model/conversation.dart';
 
-class Client {
-  static final Client _instance = Client._internal();
+class ClientManager {
+  static final ClientManager _instance = ClientManager._internal();
 
-  factory Client() {
+  factory ClientManager() {
     return _instance;
   }
 
-  Client._internal() {
+  ClientManager._internal() {
     // try read from settings
-    OpenAI.apiKey = "SK_TEST";
-    OpenAI.baseUrl = "https://api.openai.com";
+    // var openAiCLient = OpenAIClient(
+    //   apiKey: "SK_TEST",
+    //   baseUrl: "https://api.openai.com",
+    // );
   }
 
   void postMessage(
     List<Message> messages,
     ValueChanged<Message> onStream,
+    ValueChanged<Message> onError,
     ValueChanged<Message> onSuccess,
   ) {
-    Deepseek().chat(messages, onStream, onSuccess);
+    Deepseek().chat(messages, onStream, onError, onSuccess);
   }
 }

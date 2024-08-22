@@ -36,6 +36,9 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   Widget _buildConversation(Conversation conversation) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom(); // it may prevent user from scroll up while generate answers.
+    });
     return ListView.builder(
       shrinkWrap: true,
       controller: _conversationScrollController,
@@ -48,10 +51,13 @@ class _ConversationCardState extends State<ConversationCard> {
 
   Widget _compMessage(Message message) {
     bool isUser = message.role == MessageRole.user;
+    bool isAssistant = message.role == MessageRole.assistant;
     return ListTile(
       leading: isUser
           ? const SizedBox(width: 25)
-          : const Icon(Icons.computer, size: 25),
+          : isAssistant
+              ? const Icon(Icons.computer, size: 25)
+              : const Icon(Icons.settings, size: 25),
       trailing: isUser
           ? const Icon(Icons.person, size: 25)
           : const SizedBox(width: 25),
@@ -60,7 +66,9 @@ class _ConversationCardState extends State<ConversationCard> {
         decoration: BoxDecoration(
           color: isUser
               ? colorScheme.primaryContainer
-              : colorScheme.secondaryContainer,
+              : isAssistant
+                  ? colorScheme.secondaryContainer
+                  : colorScheme.tertiaryContainer,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -73,7 +81,11 @@ class _ConversationCardState extends State<ConversationCard> {
               children: [
                 // !this row have a little big minimum width because of this timestamp, use expanded can avoid it.
                 Expanded(
-                  child: Text(message.createdAt.toString().split('.')[0],
+                  child: Text(
+                      message.createdAt.toString().split('.')[0] +
+                          (message.usage != null
+                              ? " (prompt:${message.usage!.promptTokens} tokens, completion:${message.usage!.completionTokens} tokens)"
+                              : ""),
                       style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                 ),
                 IconButton(
@@ -88,6 +100,14 @@ class _ConversationCardState extends State<ConversationCard> {
           ],
         ),
       ),
+    );
+  }
+
+  void _scrollToBottom() {
+    _conversationScrollController.animateTo(
+      _conversationScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 }

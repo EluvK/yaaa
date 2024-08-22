@@ -17,6 +17,7 @@ class Message {
   String text;
   DateTime createdAt;
   MessageRole role;
+  Usage? usage;
 
   Message({
     required this.uuid,
@@ -24,13 +25,56 @@ class Message {
     required this.text,
     required this.createdAt,
     required this.role,
+    this.usage,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uuid': uuid,
+      'conversation_uuid': conversationUuid,
+      'text': text,
+      'created_at': createdAt.toIso8601String(),
+      'role': role.toString(),
+      'prompt_tokens': usage?.promptTokens,
+      'completion_tokens': usage?.completionTokens,
+      'total_tokens': usage?.totalTokens,
+    };
+  }
+
+  factory Message.fromMap(Map<String, dynamic> map) {
+    return Message(
+      uuid: map['uuid'],
+      conversationUuid: map['conversation_uuid'],
+      text: map['text'],
+      createdAt: DateTime.parse(map['created_at']),
+      role: MessageRole.values.firstWhere((e) => e.toString() == map['role']),
+      usage: map['prompt_tokens'] != null
+          ? Usage(
+              promptTokens: map['prompt_tokens'],
+              completionTokens: map['completion_tokens'],
+              totalTokens: map['total_tokens'],
+            )
+          : null,
+    );
+  }
 }
 
 enum MessageRole {
   system,
   assistant,
   user,
+}
+
+class Usage {
+  final int promptTokens;
+  final int completionTokens;
+  final int totalTokens;
+
+  Usage({
+    required this.promptTokens,
+    required this.completionTokens,
+    required this.totalTokens,
+  });
 }
 
 class ConversationRepository {
@@ -45,6 +89,10 @@ class ConversationRepository {
   static const String _columnMessageText = 'text';
   static const String _columnMessageCreatedAt = 'created_at';
   static const String _columnMessageRole = 'role';
+  // optional usage
+  static const String _columnPromptTokens = 'prompt_tokens';
+  static const String _columnCompletionTokens = 'completion_tokens';
+  static const String _columnTotalTokens = 'total_tokens';
 
   static Database? _database;
 
@@ -66,7 +114,10 @@ class ConversationRepository {
               $_columnMessageConversationUuid TEXT NOT NULL,
               $_columnMessageText TEXT NOT NULL,
               $_columnMessageCreatedAt TEXT NOT NULL,
-              $_columnMessageRole TEXT NOT NULL
+              $_columnMessageRole TEXT NOT NULL,
+              $_columnPromptTokens INTEGER,
+              $_columnCompletionTokens INTEGER,
+              $_columnTotalTokens INTEGER
             )
           ''');
       },
@@ -142,15 +193,7 @@ class ConversationRepository {
     print((" - debug get message ", maps));
 
     return List.generate(maps.length, (i) {
-      return Message(
-        uuid: maps[i][_columnMessageUuid],
-        conversationUuid: maps[i][_columnMessageConversationUuid],
-        text: maps[i][_columnMessageText],
-        createdAt: DateTime.parse(maps[i][_columnMessageCreatedAt]),
-        role: MessageRole.values.firstWhere(
-          (role) => role.toString() == maps[i][_columnMessageRole],
-        ),
-      );
+      return Message.fromMap(maps[i]);
     });
   }
 
@@ -158,13 +201,8 @@ class ConversationRepository {
     final db = await _getDb();
     await db.insert(
       _tableMessageName,
-      {
-        _columnMessageUuid: message.uuid,
-        _columnMessageConversationUuid: message.conversationUuid,
-        _columnMessageText: message.text,
-        _columnMessageCreatedAt: message.createdAt.toIso8601String(),
-        _columnMessageRole: message.role.toString(),
-      },
+      message.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 

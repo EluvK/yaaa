@@ -63,9 +63,6 @@ class MessageController extends GetxController {
       return;
     }
 
-    // not finished yet.
-    return;
-
     // the message that need to be sent through api,
     // should be from the latest role.system message
     // to the latest message, copy this list
@@ -76,10 +73,13 @@ class MessageController extends GetxController {
     print(("messageTobeSent", messageListCopy));
 
     // todo post message and wait for response
-    Client().postMessage(
+    ClientManager().postMessage(
       messageListCopy,
       (message) {
-        messageList.value = [...messageList, message];
+        messageList.value = [...messages, message];
+      },
+      (message) {
+        messageList.value = [...messages, message];
       },
       (message) async {
         // on success save response message to db
