@@ -22,34 +22,33 @@ class _ChatboxCardState extends State<ChatboxCard> {
 
   bool _canSendMessage = false;
 
+  late final _focusNode = FocusNode(onKeyEvent: _handleKeyPress);
+
+  KeyEventResult _handleKeyPress(FocusNode focusNode, KeyEvent event) {
+    if (event is KeyUpEvent &&
+        event.logicalKey == LogicalKeyboardKey.enter &&
+        HardwareKeyboard.instance.isControlPressed) {
+      _sendMessage();
+      return KeyEventResult.handled;
+    }
+    // ctrl + r
+    if (event is KeyUpEvent &&
+        event.logicalKey == LogicalKeyboardKey.keyR &&
+        HardwareKeyboard.instance.isControlPressed) {
+      print("add separator");
+      _addSeparator();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return KeyboardListener(
-      focusNode: FocusNode(),
-      autofocus: true,
-      child: Column(
-        children: [
-          buildClearContext(context),
-          buildChatBoxCard(context),
-        ],
-      ),
-      onKeyEvent: (event) {
-        // shift + enter
-        if (event is KeyUpEvent &&
-            event.logicalKey == LogicalKeyboardKey.enter &&
-            HardwareKeyboard.instance.isShiftPressed) {
-          _sendMessage();
-          return;
-        }
-        // ctrl + r
-        if (event is KeyUpEvent &&
-            event.logicalKey == LogicalKeyboardKey.keyR &&
-            HardwareKeyboard.instance.isControlPressed) {
-          print("add separator");
-          _addSeparator();
-          return;
-        }
-      },
+    return Column(
+      children: [
+        buildClearContext(context),
+        buildChatBoxCard(context),
+      ],
     );
   }
 
@@ -61,7 +60,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
         child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wrap_text),
+            Icon(Icons.restart_alt),
             Text('  Clear Context'),
           ],
         ),
@@ -77,14 +76,19 @@ class _ChatboxCardState extends State<ChatboxCard> {
           // const SizedBox(width: 8.0),
           Expanded(
             child: TextField(
+              focusNode: _focusNode,
+              autofocus: true,
               controller: _textController,
               onChanged: (text) {
-                setState(() {
-                  _canSendMessage = text.trim().isNotEmpty &&
-                      !messageController.waitingForResponse &&
-                      conversationController
-                          .currentConversationUuid.value.isNotEmpty;
-                });
+                if (!HardwareKeyboard.instance.isControlPressed) {
+                  print("text change, ${text}");
+                  setState(() {
+                    _canSendMessage = text.trim().isNotEmpty &&
+                        !messageController.waitingForResponse &&
+                        conversationController
+                            .currentConversationUuid.value.isNotEmpty;
+                  });
+                }
               },
               minLines: 1,
               maxLines: 10,
@@ -110,7 +114,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
                     : const Icon(Icons.do_not_disturb_on),
               ),
               const Text(
-                "Shift+Enter",
+                "Ctrl+Enter",
                 style: TextStyle(fontSize: 12),
               ),
             ],
