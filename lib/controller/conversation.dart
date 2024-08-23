@@ -7,6 +7,7 @@ class ConversationController extends GetxController {
 
   final currentConversationUuid = ''.obs;
   final currentConversationAssistantName = 'yaaa'.obs;
+  final currentConversationAssistantUuid = ''.obs;
 
   static ConversationController get to => Get.find<ConversationController>();
 
@@ -17,9 +18,10 @@ class ConversationController extends GetxController {
     super.onInit();
   }
 
-  void setCurrentConversation(String uuid, String name) {
-    currentConversationUuid.value = uuid;
-    currentConversationAssistantName.value = name;
+  void setCurrentConversation(Conversation conversation) {
+    currentConversationUuid.value = conversation.uuid;
+    currentConversationAssistantName.value = conversation.assistantName;
+    currentConversationAssistantUuid.value = conversation.assistantUuid;
   }
 
   void addConversation(Conversation conversation) {
@@ -31,6 +33,7 @@ class ConversationController extends GetxController {
     if (currentConversationUuid.value == uuid) {
       currentConversationUuid.value = '';
       currentConversationAssistantName.value = 'yaaa';
+      currentConversationAssistantUuid.value = '';
     }
     ConversationRepository().deleteConversation(uuid);
     conversationList.removeWhere((element) => element.uuid == uuid);
@@ -54,16 +57,30 @@ class MessageController extends GetxController {
   }
 
   void addMessage(Message message) async {
+    if (waitingForResponse) {
+      return;
+    }
+    if (message.role == MessageRole.system) {
+      // if the last message is system message, don't add another system message
+      if (messageList.isNotEmpty &&
+          messageList.last.role == MessageRole.system) {
+        print("return because last message is system message");
+        // print("last: ${messageList.last}");
+        return;
+      }
+      // save system message to db
+      await ConversationRepository().addMessage(message);
+      final messages =
+          await ConversationRepository().getMessages(message.conversationUuid);
+      messageList.value = messages;
+      return;
+    }
     // save user message to db
     await ConversationRepository().addMessage(message);
     final messages =
         await ConversationRepository().getMessages(message.conversationUuid);
     messageList.value = messages;
 
-    // for prompt message, no need to do the rest.
-    if (message.role == MessageRole.system) {
-      return;
-    }
     // print("message controller set waitingForResponse to true");
     waitingForResponse = true;
 

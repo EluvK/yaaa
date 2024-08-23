@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
+import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
 
 class ChatboxCard extends StatefulWidget {
@@ -16,6 +18,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
   final _textController = TextEditingController();
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
+  final assistantController = Get.find<AssistantController>();
 
   bool _canSendMessage = false;
 
@@ -24,25 +27,45 @@ class _ChatboxCardState extends State<ChatboxCard> {
     return KeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
-      child: buildChatBoxCard(context),
+      child: Column(
+        children: [
+          buildClearContext(context),
+          buildChatBoxCard(context),
+        ],
+      ),
       onKeyEvent: (event) {
         // shift + enter
         if (event is KeyUpEvent &&
             event.logicalKey == LogicalKeyboardKey.enter &&
             HardwareKeyboard.instance.isShiftPressed) {
-          if (_canSendMessage) {
-            _sendMessage();
-          }
+          _sendMessage();
           return;
         }
+        // ctrl + r
         if (event is KeyUpEvent &&
             event.logicalKey == LogicalKeyboardKey.keyR &&
             HardwareKeyboard.instance.isControlPressed) {
-          // print("add_seperator");
-          // todo
+          print("add separator");
+          _addSeparator();
           return;
         }
       },
+    );
+  }
+
+  Widget buildClearContext(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+      child: ElevatedButton(
+        onPressed: _addSeparator,
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.wrap_text),
+            Text('  Clear Context'),
+          ],
+        ),
+      ),
     );
   }
 
@@ -78,11 +101,19 @@ class _ChatboxCardState extends State<ChatboxCard> {
             ),
           ),
           const SizedBox(width: 8.0),
-          ElevatedButton(
-            onPressed: _canSendMessage ? _sendMessage : null,
-            child: _canSendMessage
-                ? const Icon(Icons.send)
-                : const Icon(Icons.do_not_disturb_on),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: _canSendMessage ? _sendMessage : null,
+                child: _canSendMessage
+                    ? const Icon(Icons.send)
+                    : const Icon(Icons.do_not_disturb_on),
+              ),
+              const Text(
+                "Shift+Enter",
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
           ),
         ],
       ),
@@ -90,7 +121,9 @@ class _ChatboxCardState extends State<ChatboxCard> {
   }
 
   void _sendMessage() {
-    // todo
+    if (!_canSendMessage) {
+      return;
+    }
     final message = _textController.text.trim();
     if (message.isEmpty) {
       return;
@@ -98,7 +131,6 @@ class _ChatboxCardState extends State<ChatboxCard> {
     setState(() {
       _textController.clear();
     });
-    final messageController = Get.find<MessageController>();
     var conversationUuid = conversationController.currentConversationUuid.value;
 
     final newMessage = Message(
@@ -109,5 +141,33 @@ class _ChatboxCardState extends State<ChatboxCard> {
       role: MessageRole.user,
     );
     messageController.addMessage(newMessage);
+  }
+
+  void _addSeparator() {
+    if (messageController.waitingForResponse ||
+        conversationController.currentConversationUuid.isEmpty) {
+      return;
+    }
+    print((
+      "this assistant",
+      assistantController.assistantList,
+      conversationController.currentConversationUuid,
+      conversationController.currentConversationAssistantUuid
+    ));
+    Assistant? assistant = assistantController.getAssistant(
+        conversationController.currentConversationAssistantUuid.string);
+
+    if (assistant == null) {
+      return;
+    }
+
+    final newPromptMessage = Message(
+      uuid: const Uuid().v4(),
+      conversationUuid: conversationController.currentConversationUuid.string,
+      text: assistant.prompt,
+      createdAt: DateTime.now(),
+      role: MessageRole.system,
+    );
+    messageController.addMessage(newPromptMessage);
   }
 }

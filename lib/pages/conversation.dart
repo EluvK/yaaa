@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/components/chatbox.dart';
-import 'package:yaaa/components/clearcontext.dart';
 import 'package:yaaa/components/conversation.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/utils/utils.dart';
@@ -27,7 +26,6 @@ class ConversationPage extends StatelessWidget {
           padding: EdgeInsets.all(2.0),
           child: Column(children: [
             Expanded(child: ConversationCard()),
-            ClearContextCard(),
             ChatboxCard(),
           ]),
         ),

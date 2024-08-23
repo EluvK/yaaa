@@ -33,9 +33,7 @@ void main() async {
     await controller.onInit();
     return controller;
   });
-  Get.put(MessageController());
-  Get.put(AssistantController());
-  initConversation();
+  await initConversation();
 
   runApp(const MyApp());
 }

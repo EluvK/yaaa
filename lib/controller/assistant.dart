@@ -30,4 +30,15 @@ class AssistantController extends GetxController {
     AssistantRepository().delete(uuid);
     assistantList.removeWhere((element) => element.uuid == uuid);
   }
+
+  Assistant? getAssistant(String uuid) {
+    // for (var ass in assistantList) {
+    //   print(("  = ", ass.name));
+    //   print(("  = ", ass.description));
+    //   print(("  = ", ass.uuid));
+    // }
+    return assistantList.firstWhereOrNull(
+      (element) => element.uuid == uuid,
+    );
+  }
 }

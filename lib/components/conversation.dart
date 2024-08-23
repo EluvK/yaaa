@@ -44,7 +44,16 @@ class _ConversationCardState extends State<ConversationCard> {
       controller: _conversationScrollController,
       itemCount: messageController.messageList.length,
       itemBuilder: (context, index) {
-        return _compMessage(messageController.messageList[index]);
+        var message = messageController.messageList[index];
+        if (message.role == MessageRole.system && index != 0) {
+          return Column(
+            children: [
+              const Divider(),
+              _compMessage(message),
+            ],
+          );
+        }
+        return _compMessage(message);
       },
     );
   }

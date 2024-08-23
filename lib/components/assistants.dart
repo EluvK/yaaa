@@ -140,23 +140,26 @@ class _AssistantsCardState extends State<AssistantsCard> {
     );
   }
 
-  void funcAddConversation(Assistant assistant) {
-    print(("here", assistant));
+  void funcAddConversation(Assistant assistant) async {
     final newConversationUuid = const Uuid().v4();
-    conversationController.addConversation(Conversation(
+    final conversation = Conversation(
       name: "new ${newConversationUuid.substring(0, 8)}",
       uuid: newConversationUuid,
       assistantName: assistant.name,
-    ));
-    conversationController.setCurrentConversation(newConversationUuid, assistant.name);
+      assistantUuid: assistant.uuid,
+    );
+    conversationController.addConversation(conversation);
+    conversationController.setCurrentConversation(conversation);
+    await messageController.loadMessages(newConversationUuid);
 
-    messageController.addMessage(Message(
+    final newPromptMessage = Message(
       uuid: const Uuid().v4(),
       conversationUuid: newConversationUuid,
       text: assistant.prompt,
       createdAt: DateTime.now(),
       role: MessageRole.system,
-    ));
+    );
+    messageController.addMessage(newPromptMessage);
     Get.back();
   }
 }

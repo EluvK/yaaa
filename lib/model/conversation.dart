@@ -6,9 +6,14 @@ class Conversation {
   String name;
   String uuid;
   String assistantName;
+  String assistantUuid;
 
-  Conversation(
-      {required this.name, required this.uuid, required this.assistantName});
+  Conversation({
+    required this.name,
+    required this.uuid,
+    required this.assistantName,
+    required this.assistantUuid,
+  });
 }
 
 class Message {
@@ -82,6 +87,7 @@ class ConversationRepository {
   static const String _columnUuid = 'uuid';
   static const String _columnName = 'name';
   static const String _columnAssistantName = 'assistant_name';
+  static const String _columnAssistantUuid = 'assistant_uuid';
 
   static const String _tableMessageName = 'messages';
   static const String _columnMessageUuid = 'uuid';
@@ -105,7 +111,8 @@ class ConversationRepository {
             CREATE TABLE $_tableConversationName (
               $_columnUuid TEXT PRIMARY KEY,
               $_columnName TEXT NOT NULL,
-              $_columnAssistantName TEXT NOT NULL
+              $_columnAssistantName TEXT NOT NULL,
+              $_columnAssistantUuid TEXT NOT NULL
             )
           ''');
         await db.execute('''
@@ -136,6 +143,7 @@ class ConversationRepository {
         name: maps[i][_columnName],
         uuid: maps[i][_columnUuid],
         assistantName: maps[i][_columnAssistantName],
+        assistantUuid: maps[i][_columnAssistantUuid],
       );
     });
   }
@@ -148,6 +156,7 @@ class ConversationRepository {
         _columnUuid: conversation.uuid,
         _columnName: conversation.name,
         _columnAssistantName: conversation.assistantName,
+        _columnAssistantUuid: conversation.assistantUuid,
       },
     );
   }
@@ -160,6 +169,7 @@ class ConversationRepository {
         _columnUuid: conversation.uuid,
         _columnName: conversation.name,
         _columnAssistantName: conversation.assistantName,
+        _columnAssistantUuid: conversation.assistantUuid,
       },
       where: '$_columnUuid = ?',
       whereArgs: [conversation.uuid],

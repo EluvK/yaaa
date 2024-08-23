@@ -99,13 +99,12 @@ class _ContactCardState extends State<ContactCard> {
     });
   }
 
-  void _funcTabConversation(int index) {
+  void _funcTabConversation(int index) async {
     Conversation conversation = conversationController.conversationList[index];
     String uuid = conversation.uuid;
-    conversationController.setCurrentConversation(
-        uuid, conversation.assistantName);
+    conversationController.setCurrentConversation(conversation);
 
-    messageController.loadMessages(uuid);
+    await messageController.loadMessages(uuid);
     if (isMobile(context)) {
       Get.back();
     }
