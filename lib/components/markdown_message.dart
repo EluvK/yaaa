@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:yaaa/components/code_wrapper.dart';
+import 'package:yaaa/components/latex.dart';
 
 class MarkdownRenderer extends StatelessWidget {
   final String data;
@@ -16,6 +17,10 @@ class MarkdownRenderer extends StatelessWidget {
         CodeWrapperWidget(child, text, language);
     return MarkdownBlock(
         data: data,
+        generator: MarkdownGenerator(
+          inlineSyntaxList: [LatexSyntax()],
+          generators: [latexGenerator],
+        ),
         config: config.copy(configs: [
           isDark
               ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
