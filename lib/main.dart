@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
@@ -13,6 +14,8 @@ import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/init.dart';
 
 void main() async {
+  await GetStorage.init();
+
   if (!Platform.isAndroid && !Platform.isIOS) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
@@ -49,6 +52,10 @@ class MyApp extends StatelessWidget {
 
 // debug print all assistants
     // AssistantRepository().printAllAssistants();
+
+    var isDarkMode = GetStorage().read('darkMode') ?? false;
+    var themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    print('load themeMode: $themeMode');
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -99,7 +106,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'lxgw',
       ),
 
-      themeMode: ThemeMode.light,
+      themeMode: themeMode,
       // themeMode: ThemeMode.system,
     );
   }

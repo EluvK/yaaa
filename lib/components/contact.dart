@@ -42,8 +42,8 @@ class _ContactCardState extends State<ContactCard> {
           ? Theme.of(context).colorScheme.onSurface.withOpacity(0.2)
           : null,
       child: ListTile(
-        title: Text(conversation.name),
-        subtitle: Text(conversation.assistantName),
+        title: Text(conversation.assistantName),
+        subtitle: Text(conversation.name),
         onTap: () {
           _funcTabConversation(index);
         },

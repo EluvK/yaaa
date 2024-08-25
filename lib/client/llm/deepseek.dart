@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:get_storage/get_storage.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -14,10 +15,11 @@ class Deepseek {
   ) async {
     print('Deepseek chat');
 
-    // todo fetch api key from settings
-    final client =
-        OpenAIClient(apiKey: "SK_TEST", baseUrl: "http://localhost:2335");
-    // OpenAIClient(apiKey: "SK_TEST", baseUrl: "https://api.openai.com");
+    var apiKey = GetStorage().read('apiKey') ?? 'sk-your-api-key';
+    var baseUrl = GetStorage().read('baseUrl') ?? 'https://api.openai.com';
+    var client = OpenAIClient(apiKey: apiKey, baseUrl: baseUrl);
+    // final client =
+    //     OpenAIClient(apiKey: "SK_TEST", baseUrl: "http://localhost:2335");
 
     // map message to OpenAIChatCompletionChoiceMessageModel
     List<ChatCompletionMessage> sendMessages = messages.map((e) {
