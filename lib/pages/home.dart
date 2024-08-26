@@ -5,7 +5,6 @@ import 'package:yaaa/pages/conversation.dart';
 
 class HomePage extends GetResponsiveView {
   HomePage({super.key});
-  final colorScheme = Theme.of(Get.context!).colorScheme;
 
   @override
   Widget? phone() {
@@ -21,6 +20,16 @@ class HomePage extends GetResponsiveView {
 
   @override
   Widget? desktop() {
+    return const HomePageDesktop();
+  }
+}
+
+class HomePageDesktop extends StatelessWidget {
+  const HomePageDesktop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       color: colorScheme.surface,
       child: const Row(
@@ -30,18 +39,6 @@ class HomePage extends GetResponsiveView {
           Flexible(child: ConversationPage()),
         ],
       ),
-    );
-  }
-
-  Widget title() {
-    return const Text('Yaaa');
-  }
-
-  TextStyle titleStyle() {
-    return TextStyle(
-      color: colorScheme.inverseSurface,
-      fontSize: 24,
-      fontFamily: 'lxgw',
     );
   }
 }

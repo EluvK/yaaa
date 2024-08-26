@@ -10,6 +10,7 @@ class ConversationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: isMobile(context)
@@ -20,7 +21,7 @@ class ConversationPage extends StatelessWidget {
             ),
       body: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: colorScheme.surfaceContainerHighest,
         ),
         child: const Padding(
           padding: EdgeInsets.all(2.0),
@@ -42,11 +43,11 @@ class ConversationAppBar extends StatefulWidget {
 }
 
 class _ConversationAppBarState extends State<ConversationAppBar> {
-  final colorScheme = Get.theme.colorScheme;
   final conversationController = Get.find<ConversationController>();
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Obx(() {
       var currentAssistantName =
           conversationController.currentConversationAssistantName.value;

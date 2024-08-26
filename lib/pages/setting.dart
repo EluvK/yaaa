@@ -49,41 +49,67 @@ class _SettingPageState extends State<SettingPage> {
             child: Text('App Settings'),
           ),
         ),
-        // add column if more settings
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            verticalDirection: VerticalDirection.up,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('ThemeMode'),
-              SegmentedButton(
-                segments: const [
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.light,
-                    label: Text('Light'),
-                    icon: Icon(Icons.light_mode_sharp),
-                  ),
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.system,
-                    label: Text('System'),
-                    icon: Icon(Icons.settings_system_daydream_sharp),
-                  ),
-                  ButtonSegment<ThemeMode>(
-                    value: ThemeMode.dark,
-                    label: Text('Dark'),
-                    icon: Icon(Icons.dark_mode_sharp),
+        Column(
+          children: [
+            // ThemeMode
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('ThemeMode'),
+                  SegmentedButton(
+                    segments: const [
+                      ButtonSegment<ThemeMode>(
+                        value: ThemeMode.light,
+                        label: Text('Light'),
+                        icon: Icon(Icons.light_mode_sharp),
+                      ),
+                      ButtonSegment<ThemeMode>(
+                        value: ThemeMode.system,
+                        label: Text('System'),
+                        icon: Icon(Icons.settings_system_daydream_sharp),
+                      ),
+                      ButtonSegment<ThemeMode>(
+                        value: ThemeMode.dark,
+                        label: Text('Dark'),
+                        icon: Icon(Icons.dark_mode_sharp),
+                      ),
+                    ],
+                    selected: {settingController.themeMode.value},
+                    onSelectionChanged: (Set<ThemeMode> newSelection) {
+                      settingController.setThemeMode(newSelection.first);
+                      setState(() {});
+                    },
                   ),
                 ],
-                selected: {settingController.themeMode.value},
-                onSelectionChanged: (Set<ThemeMode> newSelection) {
-                  settingController.setThemeMode(newSelection.first);
-                  setState(() {});
-                },
               ),
-            ],
-          ),
+            ),
+            // FontSize
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('FontScale'),
+                  SizedBox(
+                    width: 320,
+                    child: Slider(
+                      label: settingController.fontSize.value.toString(),
+                      value: settingController.fontSize.value,
+                      onChanged: (double newValue) {
+                        settingController.setFontSize(newValue);
+                        setState(() {});
+                      },
+                      min: 0.75,
+                      max: 1.25,
+                      divisions: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );

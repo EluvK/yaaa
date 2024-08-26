@@ -5,14 +5,15 @@ import 'package:get_storage/get_storage.dart';
 class SettingController extends GetxController {
   final box = GetStorage();
 
+  // app settings
+  final themeMode = ThemeMode.system.obs;
+  final fontSize = 1.0.obs;
+
   // model settings
   // final model = ''.obs;
   final model = Model.openAI_GPT4.obs;
   final baseUrl = ''.obs;
   final apiKey = ''.obs;
-
-  // app settings
-  final themeMode = ThemeMode.system.obs;
 
   static SettingController get to => Get.find<SettingController>();
 
@@ -33,6 +34,9 @@ class SettingController extends GetxController {
       print('theme not found, setting to system');
       themeMode.value = ThemeMode.system;
     }
+
+    fontSize.value = box.read('fontSize') ?? 1.0;
+    print('read fontSized from box $fontSize');
   }
 
   setThemeMode(ThemeMode theme) {
@@ -40,6 +44,13 @@ class SettingController extends GetxController {
     themeMode.value = theme;
     Get.changeThemeMode(themeMode.value);
     box.write('theme', themeMode.value.toString());
+  }
+
+  setFontSize(double font) {
+    print('setting font: $font');
+    fontSize.value = font;
+    Get.forceAppUpdate();
+    box.write('fontSize', fontSize.value);
   }
 
   getModelSetting() async {

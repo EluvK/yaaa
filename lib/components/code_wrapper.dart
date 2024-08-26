@@ -24,7 +24,6 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       children: [
         widget.child,
@@ -42,9 +41,7 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                            width: 0.5,
-                            color: isDark ? Colors.white : Colors.black)),
+                        border: Border.all(width: 0.5)),
                     child: Text(widget.language,
                         style: const TextStyle(fontWeight: FontWeight.normal)),
                   )),

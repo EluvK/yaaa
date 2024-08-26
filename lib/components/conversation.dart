@@ -19,8 +19,6 @@ class _ConversationCardState extends State<ConversationCard> {
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
 
-  final colorScheme = Get.theme.colorScheme;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -59,6 +57,7 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   Widget _compMessage(Message message) {
+    final colorScheme = Theme.of(context).colorScheme;
     bool isUser = message.role == MessageRole.user;
     bool isAssistant = message.role == MessageRole.assistant;
     return ListTile(

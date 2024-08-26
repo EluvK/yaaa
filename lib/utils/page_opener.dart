@@ -6,7 +6,6 @@ class PageOpener {
   static void openPage(BuildContext context, Widget page, {double? sizeRate}) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     // 如果是移动端，或者屏幕宽度较小，则全屏打开
     if (isMobile(context)) {
       Navigator.push(
@@ -23,7 +22,6 @@ class PageOpener {
               borderRadius: BorderRadius.circular(20.0),
             ),
             elevation: 16,
-            backgroundColor: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(

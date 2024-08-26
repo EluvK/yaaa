@@ -51,10 +51,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeMode themeMode = Get.find<SettingController>().themeMode.value;
+    final settingController = Get.find<SettingController>();
+    ThemeMode themeMode = settingController.themeMode.value;
     print('load themeMode: $themeMode');
 
-    return GetMaterialApp(
+    double fontSize = settingController.fontSize.value;
+    print('load fontSize: $fontSize');
+    final mediaQueryData = MediaQuery.of(context);
+    final scale = mediaQueryData.textScaler
+        .clamp(minScaleFactor: fontSize, maxScaleFactor: fontSize + 0.1);
+
+    var app = GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       getPages: [
@@ -63,7 +70,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/assistants', page: () => const AssistantsPage()),
       ],
       theme: FlexThemeData.light(
-        scheme: FlexScheme.blueM3,
+        scheme: FlexScheme.blumineBlue,
+        // scheme: FlexScheme.blueM3,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
         blendLevel: 7,
         subThemesData: const FlexSubThemesData(
@@ -83,7 +91,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'lxgw',
       ),
       darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.blueM3,
+        scheme: FlexScheme.blumineBlue,
+        // scheme: FlexScheme.aquaBlue,
+        // scheme: FlexScheme.deepBlue,
+        // scheme: FlexScheme.bahamaBlue,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
         blendLevel: 7,
         subThemesData: const FlexSubThemesData(
@@ -102,9 +113,12 @@ class MyApp extends StatelessWidget {
         swapLegacyOnMaterial3: true,
         fontFamily: 'lxgw',
       ),
-
       themeMode: themeMode,
-      // themeMode: ThemeMode.system,
+    );
+
+    return MediaQuery(
+      data: mediaQueryData.copyWith(textScaler: scale),
+      child: app,
     );
   }
 }
