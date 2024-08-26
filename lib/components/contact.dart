@@ -104,10 +104,10 @@ class _ContactCardState extends State<ContactCard> {
     String uuid = conversation.uuid;
     conversationController.setCurrentConversation(conversation);
 
-    await messageController.loadMessages(uuid);
     if (isMobile(context)) {
       Get.back();
     }
+    await messageController.loadMessages(uuid);
   }
 }
 

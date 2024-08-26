@@ -81,7 +81,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
               controller: _textController,
               onChanged: (text) {
                 if (!HardwareKeyboard.instance.isControlPressed) {
-                  print("text change, ${text}");
+                  print("text change, $text");
                   setState(() {
                     _canSendMessage = text.trim().isNotEmpty &&
                         !messageController.waitingForResponse &&

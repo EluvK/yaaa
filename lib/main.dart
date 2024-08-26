@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
-// import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/pages/home.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
@@ -21,6 +21,11 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
+  await Get.putAsync(() async {
+    final controller = SettingController();
+    await controller.onInit();
+    return controller;
+  });
   await Get.putAsync(() async {
     final controller = ConversationController();
     await controller.onInit();
@@ -46,15 +51,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-// debug print all messages
-    // ConversationRepository().showAllDatabases();
-    // ConversationRepository().printAllMessages();
-
-// debug print all assistants
-    // AssistantRepository().printAllAssistants();
-
-    var isDarkMode = GetStorage().read('darkMode') ?? false;
-    var themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    ThemeMode themeMode = Get.find<SettingController>().themeMode.value;
     print('load themeMode: $themeMode');
 
     return GetMaterialApp(

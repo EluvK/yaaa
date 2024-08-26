@@ -37,7 +37,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
               context,
               assistantController.assistantList
                   .where((assistant) =>
-                      assistant.type == AssistantType.userdefined)
+                      assistant.type == AssistantType.userDefined)
                   .toList()),
           const Padding(
             padding: EdgeInsets.all(16.0),

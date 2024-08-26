@@ -21,7 +21,7 @@ class Assistant {
 
 enum AssistantType {
   system,
-  userdefined,
+  userDefined,
 }
 
 // impl a to string method for the assistant type and from string method
@@ -31,7 +31,7 @@ extension AssistantTypeExtension on AssistantType {
     switch (this) {
       case AssistantType.system:
         return 'system';
-      case AssistantType.userdefined:
+      case AssistantType.userDefined:
         return 'user';
     }
   }
@@ -41,9 +41,9 @@ extension AssistantTypeExtension on AssistantType {
       case 'system':
         return AssistantType.system;
       case 'user':
-        return AssistantType.userdefined;
+        return AssistantType.userDefined;
       default:
-        return AssistantType.userdefined;
+        return AssistantType.userDefined;
     }
   }
 }

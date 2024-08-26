@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
+import 'package:yaaa/controller/setting.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -9,41 +10,13 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  final box = GetStorage();
+  final settingController = Get.find<SettingController>();
 
-  // model settings
-  String _model = '';
-  String _baseUrl = '';
-  String _apiKey = '';
-
-  // app settings
-  bool _darkMode = false;
+  bool _skVisible = false;
 
   @override
   void initState() {
     super.initState();
-    _loadSettings();
-  }
-
-  void _loadSettings() {
-    _model = box.read('model') ?? 'gpt-4';
-    _baseUrl = box.read('baseUrl') ?? 'https://api.openai.com';
-    _apiKey = box.read('apiKey') ?? 'sk-your-api-key';
-    print('model: $_model, baseUrl: $_baseUrl, apiKey: $_apiKey');
-
-    _darkMode = box.read('darkMode') ?? false;
-
-    setState(() {});
-  }
-
-  void _saveSettings() {
-    box.write('model', _model);
-    box.write('baseUrl', _baseUrl);
-    box.write('apiKey', _apiKey);
-    print('save setting model: $_model, baseUrl: $_baseUrl, apiKey: $_apiKey');
-
-    box.write('darkMode', _darkMode);
-    print('save setting darkMode: $_darkMode');
   }
 
   @override
@@ -67,100 +40,131 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _appSetting(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('App Settings'),
-            ),
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text('App Settings'),
           ),
-          SwitchListTile(
-            title: const Text('Dark Mode'),
-            value: _darkMode,
-            onChanged: (value) {
-              _darkMode = value;
-              _saveSettings();
-              setState(() {});
-            },
+        ),
+        // add column if more settings
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            verticalDirection: VerticalDirection.up,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('ThemeMode'),
+              SegmentedButton(
+                segments: const [
+                  ButtonSegment<ThemeMode>(
+                    value: ThemeMode.light,
+                    label: Text('Light'),
+                    icon: Icon(Icons.light_mode_sharp),
+                  ),
+                  ButtonSegment<ThemeMode>(
+                    value: ThemeMode.system,
+                    label: Text('System'),
+                    icon: Icon(Icons.settings_system_daydream_sharp),
+                  ),
+                  ButtonSegment<ThemeMode>(
+                    value: ThemeMode.dark,
+                    label: Text('Dark'),
+                    icon: Icon(Icons.dark_mode_sharp),
+                  ),
+                ],
+                selected: {settingController.themeMode.value},
+                onSelectionChanged: (Set<ThemeMode> newSelection) {
+                  settingController.setThemeMode(newSelection.first);
+                  setState(() {});
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _modelSetting(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Model Settings'),
-            ),
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Model Settings'),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownButtonFormField(
-              decoration: const InputDecoration(
-                labelText: 'Model',
-              ),
-              items: const [
-                DropdownMenuItem(
-                  value: 'gpt-4',
-                  child: Text('OpenAI GPT-4'),
+        ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                alignment: AlignmentDirectional.bottomEnd,
+                decoration: const InputDecoration(
+                  labelText: 'Model',
                 ),
-                DropdownMenuItem(
-                  value: 'deepseek-chat',
-                  child: Text('DeepSeek Chat'),
-                ),
-                DropdownMenuItem(
-                  value: 'deepseek-code',
-                  child: Text('DeepSeek Code'),
-                ),
-              ],
-              value: _model,
-              onChanged: (value) {
-                _model = value?.toString() ?? '';
-                _saveSettings();
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Base URL',
-                hintText: 'https://api.openai.com',
+                items: Model.values.map(
+                  (e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(e.name),
+                    );
+                  },
+                ).toList(),
+                value: settingController.model.value,
+                onChanged: (value) {
+                  settingController.setModel(value ?? Model.openAI_GPT4);
+                },
               ),
-              controller: TextEditingController(text: _baseUrl),
-              onChanged: (value) {
-                _baseUrl = value;
-                _saveSettings();
-              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'API Key',
-                hintText: 'sk-your-api-key',
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Base URL',
+                  hintText: 'https://api.openai.com',
+                ),
+                controller: TextEditingController(
+                  text: settingController.baseUrl.value,
+                ),
+                onChanged: (value) {
+                  settingController.setBaseUrl(value);
+                },
               ),
-              controller: TextEditingController(text: _apiKey),
-              onChanged: (value) {
-                _apiKey = value;
-                _saveSettings();
-              },
             ),
-          ),
-        ],
-      ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                        _skVisible ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _skVisible = !_skVisible;
+                      });
+                    },
+                  ),
+                  labelText: 'API Key',
+                  hintText: 'sk-your-api-key',
+                ),
+                controller: TextEditingController(
+                  text: settingController.apiKey.value,
+                ),
+                obscureText: !_skVisible,
+                onChanged: (value) {
+                  settingController.setApiKey(value);
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

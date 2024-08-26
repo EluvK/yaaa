@@ -19,7 +19,7 @@ class AssistantController extends GetxController {
     final newAssistant = Assistant(
         name: assistant.name,
         uuid: const Uuid().v4(),
-        type: AssistantType.userdefined,
+        type: AssistantType.userDefined,
         description: assistant.description,
         prompt: assistant.prompt);
     AssistantRepository().insert(newAssistant);
