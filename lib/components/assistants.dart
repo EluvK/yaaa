@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -63,21 +61,92 @@ class _AssistantsCardState extends State<AssistantsCard> {
     }
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: GridView.count(
-        shrinkWrap: true,
-        childAspectRatio: 1.618, // 宽高比
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount:
-            (Platform.isAndroid || Platform.isIOS) ? 2 : 4, // 每行显示卡片数量
-        crossAxisSpacing: 16.0, // 水平间距
-        mainAxisSpacing: 12.0, // 垂直间距
-        children: assistants
-            .map((assistant) => _compAssistantCard(context, assistant))
-            .toList(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          double totalWidth = constraints.maxWidth;
+          double cardWidth = 380.0;
+          int maxCardCountPerRow = (totalWidth / cardWidth).toInt();
+          // print('total $totalWidth, cardCount $maxCardCountPerRow');
+
+          // 计算每个子组件之间的间距
+          double spacing = (totalWidth - (maxCardCountPerRow * cardWidth)) /
+              (maxCardCountPerRow + 1);
+          return Wrap(
+            spacing: spacing,
+            runSpacing: 12.0,
+            alignment: WrapAlignment.start,
+            children: assistants.map((assistant) {
+              return SizedBox(
+                width: cardWidth,
+                height: 124.0,
+                child: _compAssistantCardNew(context, assistant),
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
 
+  Widget _compAssistantCardNew(BuildContext context, Assistant assistant) {
+    return Card(
+      elevation: 4.0,
+      child: InkWell(
+        onTap: () => funcAddConversation(assistant),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Icon(Icons.android),
+                  Text(assistant.name),
+                ],
+              ),
+              Expanded(child: Text(assistant.description)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OverflowBar(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          // todo edit assistant page
+                        },
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Edit'),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          assistantController
+                              .duplicateAssistant(assistant.uuid);
+                        },
+                        icon: const Icon(Icons.copy),
+                        label: const Text('Duplicate'),
+                      ),
+                      TextButton.icon(
+                        onPressed: assistant.type == AssistantType.system
+                            ? null
+                            : () {
+                                assistantController
+                                    .deleteAssistant(assistant.uuid);
+                              },
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Delete'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // --- old
   Widget _compAssistantCard(BuildContext context, Assistant assistant) {
     return Card(
       elevation: 4.0, // 卡片阴影
