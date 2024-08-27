@@ -5,6 +5,8 @@ import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/pages/edit_assistants.dart';
+import 'package:yaaa/utils/page_opener.dart';
 
 class AssistantsCard extends StatefulWidget {
   const AssistantsCard({super.key});
@@ -79,7 +81,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
               return SizedBox(
                 width: cardWidth,
                 height: 124.0,
-                child: _compAssistantCardNew(context, assistant),
+                child: _compAssistantCard(context, assistant),
               );
             }).toList(),
           );
@@ -88,13 +90,13 @@ class _AssistantsCardState extends State<AssistantsCard> {
     );
   }
 
-  Widget _compAssistantCardNew(BuildContext context, Assistant assistant) {
+  Widget _compAssistantCard(BuildContext context, Assistant assistant) {
     return Card(
       elevation: 4.0,
       child: InkWell(
         onTap: () => funcAddConversation(assistant),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(12.0, 16.0, 12.0, 4.0),
           child: Column(
             children: [
               Row(
@@ -105,6 +107,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
                 ],
               ),
               Expanded(child: Text(assistant.description)),
+              const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -112,7 +115,8 @@ class _AssistantsCardState extends State<AssistantsCard> {
                     children: [
                       TextButton.icon(
                         onPressed: () {
-                          // todo edit assistant page
+                          PageOpener.openPage(
+                              context, EditAssistantPage(assistant: assistant));
                         },
                         icon: const Icon(Icons.edit),
                         label: const Text('Edit'),
@@ -147,7 +151,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
   }
 
   // --- old
-  Widget _compAssistantCard(BuildContext context, Assistant assistant) {
+  Widget _compAssistantCardOld(BuildContext context, Assistant assistant) {
     return Card(
       elevation: 4.0, // 卡片阴影
       child: InkWell(

@@ -41,4 +41,13 @@ class AssistantController extends GetxController {
       (element) => element.uuid == uuid,
     );
   }
+
+  void updateAssistant(Assistant assistant) {
+    final index =
+        assistantList.indexWhere((element) => element.uuid == assistant.uuid);
+    if (index != -1) {
+      assistantList[index] = assistant;
+      AssistantRepository().update(assistant);
+    }
+  }
 }
