@@ -68,24 +68,26 @@ class _AssistantsCardState extends State<AssistantsCard> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           double totalWidth = constraints.maxWidth;
-          double cardWidth = 380.0;
+          double cardWidth = 300.0;
           int maxCardCountPerRow = (totalWidth / cardWidth).toInt();
           // print('total $totalWidth, cardCount $maxCardCountPerRow');
 
           // 计算每个子组件之间的间距
           double spacing = (totalWidth - (maxCardCountPerRow * cardWidth)) /
               (maxCardCountPerRow + 1);
-          return Wrap(
-            spacing: spacing,
-            runSpacing: 12.0,
-            alignment: WrapAlignment.start,
-            children: assistants.map((assistant) {
-              return SizedBox(
-                width: cardWidth,
-                height: 124.0,
-                child: _compAssistantCard(context, assistant),
-              );
-            }).toList(),
+          return Center(
+            child: Wrap(
+              spacing: spacing,
+              runSpacing: 12.0,
+              alignment: WrapAlignment.start,
+              children: assistants.map((assistant) {
+                return SizedBox(
+                  width: cardWidth,
+                  height: 148.0,
+                  child: _compAssistantCard(context, assistant),
+                );
+              }).toList(),
+            ),
           );
         },
       ),
@@ -101,50 +103,48 @@ class _AssistantsCardState extends State<AssistantsCard> {
           padding: const EdgeInsets.fromLTRB(12.0, 16.0, 12.0, 4.0),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  avatarContainer(context, assistant.avatarUrl, size: 40),
-                  Text(assistant.name),
-                ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    avatarContainer(context, assistant.avatarUrl, size: 40),
+                    Text(assistant.name),
+                  ],
+                ),
               ),
-              Expanded(child: Text(assistant.description)),
+              // Expanded(child: Text(assistant.description)),
               const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisSize: MainAxisSize.min,
                 children: [
-                  OverflowBar(
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          PageOpener.openPage(
-                              context, EditAssistantPage(assistant: assistant));
-                        },
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Edit'),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          assistantController
-                              .duplicateAssistant(assistant.uuid);
-                        },
-                        icon: const Icon(Icons.copy),
-                        label: const Text('Duplicate'),
-                      ),
-                      DoubleClickButton(
-                        buttonBuilder: (onPressed) => TextButton.icon(
-                          onPressed: assistant.type == AssistantType.system
-                              ? null
-                              : onPressed,
-                          icon: const Icon(Icons.delete),
-                          label: const Text('Delete'),
-                        ),
-                        onDoubleClick: () {
-                          assistantController.deleteAssistant(assistant.uuid);
-                        },
-                        firstClickHint: 'Click twice to delete assistant',
-                      ),
-                    ],
+                  IconButton(
+                    onPressed: () {
+                      PageOpener.openPage(
+                          context, EditAssistantPage(assistant: assistant));
+                    },
+                    icon: const Icon(Icons.edit),
+                    // label: const Text('Edit'),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      assistantController.duplicateAssistant(assistant.uuid);
+                    },
+                    icon: const Icon(Icons.copy),
+                    // label: const Text('Duplicate'),
+                  ),
+                  DoubleClickButton(
+                    buttonBuilder: (onPressed) => IconButton(
+                      onPressed: assistant.type == AssistantType.system
+                          ? null
+                          : onPressed,
+                      icon: const Icon(Icons.delete),
+                      // label: const Text('Delete'),
+                    ),
+                    onDoubleClick: () {
+                      assistantController.deleteAssistant(assistant.uuid);
+                    },
+                    firstClickHint: 'Click twice to delete assistant',
                   )
                 ],
               ),

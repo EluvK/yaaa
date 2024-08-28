@@ -62,17 +62,29 @@ class _SettingPageState extends State<SettingPage> {
                     segments: const [
                       ButtonSegment<ThemeMode>(
                         value: ThemeMode.light,
-                        label: Text('Light'),
+                        label: Text(
+                          'Light',
+                          style: TextStyle(fontSize: 12),
+                          overflow: TextOverflow.clip,
+                        ),
                         icon: Icon(Icons.light_mode_sharp),
                       ),
                       ButtonSegment<ThemeMode>(
                         value: ThemeMode.system,
-                        label: Text('System'),
+                        label: Text(
+                          'System',
+                          style: TextStyle(fontSize: 12),
+                          overflow: TextOverflow.clip,
+                        ),
                         icon: Icon(Icons.settings_system_daydream_sharp),
                       ),
                       ButtonSegment<ThemeMode>(
                         value: ThemeMode.dark,
-                        label: Text('Dark'),
+                        label: Text(
+                          'Dark',
+                          style: TextStyle(fontSize: 12),
+                          overflow: TextOverflow.clip,
+                        ),
                         icon: Icon(Icons.dark_mode_sharp),
                       ),
                     ],
@@ -93,7 +105,7 @@ class _SettingPageState extends State<SettingPage> {
                 children: [
                   const Text('FontScale'),
                   SizedBox(
-                    width: 320,
+                    width: 280,
                     child: Slider(
                       label: settingController.fontSize.value.toString(),
                       value: settingController.fontSize.value,
