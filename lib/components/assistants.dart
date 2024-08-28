@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
@@ -103,7 +104,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Icon(Icons.android),
+                  avatarContainer(context, assistant.avatarUrl, size: 40),
                   Text(assistant.name),
                 ],
               ),
@@ -151,69 +152,6 @@ class _AssistantsCardState extends State<AssistantsCard> {
           ),
         ),
       ),
-    );
-  }
-
-  // --- old
-  Widget _compAssistantCardOld(BuildContext context, Assistant assistant) {
-    return Card(
-      elevation: 4.0, // 卡片阴影
-      child: InkWell(
-        onTap: () => funcAddConversation(assistant),
-        onLongPress: () => _showDetailsDialog(context, assistant),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.android, size: 20.0),
-            const SizedBox(height: 3.0),
-            Text(assistant.name),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showDetailsDialog(BuildContext context, Assistant assistant) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(assistant.name),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Description: ${assistant.description}'),
-              Text('Prompt: ${assistant.prompt}'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Close'),
-            ),
-            // todo Edit name, description, prompt
-            TextButton(
-              onPressed: () {
-                assistantController.duplicateAssistant(assistant.uuid);
-                Navigator.pop(context);
-              },
-              child: const Text('Duplicate'),
-            ),
-            assistant.type == AssistantType.system
-                ? const SizedBox.shrink()
-                : TextButton(
-                    onPressed: () {
-                      assistantController.deleteAssistant(assistant.uuid);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Delete'),
-                  ),
-          ],
-        );
-      },
     );
   }
 

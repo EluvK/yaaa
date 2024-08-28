@@ -23,7 +23,7 @@ class ContactPage extends StatelessWidget {
           ),
         ],
       ),
-      constraints: const BoxConstraints(maxWidth: 300),
+      constraints: const BoxConstraints(maxWidth: 350),
       child: Column(
         children: [
           const ContactBar(),

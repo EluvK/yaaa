@@ -7,7 +7,7 @@ class Assistant {
   String description;
   String prompt;
 
-  // String? iconUrl;
+  String? avatarUrl;
 
   Assistant({
     required this.name,
@@ -15,7 +15,7 @@ class Assistant {
     required this.type,
     required this.description,
     required this.prompt,
-    // this.iconUrl,
+    this.avatarUrl,
   });
 }
 
@@ -66,6 +66,7 @@ class AssistantRepository {
   static const String _columnName = 'name';
   static const String _columnDescription = 'description';
   static const String _columnPrompt = 'prompt';
+  static const String _columnAvatarUrl = 'avatarUrl';
 
   static Database? _database;
 
@@ -82,7 +83,8 @@ class AssistantRepository {
               $_columnType TEXT NOT NULL,
               $_columnName TEXT NOT NULL,
               $_columnDescription TEXT NOT NULL,
-              $_columnPrompt TEXT NOT NULL
+              $_columnPrompt TEXT NOT NULL,
+              $_columnAvatarUrl TEXT
             )
           ''');
       },
@@ -101,6 +103,7 @@ class AssistantRepository {
                 _columnName: systemAssistants[i].name,
                 _columnDescription: systemAssistants[i].description,
                 _columnPrompt: systemAssistants[i].prompt,
+                _columnAvatarUrl: systemAssistants[i].avatarUrl,
               },
             );
           }
@@ -122,6 +125,7 @@ class AssistantRepository {
         type: AssistantTypeExtension.fromStr(maps[i][_columnType]),
         description: maps[i][_columnDescription],
         prompt: maps[i][_columnPrompt],
+        avatarUrl: maps[i][_columnAvatarUrl],
       );
     });
   }
@@ -136,6 +140,7 @@ class AssistantRepository {
         _columnType: assistant.type.toStr,
         _columnDescription: assistant.description,
         _columnPrompt: assistant.prompt,
+        _columnAvatarUrl: assistant.avatarUrl,
       },
     );
   }
@@ -150,6 +155,7 @@ class AssistantRepository {
         _columnType: assistant.type.toStr,
         _columnDescription: assistant.description,
         _columnPrompt: assistant.prompt,
+        _columnAvatarUrl: assistant.avatarUrl,
       },
       where: '$_columnUuid = ?',
       whereArgs: [assistant.uuid],
@@ -178,6 +184,7 @@ class AssistantRepository {
       print('  type: ${maps[i][_columnType]}');
       print('  description: ${maps[i][_columnDescription]}');
       print('  prompt: ${maps[i][_columnPrompt]}');
+      print('  avatarUrl: ${maps[i][_columnAvatarUrl]}');
     }
   }
 }

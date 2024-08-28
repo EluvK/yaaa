@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 
 class AssistantController extends GetxController {
   final assistantList = <Assistant>[].obs;
-
+  final conversationController = Get.find<ConversationController>();
   static AssistantController get to => Get.find<AssistantController>();
 
   @override
@@ -17,11 +18,13 @@ class AssistantController extends GetxController {
     final assistant =
         assistantList.firstWhere((element) => element.uuid == uuid);
     final newAssistant = Assistant(
-        name: "${assistant.name} copy",
-        uuid: const Uuid().v4(),
-        type: AssistantType.userDefined,
-        description: assistant.description,
-        prompt: assistant.prompt);
+      name: "${assistant.name} copy",
+      uuid: const Uuid().v4(),
+      type: AssistantType.userDefined,
+      description: assistant.description,
+      prompt: assistant.prompt,
+      avatarUrl: assistant.avatarUrl,
+    );
     AssistantRepository().insert(newAssistant);
     assistantList.add(newAssistant);
   }
@@ -32,11 +35,6 @@ class AssistantController extends GetxController {
   }
 
   Assistant? getAssistant(String uuid) {
-    // for (var ass in assistantList) {
-    //   print(("  = ", ass.name));
-    //   print(("  = ", ass.description));
-    //   print(("  = ", ass.uuid));
-    // }
     return assistantList.firstWhereOrNull(
       (element) => element.uuid == uuid,
     );
@@ -48,6 +46,14 @@ class AssistantController extends GetxController {
     if (index != -1) {
       assistantList[index] = assistant;
       AssistantRepository().update(assistant);
+    }
+
+    // update Assistant will update corresponding conversations
+    for (var conversation in conversationController.conversationList) {
+      if (conversation.assistantUuid == assistant.uuid) {
+        conversation.assistantName = assistant.name;
+        conversationController.updateConversation(conversation);
+      }
     }
   }
 }

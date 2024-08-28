@@ -65,7 +65,7 @@ class _ConversationCardState extends State<ConversationCard> {
       leading: isUser
           ? const SizedBox(width: 25)
           : isAssistant
-              ? const Icon(Icons.computer, size: 25)
+              ? const Icon(Icons.smart_toy, size: 25)
               : const Icon(Icons.settings, size: 25),
       trailing: isUser
           ? const Icon(Icons.person, size: 25)
@@ -111,7 +111,8 @@ class _ConversationCardState extends State<ConversationCard> {
                       messageController
                           .deleteUserMessageAndResponse(message.uuid);
                     },
-                    firstClickHint: 'Click twice to delete message and response',
+                    firstClickHint:
+                        'Click twice to delete message and response',
                   ),
                 ),
                 IconButton(

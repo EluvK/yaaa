@@ -38,6 +38,15 @@ class ConversationController extends GetxController {
     ConversationRepository().deleteConversation(uuid);
     conversationList.removeWhere((element) => element.uuid == uuid);
   }
+
+  void updateConversation(Conversation conversation) {
+    final index = conversationList
+        .indexWhere((element) => element.uuid == conversation.uuid);
+    if (index != -1) {
+      conversationList[index] = conversation;
+      ConversationRepository().updateConversation(conversation);
+    }
+  }
 }
 
 class MessageController extends GetxController {

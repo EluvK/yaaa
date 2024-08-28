@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yaaa/components/avatar.dart';
+import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/utils/utils.dart';
@@ -14,6 +16,7 @@ class ContactCard extends StatefulWidget {
 class _ContactCardState extends State<ContactCard> {
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
+  final assistantController = Get.find<AssistantController>();
   int _selectedIndex = -1;
 
   @override
@@ -47,6 +50,14 @@ class _ContactCardState extends State<ContactCard> {
         onTap: () {
           _funcTabConversation(index);
         },
+        leading: avatarContainer(
+          context,
+          assistantController.assistantList
+              .firstWhere(
+                  (element) => element.uuid == conversation.assistantUuid)
+              .avatarUrl,
+          size: 36,
+        ),
         trailing: Builder(builder: (context) {
           return IconButton(
               onPressed: () {
