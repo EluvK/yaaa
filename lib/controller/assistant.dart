@@ -17,7 +17,7 @@ class AssistantController extends GetxController {
     final assistant =
         assistantList.firstWhere((element) => element.uuid == uuid);
     final newAssistant = Assistant(
-        name: assistant.name,
+        name: "${assistant.name} copy",
         uuid: const Uuid().v4(),
         type: AssistantType.userDefined,
         description: assistant.description,

@@ -118,4 +118,18 @@ class MessageController extends GetxController {
     ConversationRepository().deleteConversationMessages(conversationUuid);
     messageList.clear();
   }
+
+  void deleteUserMessageAndResponse(String messageUuid) {
+    // delete message of user and the response after it.
+    messageList.removeWhere((message) {
+      if (message.uuid == messageUuid ||
+          (messageList.indexOf(message) ==
+                  messageList.indexWhere((m) => m.uuid == messageUuid) + 1 &&
+              message.role == MessageRole.assistant)) {
+        ConversationRepository().deleteMessage(message.uuid);
+        return true;
+      }
+      return false;
+    });
+  }
 }

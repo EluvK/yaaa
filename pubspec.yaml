@@ -44,6 +44,7 @@ dependencies:
   flex_color_scheme: ^7.3.1
   openai_dart: ^0.4.0
   flutter_math_fork: ^0.7.2
+  another_flushbar: ^1.12.30
   # dart_openai: ^5.1.0
   # window_size:
   #   git:

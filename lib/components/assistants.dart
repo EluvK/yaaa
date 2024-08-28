@@ -6,6 +6,7 @@ import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/edit_assistants.dart';
+import 'package:yaaa/utils/double_click.dart';
 import 'package:yaaa/utils/page_opener.dart';
 
 class AssistantsCard extends StatefulWidget {
@@ -129,15 +130,18 @@ class _AssistantsCardState extends State<AssistantsCard> {
                         icon: const Icon(Icons.copy),
                         label: const Text('Duplicate'),
                       ),
-                      TextButton.icon(
-                        onPressed: assistant.type == AssistantType.system
-                            ? null
-                            : () {
-                                assistantController
-                                    .deleteAssistant(assistant.uuid);
-                              },
-                        icon: const Icon(Icons.delete),
-                        label: const Text('Delete'),
+                      DoubleClickButton(
+                        buttonBuilder: (onPressed) => TextButton.icon(
+                          onPressed: assistant.type == AssistantType.system
+                              ? null
+                              : onPressed,
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Delete'),
+                        ),
+                        onDoubleClick: () {
+                          assistantController.deleteAssistant(assistant.uuid);
+                        },
+                        firstClickHint: 'Click twice to delete assistant',
                       ),
                     ],
                   )

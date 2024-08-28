@@ -5,6 +5,7 @@ import 'package:yaaa/components/markdown_message.dart';
 
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/double_click.dart';
 
 class ConversationCard extends StatefulWidget {
   const ConversationCard({super.key});
@@ -96,13 +97,31 @@ class _ConversationCardState extends State<ConversationCard> {
                               : ""),
                       style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                 ),
-                IconButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: message.text));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Copied to clipboard')));
+                Visibility(
+                  visible: message.role == MessageRole.user,
+                  child: DoubleClickButton(
+                    buttonBuilder: (onPressed) => IconButton(
+                      // if is wait for response, delete should be banned for a moment.
+                      onPressed: messageController.waitingForResponse
+                          ? null
+                          : onPressed,
+                      icon: const Icon(Icons.delete, size: 16),
+                    ),
+                    onDoubleClick: () {
+                      messageController
+                          .deleteUserMessageAndResponse(message.uuid);
                     },
-                    icon: const Icon(Icons.copy, size: 16))
+                    firstClickHint: 'Click twice to delete message and response',
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: message.text));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Copied to clipboard')));
+                  },
+                  icon: const Icon(Icons.copy, size: 16),
+                )
               ],
             ),
           ],

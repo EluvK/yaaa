@@ -48,7 +48,7 @@ class Deepseek {
     );
     chatStream.listen(
       (streamEvent) async {
-        print("Received stream event: $streamEvent");
+        // print("Received stream event: $streamEvent");
         if (streamEvent.choices.first.delta.content != null) {
           // todo check here. !
           print(returnMessage.text);
