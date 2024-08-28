@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/model/assistant.dart';
-import 'package:yaaa/utils/predefined_avatar.dart';
+import 'package:yaaa/utils/predefined.dart';
 
 class EditAssistantPage extends StatelessWidget {
   final Assistant assistant;

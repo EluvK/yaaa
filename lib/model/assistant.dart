@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:yaaa/utils/predefined.dart';
 
 class Assistant {
   String name;
@@ -48,17 +49,6 @@ extension AssistantTypeExtension on AssistantType {
   }
 }
 
-// system assistant lists
-final List<Assistant> systemAssistants = [
-  Assistant(
-    name: 'Bot 1',
-    uuid: '0170fd5d-2b08-4837-a88a-775df27d86b3',
-    type: AssistantType.system,
-    description: 'first system assistant',
-    prompt: 'hello, i am bot 1',
-  ),
-];
-
 class AssistantRepository {
   static const String _tableName = 'assistants';
   static const String _columnUuid = 'uuid';
@@ -93,17 +83,17 @@ class AssistantRepository {
         final List<Map<String, dynamic>> maps = await db.query(_tableName);
         final List uuids = maps.map((e) => e[_columnUuid]).toList();
 
-        for (var i = 0; i < systemAssistants.length; i++) {
-          if (!uuids.contains(systemAssistants[i].uuid)) {
+        for (var i = 0; i < predefinedAssistant.length; i++) {
+          if (!uuids.contains(predefinedAssistant[i].uuid)) {
             await db.insert(
               _tableName,
               {
-                _columnUuid: systemAssistants[i].uuid,
-                _columnType: systemAssistants[i].type.toStr,
-                _columnName: systemAssistants[i].name,
-                _columnDescription: systemAssistants[i].description,
-                _columnPrompt: systemAssistants[i].prompt,
-                _columnAvatarUrl: systemAssistants[i].avatarUrl,
+                _columnUuid: predefinedAssistant[i].uuid,
+                _columnType: predefinedAssistant[i].type.toStr,
+                _columnName: predefinedAssistant[i].name,
+                _columnDescription: predefinedAssistant[i].description,
+                _columnPrompt: predefinedAssistant[i].prompt,
+                _columnAvatarUrl: predefinedAssistant[i].avatarUrl,
               },
             );
           }

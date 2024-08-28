@@ -9,7 +9,7 @@ Container avatarContainer(BuildContext context, String? avatarUrl,
     decoration: BoxDecoration(
       border: Border.all(color: colorScheme.onSurface, width: 1.5),
       borderRadius: BorderRadius.circular(10),
-      color: colorScheme.surface,
+      color: Colors.white,
     ),
     child: InkWell(
       onTap: onTap,
