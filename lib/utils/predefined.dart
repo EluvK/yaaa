@@ -54,6 +54,7 @@ final List<Assistant> predefinedAssistant = [
         '我希望你充当 Rust 语言专家。我会告诉你我的需求，你会告诉我如何实现它们。我希望你用更好的方法、更好的代码、更好的库和框架来实现我的需求。我希望你只回复代码，别无其他，不要写解释除非我特别询问你解释代码。',
     avatarUrl:
         predefinedAvatar.firstWhere((element) => element.name == 'rust').url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
   Assistant(
     name: '文本生成',
@@ -64,6 +65,7 @@ final List<Assistant> predefinedAssistant = [
         '我希望你充当文本生成器。我会告诉你一些模板，它们可能是代码可能是配置项，然后会告诉你一些需要生成的变量内容，你会根据模板和变量生成文本。我希望你只回复生成的文本，别无其他，不要写解释。我可能会分多次告诉你，比如第一次告诉你模板，第二次告诉你需要需要生成替换的内容，此时你可以简单回复我请告知我需要替换的文本即可。',
     avatarUrl:
         predefinedAvatar.firstWhere((element) => element.name == 'android').url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
   Assistant(
     name: 'Shell 命令行专家',
@@ -74,6 +76,7 @@ final List<Assistant> predefinedAssistant = [
         '我希望你充当 Shell 命令行专家。我会告诉你我的需求，你会告诉我如何实现它们。我希望你用更好的方法、更好的更简洁的代码、来实现我的需求。我希望你只回复代码，别无其他，不要写解释除非我特别询问你解释代码。',
     avatarUrl:
         predefinedAvatar.firstWhere((element) => element.name == 'shell').url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
   Assistant(
     name: '高级前端开发',
@@ -85,6 +88,7 @@ final List<Assistant> predefinedAssistant = [
     avatarUrl: predefinedAvatar
         .firstWhere((element) => element.name == 'front_dev')
         .url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
   Assistant(
     name: '英语翻译和改进',
@@ -96,6 +100,7 @@ final List<Assistant> predefinedAssistant = [
     avatarUrl: predefinedAvatar
         .firstWhere((element) => element.name == 'translate')
         .url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
   Assistant(
     name: '旅游向导',
@@ -107,5 +112,6 @@ final List<Assistant> predefinedAssistant = [
     avatarUrl: predefinedAvatar
         .firstWhere((element) => element.name == "location")
         .url,
+    definedModel: DefinedModel.defaultDisable(),
   ),
 ];

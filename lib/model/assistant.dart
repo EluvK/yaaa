@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:yaaa/model/llm.dart';
 import 'package:yaaa/utils/predefined.dart';
 
 class Assistant {
@@ -9,6 +10,7 @@ class Assistant {
   String prompt;
 
   String? avatarUrl;
+  DefinedModel definedModel;
 
   Assistant({
     required this.name,
@@ -17,12 +19,33 @@ class Assistant {
     required this.description,
     required this.prompt,
     this.avatarUrl,
+    required this.definedModel,
   });
 }
 
 enum AssistantType {
   system,
   userDefined,
+}
+
+class DefinedModel {
+  bool enable;
+  LLMProviderEnum provider;
+  String modelName;
+
+  DefinedModel({
+    this.enable = true,
+    required this.provider,
+    required this.modelName,
+  });
+
+  static DefinedModel defaultDisable() {
+    return DefinedModel(
+      enable: false,
+      provider: LLMProviderEnum.OpenAI,
+      modelName: 'gpt-4o-mini',
+    );
+  }
 }
 
 // impl a to string method for the assistant type and from string method
@@ -57,6 +80,9 @@ class AssistantRepository {
   static const String _columnDescription = 'description';
   static const String _columnPrompt = 'prompt';
   static const String _columnAvatarUrl = 'avatarUrl';
+  static const String _columnEnableDefinedModel = 'enableDefinedModel';
+  static const String _columnDefinedModelProvider = 'definedModelProvider';
+  static const String _columnDefinedModelName = 'definedModelName';
 
   static Database? _database;
 
@@ -74,7 +100,10 @@ class AssistantRepository {
               $_columnName TEXT NOT NULL,
               $_columnDescription TEXT NOT NULL,
               $_columnPrompt TEXT NOT NULL,
-              $_columnAvatarUrl TEXT
+              $_columnAvatarUrl TEXT,
+              $_columnEnableDefinedModel INTEGER,
+              $_columnDefinedModelProvider TEXT,
+              $_columnDefinedModelName TEXT
             )
           ''');
       },
@@ -94,6 +123,12 @@ class AssistantRepository {
                 _columnDescription: predefinedAssistant[i].description,
                 _columnPrompt: predefinedAssistant[i].prompt,
                 _columnAvatarUrl: predefinedAssistant[i].avatarUrl,
+                _columnEnableDefinedModel:
+                    predefinedAssistant[i].definedModel.enable ? 1 : 0,
+                _columnDefinedModelProvider:
+                    predefinedAssistant[i].definedModel.provider.name,
+                _columnDefinedModelName:
+                    predefinedAssistant[i].definedModel.modelName,
               },
             );
           }
@@ -116,6 +151,12 @@ class AssistantRepository {
         description: maps[i][_columnDescription],
         prompt: maps[i][_columnPrompt],
         avatarUrl: maps[i][_columnAvatarUrl],
+        definedModel: DefinedModel(
+          enable: maps[i][_columnEnableDefinedModel] == 1,
+          provider: LLMProviderEnum.values.firstWhere(
+              (e) => e.name == maps[i][_columnDefinedModelProvider]),
+          modelName: maps[i][_columnDefinedModelName],
+        ),
       );
     });
   }
@@ -131,6 +172,9 @@ class AssistantRepository {
         _columnDescription: assistant.description,
         _columnPrompt: assistant.prompt,
         _columnAvatarUrl: assistant.avatarUrl,
+        _columnEnableDefinedModel: assistant.definedModel.enable ? 1 : 0,
+        _columnDefinedModelProvider: assistant.definedModel.provider.name,
+        _columnDefinedModelName: assistant.definedModel.modelName,
       },
     );
   }
@@ -146,6 +190,9 @@ class AssistantRepository {
         _columnDescription: assistant.description,
         _columnPrompt: assistant.prompt,
         _columnAvatarUrl: assistant.avatarUrl,
+        _columnEnableDefinedModel: assistant.definedModel.enable ? 1 : 0,
+        _columnDefinedModelProvider: assistant.definedModel.provider.name,
+        _columnDefinedModelName: assistant.definedModel.modelName,
       },
       where: '$_columnUuid = ?',
       whereArgs: [assistant.uuid],
@@ -175,6 +222,9 @@ class AssistantRepository {
       print('  description: ${maps[i][_columnDescription]}');
       print('  prompt: ${maps[i][_columnPrompt]}');
       print('  avatarUrl: ${maps[i][_columnAvatarUrl]}');
+      print('  enableDefinedModel: ${maps[i][_columnEnableDefinedModel]}');
+      print('  definedModelProvider: ${maps[i][_columnDefinedModelProvider]}');
+      print('  definedModelName: ${maps[i][_columnDefinedModelName]}');
     }
   }
 }

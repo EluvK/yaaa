@@ -24,6 +24,7 @@ class AssistantController extends GetxController {
       description: assistant.description,
       prompt: assistant.prompt,
       avatarUrl: assistant.avatarUrl,
+      definedModel: assistant.definedModel,
     );
     AssistantRepository().insert(newAssistant);
     assistantList.add(newAssistant);

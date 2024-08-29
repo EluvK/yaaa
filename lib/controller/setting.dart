@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:yaaa/model/llm.dart';
 
 class SettingController extends GetxController {
   final box = GetStorage();
@@ -10,15 +13,17 @@ class SettingController extends GetxController {
   final fontSize = 1.0.obs;
 
   // model settings
-  // final model = ''.obs;
-  final model = Model.openAI_GPT4.obs;
-  final baseUrl = ''.obs;
-  final apiKey = ''.obs;
+  final defaultProvider = LLMProviderEnum.OpenAI.obs;
+  final RxMap<String, LLMProvider> providers = {
+    "openai": LLMProvider.openAI,
+    "deepseek": LLMProvider.deepSeek,
+  }.obs;
 
   static SettingController get to => Get.find<SettingController>();
 
   @override
   Future<void> onInit() async {
+    // print('$providers');
     await getAppSetting();
     await getModelSetting();
     super.onInit();
@@ -54,73 +59,104 @@ class SettingController extends GetxController {
   }
 
   getModelSetting() async {
-    String modelText = box.read('model') ?? 'OpenAI GPT-4';
-    print('read model from box $modelText');
-    try {
-      model.value = Model.values.firstWhere((e) => e.name == modelText);
-    } catch (_) {
-      print('model not found, setting to OpenAI GPT-4');
-      model.value = Model.openAI_GPT4;
-    }
-
-    String baseUrlText = box.read('baseUrl') ?? model.value.url;
-    print('read baseUrl from box $baseUrlText');
-    baseUrl.value = baseUrlText;
-
-    String apiKeyText = box.read('apiKey') ?? '';
-    print('read apiKey from box $apiKeyText');
-    apiKey.value = apiKeyText;
-  }
-
-  setModel(Model model) {
-    print('setting model: $model');
-    this.model.value = model;
-    box.write('model', model.name);
-  }
-
-  setBaseUrl(String url) {
-    print('setting baseUrl: $url');
-    baseUrl.value = url;
-    box.write('baseUrl', url);
-  }
-
-  setApiKey(String key) {
-    print('setting apiKey: $key');
-    apiKey.value = key;
-    box.write('apiKey', key);
-  }
-}
-
-enum Model {
-// ignore: constant_identifier_names
-  openAI_GPT4,
-// ignore: constant_identifier_names
-  DeepSeek_Chat,
-// ignore: constant_identifier_names
-  DeepSeek_Code,
-}
-
-// impl url and name string for model
-extension ModelExt on Model {
-  String get name {
-    switch (this) {
-      case Model.openAI_GPT4:
-        return 'OpenAI GPT-4';
-      case Model.DeepSeek_Chat:
-        return 'DeepSeek Chat';
-      case Model.DeepSeek_Code:
-        return 'DeepSeek Code';
+    var readValue = box.read('providers');
+    print('read providers from box $readValue');
+    if (readValue != null) {
+      var jsonValue = jsonDecode(readValue);
+      print("getModelSetting $jsonValue");
+      // providers.value = jsonDecode(readValue);
+      jsonValue.forEach((key, value) {
+        providers[key] = LLMProvider.fromJson(value);
+      });
     }
   }
 
-  String get url {
-    switch (this) {
-      case Model.openAI_GPT4:
-        return 'https://api.openai.com';
-      case Model.DeepSeek_Chat:
-        return 'https://api.deepseek.com';
-      case Model.DeepSeek_Code:
-        return 'https://api.deepseek.com';
+  saveModelSetting() {
+    print('setModelSettingNew ${jsonEncode(providers.value)}');
+    box.write('providers', jsonEncode(providers));
+  }
+
+  LLMProviderEnum getDefaultProvider() {
+    String defaultProvider = box.read('defaultProvider') ?? 'OpenAI';
+    return LLMProviderEnum.values.firstWhere((e) => e.name == defaultProvider);
+  }
+
+  setDefaultProvider(LLMProviderEnum? provider) {
+    defaultProvider.value = provider ?? LLMProviderEnum.OpenAI;
+    print('set default provider ${defaultProvider.value.name}');
+    box.write('defaultProvider', defaultProvider.value.name);
+  }
+
+  List<String> getCurrentProviderList(LLMProviderEnum provider) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        return (providers['openai'] ?? LLMProvider.openAI).model;
+      case LLMProviderEnum.DeepSeek:
+        return (providers['deepseek'] ?? LLMProvider.deepSeek).model;
     }
+  }
+
+  String getCurrentProviderBaseUrl(LLMProviderEnum provider) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        return (providers['openai'] ?? LLMProvider.openAI).baseUrl;
+      case LLMProviderEnum.DeepSeek:
+        return (providers['deepseek'] ?? LLMProvider.deepSeek).baseUrl;
+    }
+  }
+
+  setCurrentProviderBaseUrl(LLMProviderEnum provider, String url) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        providers['openai']!.baseUrl = url;
+        break;
+      case LLMProviderEnum.DeepSeek:
+        providers['deepseek']!.baseUrl = url;
+        break;
+    }
+    saveModelSetting();
+  }
+
+  String? getCurrentProviderApiKey(LLMProviderEnum provider) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        return (providers['openai'] ?? LLMProvider.openAI).apiKey;
+      case LLMProviderEnum.DeepSeek:
+        return (providers['deepseek'] ?? LLMProvider.deepSeek).apiKey;
+    }
+  }
+
+  setCurrentProviderApiKey(LLMProviderEnum provider, String apiKey) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        providers['openai']!.apiKey = apiKey;
+        break;
+      case LLMProviderEnum.DeepSeek:
+        providers['deepseek']!.apiKey = apiKey;
+        break;
+    }
+    saveModelSetting();
+  }
+
+  String getCurrentProviderDefaultModel(LLMProviderEnum provider) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        return (providers['openai'] ?? LLMProvider.openAI).defaultModel;
+      case LLMProviderEnum.DeepSeek:
+        return (providers['deepseek'] ?? LLMProvider.deepSeek).defaultModel;
+    }
+  }
+
+  setCurrentProviderDefaultModel(
+      LLMProviderEnum provider, String defaultModel) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        providers['openai']!.defaultModel = defaultModel;
+        break;
+      case LLMProviderEnum.DeepSeek:
+        providers['deepseek']!.defaultModel = defaultModel;
+        break;
+    }
+    saveModelSetting();
   }
 }

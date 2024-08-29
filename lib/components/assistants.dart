@@ -83,7 +83,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
               children: assistants.map((assistant) {
                 return SizedBox(
                   width: cardWidth,
-                  height: 148.0,
+                  height: 136.0,
                   child: _compAssistantCard(context, assistant),
                 );
               }).toList(),
@@ -99,57 +99,54 @@ class _AssistantsCardState extends State<AssistantsCard> {
       elevation: 4.0,
       child: InkWell(
         onTap: () => funcAddConversation(assistant),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12.0, 16.0, 12.0, 4.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    avatarContainer(context, assistant.avatarUrl, size: 40),
-                    Text(assistant.name),
-                  ],
-                ),
-              ),
-              // Expanded(child: Text(assistant.description)),
-              const Divider(),
-              Row(
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      PageOpener.openPage(
-                          context, EditAssistantPage(assistant: assistant));
-                    },
-                    icon: const Icon(Icons.edit),
-                    // label: const Text('Edit'),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      assistantController.duplicateAssistant(assistant.uuid);
-                    },
-                    icon: const Icon(Icons.copy),
-                    // label: const Text('Duplicate'),
-                  ),
-                  DoubleClickButton(
-                    buttonBuilder: (onPressed) => IconButton(
-                      onPressed: assistant.type == AssistantType.system
-                          ? null
-                          : onPressed,
-                      icon: const Icon(Icons.delete),
-                      // label: const Text('Delete'),
-                    ),
-                    onDoubleClick: () {
-                      assistantController.deleteAssistant(assistant.uuid);
-                    },
-                    firstClickHint: 'Click twice to delete assistant',
-                  )
+                  avatarContainer(context, assistant.avatarUrl, size: 40),
+                  Text(assistant.name),
                 ],
               ),
-            ],
-          ),
+            ),
+            // Expanded(child: Text(assistant.description)),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    PageOpener.openPage(
+                        context, EditAssistantPage(assistant: assistant));
+                  },
+                  icon: const Icon(Icons.edit),
+                  // label: const Text('Edit'),
+                ),
+                IconButton(
+                  onPressed: () {
+                    assistantController.duplicateAssistant(assistant.uuid);
+                  },
+                  icon: const Icon(Icons.copy),
+                  // label: const Text('Duplicate'),
+                ),
+                DoubleClickButton(
+                  buttonBuilder: (onPressed) => IconButton(
+                    onPressed: assistant.type == AssistantType.system
+                        ? null
+                        : onPressed,
+                    icon: const Icon(Icons.delete),
+                    // label: const Text('Delete'),
+                  ),
+                  onDoubleClick: () {
+                    assistantController.deleteAssistant(assistant.uuid);
+                  },
+                  firstClickHint: 'Click twice to delete assistant',
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
+import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/assistant.dart';
+import 'package:yaaa/model/llm.dart';
 import 'package:yaaa/utils/predefined.dart';
 
 class EditAssistantPage extends StatelessWidget {
@@ -36,12 +38,23 @@ class EditAssistantCard extends StatefulWidget {
 
 class _EditAssistantCardState extends State<EditAssistantCard> {
   final assistantController = Get.find<AssistantController>();
+  final settingController = Get.find<SettingController>();
   final TextEditingController _avatarTextController = TextEditingController();
   bool chooseAvatar = false;
 
   @override
   Widget build(BuildContext context) {
     _avatarTextController.text = widget.assistant.avatarUrl ?? '';
+    return Column(
+      children: [
+        _basicInfo(context),
+        const Divider(),
+        _optionalModelInfo(context),
+      ],
+    );
+  }
+
+  Widget _basicInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -192,6 +205,109 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
       onChanged: (value) {
         widget.assistant.prompt = value;
         assistantController.updateAssistant(widget.assistant);
+      },
+    );
+  }
+
+  Widget _optionalModelInfo(BuildContext context) {
+    var useUniqueModel = widget.assistant.definedModel.enable;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: () {
+              widget.assistant.definedModel.enable = !useUniqueModel;
+              assistantController.updateAssistant(widget.assistant);
+              setState(() {});
+            },
+            label: Text('Set Defined Model ${useUniqueModel ? '✅' : '🔧'}'),
+            icon: useUniqueModel
+                ? const Icon(Icons.keyboard_arrow_down_outlined)
+                : const Icon(Icons.keyboard_arrow_right_outlined),
+          ),
+        ),
+        Visibility(
+          visible: useUniqueModel,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Flexible(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: editAssistantDefinedModelProvider(),
+                )),
+                Flexible(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: editAssistantDefinedModelName(),
+                )),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget editAssistantDefinedModelProvider() {
+    return DropdownButtonFormField(
+      alignment: AlignmentDirectional.bottomEnd,
+      decoration: const InputDecoration(
+        labelText: 'LLM Provider',
+      ),
+      items: LLMProviderEnum.values.map(
+        (e) {
+          return DropdownMenuItem(
+            value: e,
+            child: Text(e.name),
+          );
+        },
+      ).toList(),
+      value: widget.assistant.definedModel.provider,
+      onChanged: (value) {
+        if (value != null) {
+          if (widget.assistant.definedModel.provider != value) {
+            widget.assistant.definedModel.provider = value;
+            widget.assistant.definedModel.modelName =
+                settingController.getCurrentProviderList(value).first;
+          }
+        } else {
+          widget.assistant.definedModel.enable = false;
+        }
+        assistantController.updateAssistant(widget.assistant);
+        setState(() {});
+      },
+    );
+  }
+
+  Widget editAssistantDefinedModelName() {
+    var cProvider = widget.assistant.definedModel.provider;
+    return DropdownButtonFormField(
+      alignment: AlignmentDirectional.bottomEnd,
+      decoration: const InputDecoration(
+        labelText: 'Default Model',
+      ),
+      items: settingController.getCurrentProviderList(cProvider).map(
+        (e) {
+          return DropdownMenuItem(
+            value: e,
+            child: Text(e),
+          );
+        },
+      ).toList(),
+      value: widget.assistant.definedModel.modelName,
+      onChanged: (value) {
+        if (value != null) {
+          widget.assistant.definedModel.modelName = value;
+        } else {
+          widget.assistant.definedModel.enable = false;
+        }
+        assistantController.updateAssistant(widget.assistant);
+        setState(() {});
       },
     );
   }
