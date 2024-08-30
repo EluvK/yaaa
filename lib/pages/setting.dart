@@ -24,7 +24,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setting'),
+        title: Text('setting'.tr),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,50 +43,78 @@ class _SettingPageState extends State<SettingPage> {
   Widget _appSetting(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'App Settings',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'app_settings'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
         ),
+        // Language
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('ThemeMode'),
+              Text('language'.tr),
+              DropdownButton<Locale>(
+                value: settingController.locale ?? Get.deviceLocale,
+                onChanged: (Locale? newValue) {
+                  settingController.setLocale(newValue!);
+                  setState(() {});
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: Locale('en', 'US'),
+                    child: Text('English'),
+                  ),
+                  DropdownMenuItem(
+                    value: Locale('zh', 'CN'),
+                    child: Text('中文'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        // ThemeMode
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('theme_mode'.tr),
               SegmentedButton(
-                segments: const [
+                segments: [
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.light,
                     label: Text(
-                      'Light',
-                      style: TextStyle(fontSize: 12),
+                      'mode_light'.tr,
+                      style: const TextStyle(fontSize: 12),
                       overflow: TextOverflow.clip,
                     ),
-                    icon: Icon(Icons.light_mode_sharp),
+                    icon: const Icon(Icons.light_mode_sharp),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.system,
                     label: Text(
-                      'System',
-                      style: TextStyle(fontSize: 12),
+                      'mode_system'.tr,
+                      style: const TextStyle(fontSize: 12),
                       overflow: TextOverflow.clip,
                     ),
-                    icon: Icon(Icons.settings_system_daydream_sharp),
+                    icon: const Icon(Icons.settings_system_daydream_sharp),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.dark,
                     label: Text(
-                      'Dark',
-                      style: TextStyle(fontSize: 12),
+                      'mode_dark'.tr,
+                      style: const TextStyle(fontSize: 12),
                       overflow: TextOverflow.clip,
                     ),
-                    icon: Icon(Icons.dark_mode_sharp),
+                    icon: const Icon(Icons.dark_mode_sharp),
                   ),
                 ],
                 selected: {settingController.themeMode.value},
@@ -104,7 +132,7 @@ class _SettingPageState extends State<SettingPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('FontScale'),
+              Text('font_scale'.tr),
               SizedBox(
                 width: 280,
                 child: Slider(
@@ -130,13 +158,13 @@ class _SettingPageState extends State<SettingPage> {
     var cProvider = settingController.defaultProvider.value;
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Default Model Settings',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'default_model_settings'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -144,8 +172,8 @@ class _SettingPageState extends State<SettingPage> {
           padding: const EdgeInsets.all(4.0),
           child: DropdownButtonFormField(
             alignment: AlignmentDirectional.bottomEnd,
-            decoration: const InputDecoration(
-              labelText: 'Default LLM Provider',
+            decoration: InputDecoration(
+              labelText: 'default_llm_provider'.tr,
             ),
             items: LLMProviderEnum.values.map(
               (e) {
@@ -178,8 +206,8 @@ class _SettingPageState extends State<SettingPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: DropdownButtonFormField(
                         alignment: AlignmentDirectional.bottomEnd,
-                        decoration: const InputDecoration(
-                          labelText: 'Default Model',
+                        decoration: InputDecoration(
+                          labelText: 'default_model'.tr,
                         ),
                         items: settingController
                             .getCurrentProviderList(cProvider)
@@ -208,8 +236,8 @@ class _SettingPageState extends State<SettingPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Base URL',
+                        decoration: InputDecoration(
+                          labelText: 'base_url'.tr,
                           hintText: 'https://api.openai.com',
                         ),
                         controller: TextEditingController(
@@ -241,7 +269,7 @@ class _SettingPageState extends State<SettingPage> {
                         });
                       },
                     ),
-                    labelText: 'API Key',
+                    labelText: 'api_key'.tr,
                     hintText: 'sk-apiKey-xxxxx',
                     // helperText: 'set your api key',
                   ),
@@ -260,12 +288,11 @@ class _SettingPageState extends State<SettingPage> {
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-                '- The BaseURL and APIKey can still be used in Defined Model Assistant, even if it\'s not the default model here.'),
+            child: Text('model_setting_notes'.tr),
           ),
         ),
         const Divider(),

@@ -18,7 +18,7 @@ class EditAssistantPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit `${assistant.name}`"),
+        title: Text('edit_assistant'.trParams({'name': assistant.name})),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -60,7 +60,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: Text("Assistant UUID: ${widget.assistant.uuid}"),
+          child: Text('${'assistant_uuid'.tr}: ${widget.assistant.uuid}'),
         ),
         const Divider(),
         Padding(
@@ -86,9 +86,9 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
         ),
         Visibility(
           visible: !chooseAvatar,
-          child: const Text(
-            '  👆 Tap to edit avatar',
-            style: TextStyle(fontSize: 12),
+          child: Text(
+            'edit_avatar_hint'.tr,
+            style: const TextStyle(fontSize: 12),
           ),
         ),
         Visibility(
@@ -117,9 +117,9 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
-          "choose one or edit Avatar Url Directly",
-          style: TextStyle(fontSize: 12),
+        Text(
+          'edit_avatar_info'.tr,
+          style: const TextStyle(fontSize: 12),
         ),
         Container(
           padding: const EdgeInsets.all(8.0),
@@ -156,8 +156,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
         ),
         TextFormField(
           controller: _avatarTextController,
-          decoration: const InputDecoration(
-            labelText: 'Assistant Avatar Url',
+          decoration: InputDecoration(
+            labelText: 'assistant_avatar_url'.tr,
           ),
           onChanged: (value) {
             widget.assistant.avatarUrl = value.isEmpty ? null : value;
@@ -172,8 +172,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
   Widget editAssistantName() {
     return TextFormField(
       initialValue: widget.assistant.name,
-      decoration: const InputDecoration(
-        labelText: 'Assistant Name',
+      decoration: InputDecoration(
+        labelText: 'assistant_name'.tr,
       ),
       onChanged: (value) {
         widget.assistant.name = value;
@@ -185,8 +185,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
   Widget editAssistantDescription() {
     return TextFormField(
       initialValue: widget.assistant.description,
-      decoration: const InputDecoration(
-        labelText: 'Description',
+      decoration: InputDecoration(
+        labelText: 'assistant_description'.tr,
       ),
       onChanged: (value) {
         widget.assistant.description = value;
@@ -199,8 +199,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
     return TextFormField(
       maxLines: 13,
       initialValue: widget.assistant.prompt,
-      decoration: const InputDecoration(
-        labelText: 'Prompt',
+      decoration: InputDecoration(
+        labelText: 'assistant_prompt'.tr,
       ),
       onChanged: (value) {
         widget.assistant.prompt = value;
@@ -222,7 +222,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
               assistantController.updateAssistant(widget.assistant);
               setState(() {});
             },
-            label: Text('Set Defined Model ${useUniqueModel ? '✅' : '🔧'}'),
+            label:
+                Text('${'set_as_defined'.tr} ${useUniqueModel ? '✅' : '🔧'}'),
             icon: useUniqueModel
                 ? const Icon(Icons.keyboard_arrow_down_outlined)
                 : const Icon(Icons.keyboard_arrow_right_outlined),
@@ -256,8 +257,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
   Widget editAssistantDefinedModelProvider() {
     return DropdownButtonFormField(
       alignment: AlignmentDirectional.bottomEnd,
-      decoration: const InputDecoration(
-        labelText: 'LLM Provider',
+      decoration: InputDecoration(
+        labelText: 'assistant_llm_provider'.tr,
       ),
       items: LLMProviderEnum.values.map(
         (e) {
@@ -288,8 +289,8 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
     var cProvider = widget.assistant.definedModel.provider;
     return DropdownButtonFormField(
       alignment: AlignmentDirectional.bottomEnd,
-      decoration: const InputDecoration(
-        labelText: 'Default Model',
+      decoration: InputDecoration(
+        labelText: 'assistant_default_model'.tr,
       ),
       items: settingController.getCurrentProviderList(cProvider).map(
         (e) {

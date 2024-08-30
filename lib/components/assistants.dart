@@ -28,11 +28,11 @@ class _AssistantsCardState extends State<AssistantsCard> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'My Assistants',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'my_assistants'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           _compAssistantsMatrix(
@@ -41,11 +41,11 @@ class _AssistantsCardState extends State<AssistantsCard> {
                   .where((assistant) =>
                       assistant.type == AssistantType.userDefined)
                   .toList()),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Assistants Templates',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'assistant_templates'.tr,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           _compAssistantsMatrix(
@@ -61,7 +61,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
   Widget _compAssistantsMatrix(
       BuildContext context, List<Assistant> assistants) {
     if (assistants.isEmpty) {
-      return const Text('No assistant found. Try duplicating one.');
+      return Text('no_user_assistants_noted'.tr);
     }
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -142,7 +142,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
                   onDoubleClick: () {
                     assistantController.deleteAssistant(assistant.uuid);
                   },
-                  firstClickHint: 'Click twice to delete assistant',
+                  firstClickHint: 'double_click_delete_assistant_hint'.tr,
                 )
               ],
             ),

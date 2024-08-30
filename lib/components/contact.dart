@@ -136,7 +136,7 @@ class _ContactBarState extends State<ContactBar> {
       height: 56,
       child: AppBar(
         centerTitle: true,
-        title: const Text('Contact'),
+        title: Text('contact'.tr),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(

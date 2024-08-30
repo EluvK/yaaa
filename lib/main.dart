@@ -12,6 +12,7 @@ import 'package:yaaa/pages/home.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/init.dart';
+import 'package:yaaa/utils/translation.dart';
 
 void main() async {
   await GetStorage.init();
@@ -61,7 +62,12 @@ class MyApp extends StatelessWidget {
     final scale = mediaQueryData.textScaler
         .clamp(minScaleFactor: fontSize, maxScaleFactor: fontSize + 0.1);
 
+    var locale = settingController.locale ?? Get.deviceLocale;
+    print('load locale: $locale');
+
     var app = GetMaterialApp(
+      translations: Translation(),
+      locale: locale,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       getPages: [

@@ -3,6 +3,7 @@ import 'package:yaaa/components/contact.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/page_opener.dart';
+import 'package:get/get.dart';
 
 class ContactPage extends StatelessWidget {
   const ContactPage({super.key});
@@ -29,17 +30,17 @@ class ContactPage extends StatelessWidget {
           const ContactBar(),
           const Expanded(child: ContactCard()), // for contact list
           TextButton(
-            child: const ListTile(
-              title: Text('Assistants'),
-              leading: Icon(Icons.line_axis),
+            child:  ListTile(
+              title: Text('assistant'.tr),
+              leading: const Icon(Icons.line_axis),
             ),
             onPressed: () =>
                 PageOpener.openPage(context, const AssistantsPage()),
           ),
           TextButton(
-            child: const ListTile(
-              title: Text('Setting'),
-              leading: Icon(Icons.settings),
+            child:  ListTile(
+              title: Text('setting'.tr),
+              leading: const Icon(Icons.settings),
             ),
             onPressed: () => PageOpener.openPage(context, const SettingPage()),
           ),

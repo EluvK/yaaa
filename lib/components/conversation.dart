@@ -93,8 +93,13 @@ class _ConversationCardState extends State<ConversationCard> {
                   child: Text(
                       message.createdAt.toString().split('.')[0] +
                           (message.usage != null
-                              ? " (prompt:${message.usage!.promptTokens} tokens, completion:${message.usage!.completionTokens} tokens)"
-                              : ""),
+                              ? 'token_usage'.trParams({
+                                  'promptToken':
+                                      message.usage!.promptTokens.toString(),
+                                  'completionToken':
+                                      message.usage!.completionTokens.toString()
+                                })
+                              : ''),
                       style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                 ),
                 Visibility(
@@ -111,15 +116,14 @@ class _ConversationCardState extends State<ConversationCard> {
                       messageController
                           .deleteUserMessageAndResponse(message.uuid);
                     },
-                    firstClickHint:
-                        'Click twice to delete message and response',
+                    firstClickHint: 'double_click_delete_message_hint'.tr,
                   ),
                 ),
                 IconButton(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: message.text));
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Copied to clipboard')));
+                        SnackBar(content: Text('copy_to_clipboard'.tr)));
                   },
                   icon: const Icon(Icons.copy, size: 16),
                 )

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DoubleClickButton<T extends ButtonStyleButton> extends StatefulWidget {
   final Widget Function(VoidCallback onPressed) buttonBuilder;
@@ -29,7 +30,7 @@ class _DoubleClickButtonState extends State<DoubleClickButton> {
       _clickCount++;
       if (_clickCount == 1) {
         Flushbar(
-          title: "Double Click Check!",
+          title: "double_click_hint".tr,
           message: widget.firstClickHint,
           duration: const Duration(seconds: 2),
           icon: Icon(Icons.info_outline, size: 28, color: Colors.blue.shade300),

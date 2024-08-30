@@ -67,11 +67,11 @@ class _ChatboxCardState extends State<ChatboxCard> {
       padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
       child: ElevatedButton(
         onPressed: _addSeparator,
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.restart_alt),
-            Text('  Clear Context'),
+            const Icon(Icons.restart_alt),
+            Text('clear_context'.tr),
           ],
         ),
       ),
@@ -103,10 +103,10 @@ class _ChatboxCardState extends State<ChatboxCard> {
               minLines: 1,
               maxLines: 10,
               keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
+              decoration:  InputDecoration(
                 // hintText: 'Type a message',
-                labelText: 'Type a message',
-                border: OutlineInputBorder(
+                labelText: 'type_message_hint'.tr,
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 // prefixIcon: Icon(Icons.person),

@@ -11,6 +11,7 @@ class SettingController extends GetxController {
   // app settings
   final themeMode = ThemeMode.system.obs;
   final fontSize = 1.0.obs;
+  Locale? locale;
 
   // model settings
   final defaultProvider = LLMProviderEnum.OpenAI.obs;
@@ -23,7 +24,6 @@ class SettingController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    // print('$providers');
     await getAppSetting();
     await getModelSetting();
     super.onInit();
@@ -42,6 +42,9 @@ class SettingController extends GetxController {
 
     fontSize.value = box.read('fontSize') ?? 1.0;
     print('read fontSized from box $fontSize');
+
+    locale = box.read('locale') ?? Get.deviceLocale;
+    print('read locale from box $locale');
   }
 
   setThemeMode(ThemeMode theme) {
@@ -56,6 +59,12 @@ class SettingController extends GetxController {
     fontSize.value = font;
     Get.forceAppUpdate();
     box.write('fontSize', fontSize.value);
+  }
+
+  setLocale(Locale locale) {
+    print('setting locale: $locale');
+    this.locale = locale;
+    Get.updateLocale(locale);
   }
 
   getModelSetting() async {
