@@ -4,6 +4,8 @@ import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/pages/assistants.dart';
+import 'package:yaaa/utils/page_opener.dart';
 import 'package:yaaa/utils/utils.dart';
 
 class ContactCard extends StatefulWidget {
@@ -53,9 +55,9 @@ class _ContactCardState extends State<ContactCard> {
         leading: avatarContainer(
           context,
           assistantController.assistantList
-              .firstWhere(
+              .firstWhereOrNull(
                   (element) => element.uuid == conversation.assistantUuid)
-              .avatarUrl,
+              ?.avatarUrl,
           size: 36,
         ),
         trailing: Builder(builder: (context) {
@@ -139,7 +141,7 @@ class _ContactBarState extends State<ContactBar> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.toNamed('/assistants');
+              PageOpener.openPage(context, const AssistantsPage());
             },
             icon: const Icon(Icons.add),
           ),

@@ -161,7 +161,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
       assistantUuid: assistant.uuid,
     );
     conversationController.addConversation(conversation);
-    conversationController.setCurrentConversation(conversation);
+    await conversationController.setCurrentConversation(conversation);
 
     final newPromptMessage = Message(
       uuid: const Uuid().v4(),

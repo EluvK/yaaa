@@ -20,7 +20,7 @@ class ConversationController extends GetxController {
     super.onInit();
   }
 
-  void setCurrentConversation(Conversation conversation) async {
+  setCurrentConversation(Conversation conversation) async {
     currentConversationUuid.value = conversation.uuid;
     currentConversationAssistantName.value = conversation.assistantName;
     currentConversationAssistantUuid.value = conversation.assistantUuid;
@@ -77,7 +77,7 @@ class MessageController extends GetxController {
       if (messageList.isNotEmpty &&
           messageList.last.role == MessageRole.system) {
         print("return because last message is system message");
-        // print("last: ${messageList.last}");
+        // print("last: ${messageList.last.uuid}");
         return;
       }
       // save system message to db

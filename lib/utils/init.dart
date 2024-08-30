@@ -13,7 +13,7 @@ Future<void> initConversation() async {
     Conversation firstConversation =
         conversationController.conversationList.first;
     currentConversationUuid = firstConversation.uuid;
-    conversationController.setCurrentConversation(firstConversation);
+    await conversationController.setCurrentConversation(firstConversation);
     print(("[init] _compConversation", currentConversationUuid));
   }
 }
