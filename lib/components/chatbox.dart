@@ -15,6 +15,7 @@ class ChatboxCard extends StatefulWidget {
 }
 
 class _ChatboxCardState extends State<ChatboxCard> {
+  final FocusNode _chatBoxFocusNode = FocusNode();
   final _textController = TextEditingController();
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
@@ -43,12 +44,21 @@ class _ChatboxCardState extends State<ChatboxCard> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print("chatBoxFocusNode request focus");
+    _chatBoxFocusNode.requestFocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildClearContext(context),
-        buildChatBoxCard(context),
-      ],
+    return Focus(
+      child: Column(
+        children: [
+          ExcludeFocus(child: buildClearContext(context)),
+          buildChatBoxCard(context),
+        ],
+      ),
     );
   }
 
@@ -77,7 +87,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
           Expanded(
             child: TextField(
               focusNode: _focusNode,
-              autofocus: true,
+              // autofocus: true,
               controller: _textController,
               onChanged: (text) {
                 if (!HardwareKeyboard.instance.isControlPressed) {

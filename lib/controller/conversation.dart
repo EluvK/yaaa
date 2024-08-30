@@ -11,6 +11,8 @@ class ConversationController extends GetxController {
 
   static ConversationController get to => Get.find<ConversationController>();
 
+  final messageController = Get.find<MessageController>();
+
   @override
   Future<void> onInit() async {
     conversationList.value =
@@ -18,10 +20,11 @@ class ConversationController extends GetxController {
     super.onInit();
   }
 
-  void setCurrentConversation(Conversation conversation) {
+  void setCurrentConversation(Conversation conversation) async {
     currentConversationUuid.value = conversation.uuid;
     currentConversationAssistantName.value = conversation.assistantName;
     currentConversationAssistantUuid.value = conversation.assistantUuid;
+    await messageController.loadMessages(conversation.uuid);
   }
 
   void addConversation(Conversation conversation) {

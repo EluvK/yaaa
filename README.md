@@ -9,3 +9,4 @@ Yet Another AI Assistant. A toy project while learning Flutter.
 - ✅ Continuous Conversation
 - ✅ Markdown and Latex Support
 - ✅ Dark Mode
+- ✅ Shortcuts

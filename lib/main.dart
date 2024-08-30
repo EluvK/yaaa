@@ -27,12 +27,12 @@ void main() async {
     return controller;
   });
   await Get.putAsync(() async {
-    final controller = ConversationController();
+    final controller = MessageController();
     await controller.onInit();
     return controller;
   });
   await Get.putAsync(() async {
-    final controller = MessageController();
+    final controller = ConversationController();
     await controller.onInit();
     return controller;
   });

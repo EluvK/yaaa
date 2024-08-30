@@ -4,7 +4,6 @@ import 'package:yaaa/model/conversation.dart';
 
 Future<void> initConversation() async {
   final conversationController = Get.find<ConversationController>();
-  final messageController = Get.find<MessageController>();
   var currentConversationUuid =
       conversationController.currentConversationUuid.value;
   print(('[init] currentConversationUuid', currentConversationUuid));
@@ -15,7 +14,6 @@ Future<void> initConversation() async {
         conversationController.conversationList.first;
     currentConversationUuid = firstConversation.uuid;
     conversationController.setCurrentConversation(firstConversation);
-    await messageController.loadMessages(currentConversationUuid);
     print(("[init] _compConversation", currentConversationUuid));
   }
 }

@@ -10,26 +10,20 @@ class ConversationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: isMobile(context)
           ? null
           : const PreferredSize(
               preferredSize: Size.fromHeight(56.0),
-              child: ConversationAppBar(),
+              child: ExcludeFocus(child: ConversationAppBar()),
             ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest,
-        ),
-        child: const Padding(
-          padding: EdgeInsets.all(2.0),
-          child: Column(children: [
-            Expanded(child: ConversationCard()),
-            ChatboxCard(),
-          ]),
-        ),
+      body: const Padding(
+        padding: EdgeInsets.all(4.0),
+        child: Column(children: [
+          ExcludeFocus(child: Expanded(child: ConversationCard())),
+          ChatboxCard(),
+        ]),
       ),
     );
   }
