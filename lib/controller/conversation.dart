@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:yaaa/client/client.dart';
+import 'package:yaaa/controller/assistant.dart';
+import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
 
 class ConversationController extends GetxController {
@@ -55,6 +57,9 @@ class ConversationController extends GetxController {
 class MessageController extends GetxController {
   final messageList = <Message>[].obs;
 
+  late final assistantController = Get.find<AssistantController>();
+  late final conversationController = Get.find<ConversationController>();
+
   bool waitingForResponse = false;
 
   @override
@@ -105,9 +110,20 @@ class MessageController extends GetxController {
     final messageListCopy = messageList.sublist(latestSystemMessageIndex);
     print(("messageTobeSent", messageListCopy));
 
-    // todo post message and wait for response
+    // find the assistant setting, could have defined model
+    // message.conversationUuid
+    String? assistantId = conversationController.conversationList
+        .firstWhereOrNull(
+          (conversation) => conversation.uuid == message.conversationUuid,
+        )
+        ?.assistantUuid;
+    DefinedModel? definedModel = assistantController.assistantList
+        .firstWhereOrNull((assistant) => assistant.uuid == assistantId)
+        ?.definedModel;
+
     ClientManager().postMessage(
       messageListCopy,
+      definedModel,
       (message) {
         messageList.value = [...messages, message];
       },

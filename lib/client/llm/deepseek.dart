@@ -1,25 +1,36 @@
 // ignore_for_file: avoid_print
 
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:yaaa/controller/setting.dart';
+import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart' as yaaa_model;
+import 'package:yaaa/model/llm.dart';
 
 class Deepseek {
   void chat(
     List<yaaa_model.Message> messages,
+    DefinedModel? definedModel,
     ValueChanged<yaaa_model.Message> onStream,
     ValueChanged<yaaa_model.Message> onError,
     ValueChanged<yaaa_model.Message> onSuccess,
   ) async {
     print('Deepseek chat');
 
-    var apiKey = GetStorage().read('apiKey') ?? 'sk-your-api-key';
-    var baseUrl = GetStorage().read('baseUrl') ?? 'https://api.openai.com';
+    final settingController = Get.find<SettingController>();
+    final baseUrl =
+        settingController.getCurrentProviderBaseUrl(LLMProviderEnum.DeepSeek);
+    final apiKey =
+        settingController.getCurrentProviderApiKey(LLMProviderEnum.DeepSeek);
+    var model = settingController
+        .getCurrentProviderDefaultModel(LLMProviderEnum.DeepSeek);
+    if (definedModel != null && definedModel.enable) {
+      model = definedModel.modelName;
+    }
+
     var client = OpenAIClient(apiKey: apiKey, baseUrl: baseUrl);
-    // final client =
-    //     OpenAIClient(apiKey: "SK_TEST", baseUrl: "http://localhost:2335");
 
     // map message to OpenAIChatCompletionChoiceMessageModel
     List<ChatCompletionMessage> sendMessages = messages.map((e) {
@@ -41,8 +52,7 @@ class Deepseek {
     );
     var chatStream = client.createChatCompletionStream(
       request: CreateChatCompletionRequest(
-        // todo fetch with conversation context. or settings
-        model: const ChatCompletionModel.modelId("model"),
+        model: ChatCompletionModel.modelId(model),
         messages: sendMessages,
       ),
     );
