@@ -45,6 +45,7 @@ dependencies:
   openai_dart: ^0.4.0
   flutter_math_fork: ^0.7.2
   another_flushbar: ^1.12.30
+  file_saver: ^0.2.14
   # dart_openai: ^5.1.0
   # window_size:
   #   git:

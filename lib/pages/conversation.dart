@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:yaaa/components/chatbox.dart';
 import 'package:yaaa/components/conversation.dart';
 import 'package:yaaa/controller/conversation.dart';
+import 'package:yaaa/utils/save_conversation.dart';
 import 'package:yaaa/utils/utils.dart';
 
 class ConversationPage extends StatelessWidget {
@@ -38,6 +39,7 @@ class ConversationAppBar extends StatefulWidget {
 
 class _ConversationAppBarState extends State<ConversationAppBar> {
   final conversationController = Get.find<ConversationController>();
+  final messageController = Get.find<MessageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,23 @@ class _ConversationAppBarState extends State<ConversationAppBar> {
         flexibleSpace: Container(color: colorScheme.surface),
         actions: [
           // todo
-          IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+          IconButton(
+            onPressed: () {
+              if (conversationController
+                  .currentConversationUuid.value.isNotEmpty) {
+                final conversation =
+                    conversationController.conversationList.firstWhere(
+                  (element) =>
+                      element.uuid ==
+                      conversationController.currentConversationUuid.value,
+                );
+                final messages = messageController.messageList;
+                SaveConversation.saveConversation(conversation, messages);
+              }
+            },
+            icon: const Icon(Icons.save),
+          ),
+          // IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
         ],
       );
     });

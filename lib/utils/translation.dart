@@ -50,9 +50,12 @@ class Translation extends Translations {
           'double_click_delete_message_hint':
               'Click twice to delete message and response.',
           // conversation
-          'token_usage':'(prompt: @promptToken tokens, completion: @completionToken tokens)',
+          'token_usage':
+              '(prompt: @promptToken tokens, completion: @completionToken tokens)',
           // others
+          'information': 'Info',
           'copy_to_clipboard': 'Copy to Clipboard',
+          'file_saved': 'File saved to @path',
         },
         'zh_CN': {
           // settings
@@ -97,9 +100,12 @@ class Translation extends Translations {
           'double_click_delete_assistant_hint': '双击删除助手。',
           'double_click_delete_message_hint': '双击删除消息和回复。',
           // conversation
-          'token_usage':'(提示词 Token: @promptToken, 回答 Token: @completionToken)',
+          'token_usage':
+              '(提示词 Token: @promptToken, 回答 Token: @completionToken)',
           // others
+          'information': '提示',
           'copy_to_clipboard': '已复制到剪贴板',
+          'file_saved': '文件已保存至 @path',
         }
       };
 }

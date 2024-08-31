@@ -14,6 +14,15 @@ class Conversation {
     required this.assistantName,
     required this.assistantUuid,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'uuid': uuid,
+      'assistant_name': assistantName,
+      'assistant_uuid': assistantUuid,
+    };
+  }
 }
 
 class Message {
