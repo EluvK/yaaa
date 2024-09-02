@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yaaa/components/contact.dart';
 import 'package:yaaa/controller/shortcuts.dart';
 import 'package:yaaa/pages/contact.dart';
 import 'package:yaaa/pages/conversation.dart';
@@ -49,6 +50,7 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ExcludeFocus(child: ContactPage()),
+                HiddenContactButton(),
                 Flexible(child: ConversationPage()),
               ],
             ),

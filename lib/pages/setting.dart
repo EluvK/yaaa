@@ -150,6 +150,23 @@ class _SettingPageState extends State<SettingPage> {
             ],
           ),
         ),
+        // Simple Contact List
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('expand_contact_list'.tr),
+              Switch(
+                value: settingController.expandContactList.value,
+                onChanged: (bool newValue) {
+                  settingController.setExpandContactList(newValue);
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

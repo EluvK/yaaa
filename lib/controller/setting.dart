@@ -12,6 +12,7 @@ class SettingController extends GetxController {
   final themeMode = ThemeMode.system.obs;
   final fontSize = 1.0.obs;
   Locale? locale;
+  final expandContactList = true.obs;
 
   // model settings
   final defaultProvider = LLMProviderEnum.OpenAI.obs;
@@ -45,6 +46,8 @@ class SettingController extends GetxController {
 
     locale = box.read('locale') ?? Get.deviceLocale;
     print('read locale from box $locale');
+
+    expandContactList.value = box.read('expandContactList') ?? true;
   }
 
   setThemeMode(ThemeMode theme) {
@@ -65,6 +68,16 @@ class SettingController extends GetxController {
     print('setting locale: $locale');
     this.locale = locale;
     Get.updateLocale(locale);
+  }
+
+  setExpandContactList(bool expand) {
+    print('setting expand contact list: $expand');
+    expandContactList.value = expand;
+    box.write('expandContactList', expandContactList.value);
+  }
+
+  bool getExpandContactList() {
+    return expandContactList.value;
   }
 
   getModelSetting() async {

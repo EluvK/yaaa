@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
+import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/utils/page_opener.dart';
@@ -19,6 +20,7 @@ class _ContactCardState extends State<ContactCard> {
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
   final assistantController = Get.find<AssistantController>();
+  final settingController = Get.find<SettingController>();
   int _selectedIndex = -1;
 
   @override
@@ -46,32 +48,54 @@ class _ContactCardState extends State<ContactCard> {
       color: _selectedIndex == index
           ? Theme.of(context).colorScheme.onSurface.withOpacity(0.2)
           : null,
-      child: ListTile(
-        title: Text(conversation.assistantName),
-        subtitle: Text(conversation.name),
+      child: settingController.getExpandContactList()
+          ? _compConversationCardExpanded(conversation, index)
+          : _compConversationCard(conversation, index),
+    );
+  }
+
+  Widget _compConversationCard(Conversation conversation, int index) {
+    return Card(
+      child: avatarContainer(
+        context,
+        assistantController.assistantList
+            .firstWhereOrNull(
+                (element) => element.uuid == conversation.assistantUuid)
+            ?.avatarUrl,
+        size: 36,
         onTap: () {
           _funcTabConversation(index);
         },
-        leading: avatarContainer(
-          context,
-          assistantController.assistantList
-              .firstWhereOrNull(
-                  (element) => element.uuid == conversation.assistantUuid)
-              ?.avatarUrl,
-          size: 36,
-        ),
-        trailing: Builder(builder: (context) {
-          return IconButton(
-              onPressed: () {
-                //显示一个overlay操作
-                _compConversationDetail(context, index);
-              },
-              icon: Icon(
-                Icons.more_horiz,
-                color: Theme.of(context).colorScheme.primary,
-              ));
-        }),
       ),
+    );
+  }
+
+  ListTile _compConversationCardExpanded(Conversation conversation, int index) {
+    return ListTile(
+      title: Text(conversation.assistantName),
+      subtitle: Text(conversation.name),
+      onTap: () {
+        _funcTabConversation(index);
+      },
+      leading: avatarContainer(
+        context,
+        assistantController.assistantList
+            .firstWhereOrNull(
+                (element) => element.uuid == conversation.assistantUuid)
+            ?.avatarUrl,
+        size: 36,
+      ),
+      trailing: Builder(builder: (context) {
+        return IconButton(
+            onPressed: () {
+              //显示一个overlay操作
+              _compConversationDetail(context, index);
+            },
+            icon: Icon(
+              Icons.more_horiz,
+              color: Theme.of(context).colorScheme.primary,
+            ));
+      }),
     );
   }
 
@@ -147,6 +171,61 @@ class _ContactBarState extends State<ContactBar> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HiddenContactButton extends StatefulWidget {
+  const HiddenContactButton({super.key});
+
+  @override
+  State<HiddenContactButton> createState() => _HiddenContactButtonState();
+}
+
+class _HiddenContactButtonState extends State<HiddenContactButton> {
+  bool _isButtonVisible = false;
+  final settingController = Get.find<SettingController>();
+  late bool _isContactExpanded = settingController.getExpandContactList();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          _isButtonVisible = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _isButtonVisible = false;
+        });
+      },
+      child: AnimatedOpacity(
+          opacity: _isButtonVisible ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _isContactExpanded = !_isContactExpanded;
+                settingController.setExpandContactList(_isContactExpanded);
+              });
+            },
+            child: SizedBox(
+              width: 20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _isContactExpanded
+                        ? Icons.chevron_left
+                        : Icons.chevron_right,
+                    color: colorScheme.primary,
+                  ),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
