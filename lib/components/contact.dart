@@ -55,18 +55,16 @@ class _ContactCardState extends State<ContactCard> {
   }
 
   Widget _compConversationCard(Conversation conversation, int index) {
-    return Card(
-      child: avatarContainer(
-        context,
-        assistantController.assistantList
-            .firstWhereOrNull(
-                (element) => element.uuid == conversation.assistantUuid)
-            ?.avatarUrl,
-        size: 36,
-        onTap: () {
-          _funcTabConversation(index);
-        },
-      ),
+    return avatarContainer(
+      context,
+      assistantController.assistantList
+          .firstWhereOrNull(
+              (element) => element.uuid == conversation.assistantUuid)
+          ?.avatarUrl,
+      size: 48,
+      onTap: () {
+        _funcTabConversation(index);
+      },
     );
   }
 
