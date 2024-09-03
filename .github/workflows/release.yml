@@ -30,7 +30,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     if: contains(github.event.inputs.platforms, 'windows')
-    step:
+    steps:
       - uses: actions/checkout@v4
 
       - use: subosito/flutter-action@v2
