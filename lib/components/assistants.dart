@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 import 'package:yaaa/components/avatar.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
-import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/edit_assistants.dart';
 import 'package:yaaa/utils/double_click.dart';
 import 'package:yaaa/utils/page_opener.dart';
