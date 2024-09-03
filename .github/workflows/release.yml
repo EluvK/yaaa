@@ -18,6 +18,7 @@ on:
         options:
           - "windows"
           - "android"
+          - "windows,android"
         default: "windows"
   push:
     tags:
@@ -85,9 +86,24 @@ jobs:
       - run: flutter --version
 
       - name: Flutter build apk
-        run: flutter build apk --release
+        run: |
+          $version_str=$(cat pubspec.yaml | grep 'version: ' | sed 's/version: //')
+          $version=$version_str | cut -d'+' -f1
+          $build_number=$version_str | cut -d'+' -f2
+          flutter build apk --release --dart-define="APP_VERSION=$version" --dart-define="APP_BUILD_NUMBER=$build_number"
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: yaaa.apk
-          path: "build/app/outputs/apk/release/*.apk"
+          path: build/app/outputs/apk/release/app-release.apk
+
+      - name: Upload windows setup exe to release
+        uses: svenstaro/upload-release-action@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          repo_token: ${{ secrets.YAAA_GITHUB_TOKEN }}
+          file: build/app/outputs/apk/release/app-release.apk
+          asset_name: yaaa.apk
+          tag: ${{ github.ref }}
+          overwrite: true
