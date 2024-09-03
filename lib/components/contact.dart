@@ -22,6 +22,7 @@ class _ContactCardState extends State<ContactCard> {
   final assistantController = Get.find<AssistantController>();
   final settingController = Get.find<SettingController>();
   int _selectedIndex = -1;
+  int _moreInfoIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _ContactCardState extends State<ContactCard> {
   Widget _compConversation(Conversation conversation, int index) {
     return Card(
       color: _selectedIndex == index
-          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.2)
+          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
           : null,
       child: settingController.getExpandContactList()
           ? _compConversationCardExpanded(conversation, index)
@@ -65,11 +66,12 @@ class _ContactCardState extends State<ContactCard> {
       onTap: () {
         _funcTabConversation(index);
       },
+      color: _selectedIndex == index ? Colors.blue.shade100 : Colors.white,
     );
   }
 
-  ListTile _compConversationCardExpanded(Conversation conversation, int index) {
-    return ListTile(
+  Widget _compConversationCardExpanded(Conversation conversation, int index) {
+    Widget cardExpanded = ListTile(
       title: Text(conversation.assistantName),
       subtitle: Text(conversation.name),
       onTap: () {
@@ -86,15 +88,61 @@ class _ContactCardState extends State<ContactCard> {
       trailing: Builder(builder: (context) {
         return IconButton(
             onPressed: () {
-              //显示一个overlay操作
-              _compConversationDetail(context, index);
+              _moreInfoIndex = (_moreInfoIndex == index) ? -1 : index;
+              setState(() {});
+              // _compConversationDetail(context, index);
             },
             icon: Icon(
-              Icons.more_horiz,
+              (_moreInfoIndex == index)
+                  ? Icons.arrow_drop_up
+                  : Icons.more_horiz,
               color: Theme.of(context).colorScheme.primary,
             ));
       }),
     );
+
+    if (index == _moreInfoIndex) {
+      return Column(
+        children: [
+          cardExpanded,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    conversationController.editContactConversation(
+                        context, conversation);
+                  },
+                  icon: const Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () {
+                    assistantController.editConversationAssistant(
+                        context, conversation);
+                  },
+                  icon: const Icon(Icons.assistant)),
+              IconButton(
+                  onPressed: () {
+                    assistantController
+                        .duplicationAssistantConversation(conversation);
+                    _moreInfoIndex = -1;
+                    // actually not need setState to refresh,
+                    // if success to duplicate, the conversation will be added to the list and set to current.
+                    // setState(() {});
+                  },
+                  icon: const Icon(Icons.copy)),
+              IconButton(
+                  onPressed: () {
+                    conversationController
+                        .deleteConversation(conversation.uuid);
+                  },
+                  icon: const Icon(Icons.delete)),
+            ],
+          )
+        ],
+      );
+    }
+
+    return cardExpanded;
   }
 
   void _compConversationDetail(BuildContext context, int index) {

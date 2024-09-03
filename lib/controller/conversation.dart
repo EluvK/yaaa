@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/client/client.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/pages/edit_conversation.dart';
+import 'package:yaaa/utils/page_opener.dart';
 
 class ConversationController extends GetxController {
   final conversationList = <Conversation>[].obs;
@@ -29,9 +32,10 @@ class ConversationController extends GetxController {
     await messageController.loadMessages(conversation.uuid);
   }
 
-  void addConversation(Conversation conversation) {
+  addConversation(Conversation conversation) async {
     ConversationRepository().addConversation(conversation);
     conversationList.add(conversation);
+    await setCurrentConversation(conversation);
   }
 
   void deleteConversation(String uuid) {
@@ -51,6 +55,11 @@ class ConversationController extends GetxController {
       conversationList[index] = conversation;
       ConversationRepository().updateConversation(conversation);
     }
+  }
+
+  editContactConversation(BuildContext context, Conversation conversation) {
+    PageOpener.openPage(
+        context, EditConversationPage(conversation: conversation));
   }
 }
 

@@ -33,6 +33,7 @@ class Translation extends Translations {
           'assistant_templates': 'Assistant Templates',
           'no_user_assistants_noted':
               'No assistant found. Try duplicating one.',
+          'assistant_not_found': 'Assistant not found.',
           // edit assistant
           'edit_assistant': 'Edit `@name`',
           'assistant_uuid': 'Assistant UUID',
@@ -45,6 +46,10 @@ class Translation extends Translations {
           'set_as_defined': 'Set Defined Model',
           'assistant_llm_provider': 'LLM Provider',
           'assistant_default_model': 'Default Model',
+          // edit conversation
+          'edit_conversation': 'Edit `@name`',
+          'conversation_uuid': 'Conversation UUID',
+          'conversation_name': 'Conversation Name',
           // double click
           'double_click_title': 'Double Click Check!',
           'double_click_delete_assistant_hint':
@@ -56,6 +61,7 @@ class Translation extends Translations {
               '(prompt: @promptToken tokens, completion: @completionToken tokens)',
           // others
           'information': 'Info',
+          'error': 'Error',
           'copy_to_clipboard': 'Copy to Clipboard',
           'file_saved': 'File saved to @path',
         },
@@ -87,6 +93,7 @@ class Translation extends Translations {
           'my_assistants': '自定义助手',
           'assistant_templates': '助手模板',
           'no_user_assistants_noted': '暂无自定义助手，从下列模板中复制一个吧。',
+          'assistant_not_found': '未找到该助手。',
           // edit assistant
           'edit_assistant': '编辑 `@name`',
           'assistant_uuid': '助手 ID',
@@ -99,6 +106,10 @@ class Translation extends Translations {
           'set_as_defined': '设为自定义模型',
           'assistant_llm_provider': '语言模型提供商',
           'assistant_default_model': '默认模型',
+          // edit conversation
+          'edit_conversation': '编辑 `@name`',
+          'conversation_uuid': '对话 ID',
+          'conversation_name': '对话名称',
           // double click
           'double_click_title': '双击确认！',
           'double_click_delete_assistant_hint': '双击删除助手。',
@@ -108,6 +119,7 @@ class Translation extends Translations {
               '(提示词 Token: @promptToken, 回答 Token: @completionToken)',
           // others
           'information': '提示',
+          'error': '错误',
           'copy_to_clipboard': '已复制到剪贴板',
           'file_saved': '文件已保存至 @path',
         }

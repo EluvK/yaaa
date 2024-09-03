@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class SaveConversation {
   static Future<void> saveConversation(
@@ -30,14 +29,7 @@ class SaveConversation {
     );
 
     print('file saved');
-    Flushbar(
-      title: "information".tr,
-      message: 'file_saved'.trParams({'path': filePath}),
-      duration: const Duration(seconds: 2),
-      icon: Icon(Icons.check_box_sharp, size: 28, color: Colors.green.shade300),
-      margin: const EdgeInsets.all(12.0),
-      borderRadius: BorderRadius.circular(8.0),
-      leftBarIndicatorColor: Colors.green.shade300,
-    ).show(Get.context!);
+    flushBar(FlushLevel.OK, "information".tr,
+        'file_saved'.trParams({'path': filePath}));
   }
 }

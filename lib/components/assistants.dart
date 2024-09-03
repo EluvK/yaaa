@@ -98,7 +98,10 @@ class _AssistantsCardState extends State<AssistantsCard> {
     return Card(
       elevation: 4.0,
       child: InkWell(
-        onTap: () => funcAddConversation(assistant),
+        onTap: () {
+          assistantController.newAssistantConversation(assistant);
+          Get.back();
+        },
         child: Column(
           children: [
             Expanded(
@@ -150,27 +153,5 @@ class _AssistantsCardState extends State<AssistantsCard> {
         ),
       ),
     );
-  }
-
-  void funcAddConversation(Assistant assistant) async {
-    final newConversationUuid = const Uuid().v4();
-    final conversation = Conversation(
-      name: "new ${newConversationUuid.substring(0, 8)}",
-      uuid: newConversationUuid,
-      assistantName: assistant.name,
-      assistantUuid: assistant.uuid,
-    );
-    conversationController.addConversation(conversation);
-    await conversationController.setCurrentConversation(conversation);
-
-    final newPromptMessage = Message(
-      uuid: const Uuid().v4(),
-      conversationUuid: newConversationUuid,
-      text: assistant.prompt,
-      createdAt: DateTime.now(),
-      role: MessageRole.system,
-    );
-    messageController.addMessage(newPromptMessage);
-    Get.back();
   }
 }

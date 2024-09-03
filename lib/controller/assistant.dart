@@ -1,11 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
+import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/pages/edit_assistants.dart';
+import 'package:yaaa/utils/page_opener.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class AssistantController extends GetxController {
   final assistantList = <Assistant>[].obs;
   final conversationController = Get.find<ConversationController>();
+  final messageController = Get.find<MessageController>();
   static AssistantController get to => Get.find<AssistantController>();
 
   @override
@@ -55,6 +61,46 @@ class AssistantController extends GetxController {
         conversation.assistantName = assistant.name;
         conversationController.updateConversation(conversation);
       }
+    }
+  }
+
+  newAssistantConversation(Assistant assistant) async {
+    final newConversationUuid = const Uuid().v4();
+    final conversation = Conversation(
+      name: "new ${newConversationUuid.substring(0, 8)}",
+      uuid: newConversationUuid,
+      assistantName: assistant.name,
+      assistantUuid: assistant.uuid,
+    );
+    await conversationController.addConversation(conversation);
+
+    final newPromptMessage = Message(
+      uuid: const Uuid().v4(),
+      conversationUuid: newConversationUuid,
+      text: assistant.prompt,
+      createdAt: DateTime.now(),
+      role: MessageRole.system,
+    );
+    messageController.addMessage(newPromptMessage);
+  }
+
+  duplicationAssistantConversation(Conversation conversation) async {
+    final assistant = assistantList.firstWhereOrNull(
+        (element) => element.uuid == conversation.assistantUuid);
+    if (assistant != null) {
+      newAssistantConversation(assistant);
+    } else {
+      flushBar(FlushLevel.WARNING, 'error'.tr, 'assistant_not_found'.tr);
+    }
+  }
+
+  editConversationAssistant(BuildContext context, Conversation conversation) {
+    final assistant = assistantList.firstWhereOrNull(
+        (element) => element.uuid == conversation.assistantUuid);
+    if (assistant != null) {
+      PageOpener.openPage(context, EditAssistantPage(assistant: assistant));
+    } else {
+      flushBar(FlushLevel.WARNING, 'error'.tr, 'assistant_not_found'.tr);
     }
   }
 }
