@@ -216,96 +216,33 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             children: [
               // default model and base url
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // choose provider default model
-                  Flexible(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButtonFormField(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        decoration: InputDecoration(
-                          labelText: 'default_model'.tr,
+              isMobile(context)
+                  ? Column(
+                      children: [
+                        // choose provider default model
+                        _editProviderDefaultModel(cProvider),
+                        // choose provider url
+                        _editProviderBaseUrl(cProvider),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // choose provider default model
+                        Flexible(
+                          flex: 2,
+                          child: _editProviderDefaultModel(cProvider),
                         ),
-                        items: settingController
-                            .getCurrentProviderList(cProvider)
-                            .map(
-                          (e) {
-                            return DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            );
-                          },
-                        ).toList(),
-                        value: settingController
-                            .getCurrentProviderDefaultModel(cProvider),
-                        onChanged: (value) {
-                          settingController.setCurrentProviderDefaultModel(
-                            cProvider,
-                            value!,
-                          );
-                        },
-                      ),
+                        // choose provider url
+                        Flexible(
+                          flex: 3,
+                          child: _editProviderBaseUrl(cProvider),
+                        ),
+                      ],
                     ),
-                  ),
-                  // choose provider url
-                  Flexible(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'base_url'.tr,
-                          hintText: cProvider.defaultBaseUrl,
-                        ),
-                        controller: TextEditingController(
-                          text: settingController
-                              .getCurrentProviderBaseUrl(cProvider),
-                        ),
-                        onChanged: (value) {
-                          settingController.setCurrentProviderBaseUrl(
-                            cProvider,
-                            value,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               // api key
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                          _skVisible ? Icons.visibility : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          _skVisible = !_skVisible;
-                        });
-                      },
-                    ),
-                    labelText: 'api_key'.tr,
-                    hintText: 'sk-apiKey-xxxxx',
-                    // helperText: 'set your api key',
-                  ),
-                  controller: TextEditingController(
-                    text: settingController.getCurrentProviderApiKey(cProvider),
-                  ),
-                  obscureText: !_skVisible,
-                  onChanged: (value) {
-                    settingController.setCurrentProviderApiKey(
-                      cProvider,
-                      value,
-                    );
-                  },
-                ),
-              ),
+              _editAPIKey(cProvider),
             ],
           ),
         ),
@@ -318,6 +255,85 @@ class _SettingPageState extends State<SettingPage> {
         ),
         const Divider(),
       ],
+    );
+  }
+
+  Widget _editProviderDefaultModel(LLMProviderEnum cProvider) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButtonFormField(
+        alignment: AlignmentDirectional.bottomEnd,
+        decoration: InputDecoration(
+          labelText: 'default_model'.tr,
+        ),
+        items: settingController.getCurrentProviderList(cProvider).map(
+          (e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(e),
+            );
+          },
+        ).toList(),
+        value: settingController.getCurrentProviderDefaultModel(cProvider),
+        onChanged: (value) {
+          settingController.setCurrentProviderDefaultModel(
+            cProvider,
+            value!,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _editProviderBaseUrl(LLMProviderEnum cProvider) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: 'base_url'.tr,
+          hintText: cProvider.defaultBaseUrl,
+        ),
+        controller: TextEditingController(
+          text: settingController.getCurrentProviderBaseUrl(cProvider),
+        ),
+        onChanged: (value) {
+          settingController.setCurrentProviderBaseUrl(
+            cProvider,
+            value,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _editAPIKey(LLMProviderEnum cProvider) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: Icon(_skVisible ? Icons.visibility : Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _skVisible = !_skVisible;
+              });
+            },
+          ),
+          labelText: 'api_key'.tr,
+          hintText: 'sk-apiKey-xxxxx',
+          // helperText: 'set your api key',
+        ),
+        controller: TextEditingController(
+          text: settingController.getCurrentProviderApiKey(cProvider),
+        ),
+        obscureText: !_skVisible,
+        onChanged: (value) {
+          settingController.setCurrentProviderApiKey(
+            cProvider,
+            value,
+          );
+        },
+      ),
     );
   }
 }

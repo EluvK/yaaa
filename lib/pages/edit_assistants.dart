@@ -8,6 +8,7 @@ import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/llm.dart';
 import 'package:yaaa/utils/predefined.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class EditAssistantPage extends StatelessWidget {
   final Assistant assistant;
@@ -229,25 +230,24 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
                 : const Icon(Icons.keyboard_arrow_right_outlined),
           ),
         ),
-        Visibility(
-          visible: useUniqueModel,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: editAssistantDefinedModelProvider(),
-                )),
-                Flexible(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: editAssistantDefinedModelName(),
-                )),
-              ],
-            ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Visibility(
+            visible: useUniqueModel,
+            child: isMobile(context)
+                ? Column(
+                    children: [
+                      editAssistantDefinedModelProvider(),
+                      editAssistantDefinedModelName(),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(child: editAssistantDefinedModelProvider()),
+                      Flexible(child: editAssistantDefinedModelName()),
+                    ],
+                  ),
           ),
         ),
       ],
@@ -255,61 +255,67 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
   }
 
   Widget editAssistantDefinedModelProvider() {
-    return DropdownButtonFormField(
-      alignment: AlignmentDirectional.bottomEnd,
-      decoration: InputDecoration(
-        labelText: 'assistant_llm_provider'.tr,
-      ),
-      items: LLMProviderEnum.values.map(
-        (e) {
-          return DropdownMenuItem(
-            value: e,
-            child: Text(e.name),
-          );
-        },
-      ).toList(),
-      value: widget.assistant.definedModel.provider,
-      onChanged: (value) {
-        if (value != null) {
-          if (widget.assistant.definedModel.provider != value) {
-            widget.assistant.definedModel.provider = value;
-            widget.assistant.definedModel.modelName =
-                settingController.getCurrentProviderList(value).first;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButtonFormField(
+        alignment: AlignmentDirectional.bottomEnd,
+        decoration: InputDecoration(
+          labelText: 'assistant_llm_provider'.tr,
+        ),
+        items: LLMProviderEnum.values.map(
+          (e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(e.name),
+            );
+          },
+        ).toList(),
+        value: widget.assistant.definedModel.provider,
+        onChanged: (value) {
+          if (value != null) {
+            if (widget.assistant.definedModel.provider != value) {
+              widget.assistant.definedModel.provider = value;
+              widget.assistant.definedModel.modelName =
+                  settingController.getCurrentProviderList(value).first;
+            }
+          } else {
+            widget.assistant.definedModel.enable = false;
           }
-        } else {
-          widget.assistant.definedModel.enable = false;
-        }
-        assistantController.updateAssistant(widget.assistant);
-        setState(() {});
-      },
+          assistantController.updateAssistant(widget.assistant);
+          setState(() {});
+        },
+      ),
     );
   }
 
   Widget editAssistantDefinedModelName() {
     var cProvider = widget.assistant.definedModel.provider;
-    return DropdownButtonFormField(
-      alignment: AlignmentDirectional.bottomEnd,
-      decoration: InputDecoration(
-        labelText: 'assistant_default_model'.tr,
-      ),
-      items: settingController.getCurrentProviderList(cProvider).map(
-        (e) {
-          return DropdownMenuItem(
-            value: e,
-            child: Text(e),
-          );
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButtonFormField(
+        alignment: AlignmentDirectional.bottomEnd,
+        decoration: InputDecoration(
+          labelText: 'assistant_default_model'.tr,
+        ),
+        items: settingController.getCurrentProviderList(cProvider).map(
+          (e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(e),
+            );
+          },
+        ).toList(),
+        value: widget.assistant.definedModel.modelName,
+        onChanged: (value) {
+          if (value != null) {
+            widget.assistant.definedModel.modelName = value;
+          } else {
+            widget.assistant.definedModel.enable = false;
+          }
+          assistantController.updateAssistant(widget.assistant);
+          setState(() {});
         },
-      ).toList(),
-      value: widget.assistant.definedModel.modelName,
-      onChanged: (value) {
-        if (value != null) {
-          widget.assistant.definedModel.modelName = value;
-        } else {
-          widget.assistant.definedModel.enable = false;
-        }
-        assistantController.updateAssistant(widget.assistant);
-        setState(() {});
-      },
+      ),
     );
   }
 }
