@@ -35,7 +35,7 @@ class Translation extends Translations {
               'No assistant found. Try duplicating one.',
           'assistant_not_found': 'Assistant not found.',
           // edit assistant
-          'edit_assistant': 'Edit `@name`',
+          'edit_assistant': 'Edit Assistant `@name`',
           'assistant_uuid': 'Assistant UUID',
           'edit_avatar_hint': '  👆 Tap to edit avatar',
           'edit_avatar_info': 'choose one or edit Avatar Url Directly',
@@ -47,7 +47,7 @@ class Translation extends Translations {
           'assistant_llm_provider': 'LLM Provider',
           'assistant_default_model': 'Default Model',
           // edit conversation
-          'edit_conversation': 'Edit `@name`',
+          'edit_conversation': 'Edit Conversation `@name`',
           'conversation_uuid': 'Conversation UUID',
           'conversation_name': 'Conversation Name',
           // double click
@@ -95,7 +95,7 @@ class Translation extends Translations {
           'no_user_assistants_noted': '暂无自定义助手，从下列模板中复制一个吧。',
           'assistant_not_found': '未找到该助手。',
           // edit assistant
-          'edit_assistant': '编辑 `@name`',
+          'edit_assistant': '编辑助手 `@name`',
           'assistant_uuid': '助手 ID',
           'edit_avatar_hint': '  👆 点击编辑头像',
           'edit_avatar_info': '选择一个或直接编辑头像 URL',
@@ -107,7 +107,7 @@ class Translation extends Translations {
           'assistant_llm_provider': '语言模型提供商',
           'assistant_default_model': '默认模型',
           // edit conversation
-          'edit_conversation': '编辑 `@name`',
+          'edit_conversation': '编辑对话 `@name`',
           'conversation_uuid': '对话 ID',
           'conversation_name': '对话名称',
           // double click

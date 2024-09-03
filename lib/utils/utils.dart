@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // ignore: constant_identifier_names
-const String VERSION = '0.0.1-alpha';
+const String VERSION =
+    String.fromEnvironment('APP_VERSION', defaultValue: '0.0.1-alpha');
+
+// ignore: constant_identifier_names
+const String APP_BUILD_NUMBER =
+    String.fromEnvironment('APP_BUILD_NUMBER', defaultValue: '0');
 
 bool isMobile(BuildContext context) {
   return GetPlatform.isMobile || MediaQuery.of(context).size.width < 600;

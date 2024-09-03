@@ -77,7 +77,8 @@ class _ContactPageState extends State<ContactPage> {
               // ).show(Get.context!);
             },
             child: ListTile(
-              title: Text('version'.trParams({'version': VERSION})),
+              title: Text('version'
+                  .trParams({'version': '$VERSION+$APP_BUILD_NUMBER'})),
               leading: const Icon(Icons.info),
             ),
           ),
