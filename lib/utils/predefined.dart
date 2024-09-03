@@ -1,4 +1,5 @@
 import 'package:yaaa/model/assistant.dart';
+import 'package:yaaa/model/conversation.dart';
 
 class Avatar {
   final String name;
@@ -113,5 +114,45 @@ final List<Assistant> predefinedAssistant = [
         .firstWhere((element) => element.name == "location")
         .url,
     definedModel: DefinedModel.defaultDisable(),
+  ),
+];
+
+// predefined conversations
+final List<Conversation> predefinedConversation = [
+  Conversation(
+    uuid: 'c5e52ce2-8e21-4bd0-bfc2-4d8c9e827386',
+    name: 'Guide to Yaaa',
+    assistantName: 'Example',
+    assistantUuid: '91d1eccd-b848-4513-a99b-a80f3bb4d0f0',
+  ),
+];
+
+// predefined messages
+final List<Message> predefinedMessage = [
+  Message(
+    uuid: 'fcda2ee8-91a5-445f-9c79-abb2820f2d91',
+    conversationUuid: 'c5e52ce2-8e21-4bd0-bfc2-4d8c9e827386',
+    text: 'Hello, I am a guide to Yaaa. How can I help you?',
+    createdAt: DateTime.now(),
+    role: MessageRole.system,
+  ),
+  Message(
+    uuid: '699720c2-9a19-44ee-ba93-8d1075f8d6c7',
+    conversationUuid: 'c5e52ce2-8e21-4bd0-bfc2-4d8c9e827386',
+    text: 'How to use this App?',
+    createdAt: DateTime.now(),
+    role: MessageRole.user,
+  ),
+  Message(
+    uuid: '4a31f5fb-e5e8-473d-b3aa-870ecd8cc350',
+    conversationUuid: 'c5e52ce2-8e21-4bd0-bfc2-4d8c9e827386',
+    text: '''
+1. Choose the default model at setting page (shortcut: `Ctrl + ,`) and configure the API key and base URL.\n
+2. Duplicate/Edit the assistant from the assistant page (shortcut: `Ctrl + N`)\n
+3. Create a new conversation to certain assistant.\n
+4. Start chatting with the assistant.\n
+''',
+    createdAt: DateTime.now(),
+    role: MessageRole.assistant,
   ),
 ];

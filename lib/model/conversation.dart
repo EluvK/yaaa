@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
+import 'package:yaaa/utils/predefined.dart';
 
 class Conversation {
   String name;
@@ -44,29 +45,34 @@ class Message {
 
   Map<String, dynamic> toMap() {
     return {
-      'uuid': uuid,
-      'conversation_uuid': conversationUuid,
-      'text': text,
-      'created_at': createdAt.toIso8601String(),
-      'role': role.toString(),
-      'prompt_tokens': usage?.promptTokens,
-      'completion_tokens': usage?.completionTokens,
-      'total_tokens': usage?.totalTokens,
+      ConversationRepository._columnMessageUuid: uuid,
+      ConversationRepository._columnMessageConversationUuid: conversationUuid,
+      ConversationRepository._columnMessageText: text,
+      ConversationRepository._columnMessageCreatedAt:
+          createdAt.toIso8601String(),
+      ConversationRepository._columnMessageRole: role.toString(),
+      ConversationRepository._columnPromptTokens: usage?.promptTokens,
+      ConversationRepository._columnCompletionTokens: usage?.completionTokens,
+      ConversationRepository._columnTotalTokens: usage?.totalTokens,
     };
   }
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      uuid: map['uuid'],
-      conversationUuid: map['conversation_uuid'],
-      text: map['text'],
-      createdAt: DateTime.parse(map['created_at']),
-      role: MessageRole.values.firstWhere((e) => e.toString() == map['role']),
-      usage: map['prompt_tokens'] != null
+      uuid: map[ConversationRepository._columnMessageConversationUuid],
+      conversationUuid:
+          map[ConversationRepository._columnMessageConversationUuid],
+      text: map[ConversationRepository._columnMessageText],
+      createdAt:
+          DateTime.parse(map[ConversationRepository._columnMessageCreatedAt]),
+      role: MessageRole.values.firstWhere((e) =>
+          e.toString() == map[ConversationRepository._columnMessageRole]),
+      usage: map[ConversationRepository._columnPromptTokens] != null
           ? Usage(
-              promptTokens: map['prompt_tokens'],
-              completionTokens: map['completion_tokens'],
-              totalTokens: map['total_tokens'],
+              promptTokens: map[ConversationRepository._columnPromptTokens],
+              completionTokens:
+                  map[ConversationRepository._columnCompletionTokens],
+              totalTokens: map[ConversationRepository._columnTotalTokens],
             )
           : null,
     );
@@ -136,6 +142,22 @@ class ConversationRepository {
               $_columnTotalTokens INTEGER
             )
           ''');
+
+        for (var i = 0; i < predefinedConversation.length; i++) {
+          await db.insert(
+            _tableConversationName,
+            predefinedConversation[i].toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+
+        for (var i = 0; i < predefinedMessage.length; i++) {
+          await db.insert(
+            _tableMessageName,
+            predefinedMessage[i].toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
       },
     );
 

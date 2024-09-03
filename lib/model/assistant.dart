@@ -21,6 +21,40 @@ class Assistant {
     this.avatarUrl,
     required this.definedModel,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      AssistantRepository._columnName: name,
+      AssistantRepository._columnUuid: uuid,
+      AssistantRepository._columnType: type.toStr,
+      AssistantRepository._columnDescription: description,
+      AssistantRepository._columnPrompt: prompt,
+      AssistantRepository._columnAvatarUrl: avatarUrl,
+      AssistantRepository._columnEnableDefinedModel:
+          definedModel.enable ? 1 : 0,
+      AssistantRepository._columnDefinedModelProvider:
+          definedModel.provider.name,
+      AssistantRepository._columnDefinedModelName: definedModel.modelName,
+    };
+  }
+
+  factory Assistant.fromMap(Map<String, dynamic> map) {
+    return Assistant(
+      name: map[AssistantRepository._columnName],
+      uuid: map[AssistantRepository._columnUuid],
+      type:
+          AssistantTypeExtension.fromStr(map[AssistantRepository._columnType]),
+      description: map[AssistantRepository._columnDescription],
+      prompt: map[AssistantRepository._columnPrompt],
+      avatarUrl: map[AssistantRepository._columnAvatarUrl],
+      definedModel: DefinedModel(
+        enable: map[AssistantRepository._columnEnableDefinedModel] == 1,
+        provider: LLMProviderEnum.values.firstWhere((e) =>
+            e.name == map[AssistantRepository._columnDefinedModelProvider]),
+        modelName: map[AssistantRepository._columnDefinedModelName],
+      ),
+    );
+  }
 }
 
 enum AssistantType {
@@ -116,20 +150,7 @@ class AssistantRepository {
           if (!uuids.contains(predefinedAssistant[i].uuid)) {
             await db.insert(
               _tableName,
-              {
-                _columnUuid: predefinedAssistant[i].uuid,
-                _columnType: predefinedAssistant[i].type.toStr,
-                _columnName: predefinedAssistant[i].name,
-                _columnDescription: predefinedAssistant[i].description,
-                _columnPrompt: predefinedAssistant[i].prompt,
-                _columnAvatarUrl: predefinedAssistant[i].avatarUrl,
-                _columnEnableDefinedModel:
-                    predefinedAssistant[i].definedModel.enable ? 1 : 0,
-                _columnDefinedModelProvider:
-                    predefinedAssistant[i].definedModel.provider.name,
-                _columnDefinedModelName:
-                    predefinedAssistant[i].definedModel.modelName,
-              },
+              predefinedAssistant[i].toMap(),
             );
           }
         }

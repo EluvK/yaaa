@@ -6,6 +6,18 @@ enum LLMProviderEnum {
   DeepSeek,
 }
 
+// impl extend LLMProviderEnum
+extension LLMProviderEnumExtension on LLMProviderEnum {
+  String get defaultBaseUrl {
+    switch (this) {
+      case LLMProviderEnum.OpenAI:
+        return 'https://api.openai.com';
+      case LLMProviderEnum.DeepSeek:
+        return 'https://api.deepseek.com';
+    }
+  }
+}
+
 class LLMProvider {
   final LLMProviderEnum name;
   final List<String> model;
@@ -24,7 +36,7 @@ class LLMProvider {
   static var openAI = LLMProvider(
     name: LLMProviderEnum.OpenAI,
     model: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'],
-    baseUrl: 'https://api.openai.com',
+    baseUrl: LLMProviderEnum.OpenAI.defaultBaseUrl,
     defaultModel: 'gpt-4o',
     apiKey: null,
   );
@@ -32,7 +44,7 @@ class LLMProvider {
   static var deepSeek = LLMProvider(
     name: LLMProviderEnum.DeepSeek,
     model: ['deepseek-chat', 'deepseek-code'],
-    baseUrl: 'https://api.deepseek.com',
+    baseUrl: LLMProviderEnum.DeepSeek.defaultBaseUrl,
     defaultModel: 'deepseek-chat',
     apiKey: null,
   );

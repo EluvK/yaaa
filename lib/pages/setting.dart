@@ -259,7 +259,7 @@ class _SettingPageState extends State<SettingPage> {
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'base_url'.tr,
-                          hintText: 'https://api.openai.com',
+                          hintText: cProvider.defaultBaseUrl,
                         ),
                         controller: TextEditingController(
                           text: settingController

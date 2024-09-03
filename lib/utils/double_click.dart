@@ -30,7 +30,10 @@ class _DoubleClickButtonState extends State<DoubleClickButton> {
       _clickCount++;
       if (_clickCount == 1) {
         flushBar(
-            FlushLevel.WARNING, 'double_click_hint'.tr, widget.firstClickHint);
+          FlushLevel.WARNING,
+          'double_click_title'.tr,
+          widget.firstClickHint,
+        );
         _startResetTimer();
       } else if (_clickCount == 2) {
         _resetTimer?.cancel();

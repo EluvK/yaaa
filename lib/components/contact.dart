@@ -6,6 +6,7 @@ import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/assistants.dart';
+import 'package:yaaa/utils/double_click.dart';
 import 'package:yaaa/utils/page_opener.dart';
 import 'package:yaaa/utils/utils.dart';
 
@@ -28,7 +29,7 @@ class _ContactCardState extends State<ContactCard> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (conversationController.conversationList.isEmpty) {
-        return const Center(child: Text('No conversation'));
+        return Container();
       }
       _selectedIndex = conversationController.conversationList.indexWhere(
           (element) =>
@@ -130,12 +131,18 @@ class _ContactCardState extends State<ContactCard> {
                     // setState(() {});
                   },
                   icon: const Icon(Icons.copy)),
-              IconButton(
-                  onPressed: () {
-                    conversationController
-                        .deleteConversation(conversation.uuid);
-                  },
-                  icon: const Icon(Icons.delete)),
+              DoubleClickButton(
+                buttonBuilder: (onPressed) => IconButton(
+                  // if is wait for response, delete should be banned for a moment.
+                  onPressed:
+                      messageController.waitingForResponse ? null : onPressed,
+                  icon: const Icon(Icons.delete),
+                ),
+                onDoubleClick: () {
+                  conversationController.deleteConversation(conversation.uuid);
+                },
+                firstClickHint: 'double_click_delete_conversation_hint'.tr,
+              ),
             ],
           )
         ],
@@ -143,43 +150,6 @@ class _ContactCardState extends State<ContactCard> {
     }
 
     return cardExpanded;
-  }
-
-  void _compConversationDetail(BuildContext context, int index) {
-    final conversation = conversationController.conversationList[index];
-    final RenderBox button = context.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset.zero),
-            ancestor: overlay),
-      ),
-      Offset.zero & overlay.size,
-    );
-    showMenu(
-      context: context,
-      position: position,
-      items: [
-        PopupMenuItem(
-          value: "delete",
-          child: Text('delete'.tr),
-        ),
-        // PopupMenuItem(
-        //   value: "rename",
-        //   child: Text('reName'.tr),
-        // ),
-      ],
-    ).then((value) {
-      if (value == "delete") {
-        conversationController.deleteConversation(conversation.uuid);
-        messageController.deleteConversationMessages(conversation.uuid);
-      }
-      //  else if (value == "rename") {
-      //   _renameConversation(context, index);
-      // }
-    });
   }
 
   void _funcTabConversation(int index) async {

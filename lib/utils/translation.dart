@@ -56,6 +56,8 @@ class Translation extends Translations {
               'Click twice to delete assistant.',
           'double_click_delete_message_hint':
               'Click twice to delete message and response.',
+          'double_click_delete_conversation_hint':
+              'Click twice to delete conversation.',
           // conversation
           'token_usage':
               '(prompt: @promptToken tokens, completion: @completionToken tokens)',
@@ -114,6 +116,7 @@ class Translation extends Translations {
           'double_click_title': '双击确认！',
           'double_click_delete_assistant_hint': '双击删除助手。',
           'double_click_delete_message_hint': '双击删除消息和回复。',
+          'double_click_delete_conversation_hint': '双击删除对话。',
           // conversation
           'token_usage':
               '(提示词 Token: @promptToken, 回答 Token: @completionToken)',
