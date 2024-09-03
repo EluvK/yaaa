@@ -4,7 +4,7 @@ class Translation extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         'en_US': {
-          'version': 'Version: @version',
+          'version': 'Yaaa Version: @version',
           // settings
           'setting': 'Setting',
           'app_settings': 'App Settings',
@@ -68,7 +68,7 @@ class Translation extends Translations {
           'file_saved': 'File saved to @path',
         },
         'zh_CN': {
-          'version': '版本: @version',
+          'version': 'Yaaa 版本: @version',
           // settings
           'setting': '设置',
           'app_settings': '应用设置',

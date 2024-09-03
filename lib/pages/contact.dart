@@ -6,6 +6,7 @@ import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/page_opener.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -62,24 +63,16 @@ class _ContactPageState extends State<ContactPage> {
             onPressed: () => PageOpener.openPage(context, const SettingPage()),
           ),
           const Divider(),
-          TextButton(
-            onPressed: () {
-              // open github repo
-              // Flushbar(
-              //   title: "information".tr,
-              //   message: '${'version'.trParams({'version': VERSION})}\nhttps://www.github.com/eluvk/yaaa',
-              //   duration: const Duration(seconds: 2),
-              //   icon: Icon(Icons.info_outline,
-              //       size: 28, color: Colors.green.shade300),
-              //   margin: const EdgeInsets.all(12.0),
-              //   borderRadius: BorderRadius.circular(8.0),
-              //   leftBarIndicatorColor: Colors.green.shade300,
-              // ).show(Get.context!);
-            },
-            child: ListTile(
-              title: Text('version'
-                  .trParams({'version': '$VERSION+$APP_BUILD_NUMBER'})),
-              leading: const Icon(Icons.info),
+          Transform.scale(
+            scale: 0.8,
+            child: TextButton(
+              onPressed: () {
+                launchRepo();
+              },
+              child: ListTile(
+                title: Text('version'.trParams({'version': VERSION})),
+                leading: const Icon(Icons.info),
+              ),
             ),
           ),
         ],

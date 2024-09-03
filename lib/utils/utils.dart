@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: constant_identifier_names
 const String VERSION =
@@ -9,6 +10,14 @@ const String VERSION =
 // ignore: constant_identifier_names
 const String APP_BUILD_NUMBER =
     String.fromEnvironment('APP_BUILD_NUMBER', defaultValue: '0');
+
+// ignore: constant_identifier_names
+const String REPO_URL = 'https://github.com/eluvk/yaaa';
+Future<void> launchRepo() async {
+  if (!await launchUrl(Uri.parse(REPO_URL))) {
+    throw Exception('Could not launch $REPO_URL');
+  }
+}
 
 bool isMobile(BuildContext context) {
   return GetPlatform.isMobile || MediaQuery.of(context).size.width < 600;
