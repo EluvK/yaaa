@@ -156,7 +156,7 @@ class _ContactCardState extends State<ContactCard> {
     Conversation conversation = conversationController.conversationList[index];
     conversationController.setCurrentConversation(conversation);
 
-    if (isMobile(context)) {
+    if (isMobile()) {
       Get.back();
     }
   }

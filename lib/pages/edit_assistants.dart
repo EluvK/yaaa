@@ -65,7 +65,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
         ),
         const Divider(),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: Row(
             children: [
               avatarContainer(
@@ -101,11 +101,11 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: editAssistantDescription(),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: editAssistantPrompt(),
         ),
         // maybe add some optional ai model settings here
@@ -123,7 +123,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           style: const TextStyle(fontSize: 12),
         ),
         Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: LayoutBuilder(
             builder: (context, constraints) {
               double totalWidth = constraints.maxWidth;
@@ -231,10 +231,10 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: Visibility(
             visible: useUniqueModel,
-            child: isMobile(context)
+            child: isMobile()
                 ? Column(
                     children: [
                       editAssistantDefinedModelProvider(),
@@ -256,7 +256,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
 
   Widget editAssistantDefinedModelProvider() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: dynDevicePadding(2),
       child: DropdownButtonFormField(
         alignment: AlignmentDirectional.bottomEnd,
         decoration: InputDecoration(
@@ -291,7 +291,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
   Widget editAssistantDefinedModelName() {
     var cProvider = widget.assistant.definedModel.provider;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: dynDevicePadding(2),
       child: DropdownButtonFormField(
         alignment: AlignmentDirectional.bottomEnd,
         decoration: InputDecoration(

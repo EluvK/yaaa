@@ -6,6 +6,7 @@ import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class ChatboxCard extends StatefulWidget {
   const ChatboxCard({super.key});
@@ -64,7 +65,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
 
   Widget buildClearContext(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: ElevatedButton(
         onPressed: _addSeparator,
         child: Row(
@@ -80,7 +81,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
 
   Widget buildChatBoxCard(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: dynDevicePadding(4),
       child: Row(
         children: [
           // const SizedBox(width: 8.0),
@@ -103,7 +104,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
               minLines: 1,
               maxLines: 10,
               keyboardType: TextInputType.multiline,
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 // hintText: 'Type a message',
                 labelText: 'type_message_hint'.tr,
                 border: const OutlineInputBorder(

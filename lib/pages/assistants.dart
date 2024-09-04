@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaaa/components/assistants.dart';
 import 'package:get/get.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class AssistantsPage extends StatelessWidget {
   const AssistantsPage({super.key});
@@ -11,9 +12,9 @@ class AssistantsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('assistant'.tr),
       ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: AssistantsCard(),
+      body: SingleChildScrollView(
+        padding: dynDevicePadding(4),
+        child: const AssistantsCard(),
       ),
     );
   }

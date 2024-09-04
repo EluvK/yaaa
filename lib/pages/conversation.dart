@@ -13,7 +13,7 @@ class ConversationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: isMobile(context)
+      appBar: isMobile()
           ? null
           : const PreferredSize(
               preferredSize: Size.fromHeight(56.0),

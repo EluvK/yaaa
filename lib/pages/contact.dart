@@ -6,7 +6,6 @@ import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/page_opener.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/utils/utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});

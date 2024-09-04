@@ -19,8 +19,16 @@ Future<void> launchRepo() async {
   }
 }
 
-bool isMobile(BuildContext context) {
-  return GetPlatform.isMobile || MediaQuery.of(context).size.width < 600;
+bool isMobile() {
+  return GetPlatform.isMobile || Get.width < 600;
+}
+
+EdgeInsets dynDevicePadding(double rate) {
+  if (isMobile()) {
+    return EdgeInsets.all(2.0 * rate);
+  } else {
+    return EdgeInsets.all(4.0 * rate);
+  }
 }
 
 // ignore: constant_identifier_names

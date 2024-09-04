@@ -7,6 +7,7 @@ import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/pages/edit_assistants.dart';
 import 'package:yaaa/utils/double_click.dart';
 import 'package:yaaa/utils/page_opener.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class AssistantsCard extends StatefulWidget {
   const AssistantsCard({super.key});
@@ -27,7 +28,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: dynDevicePadding(4),
             child: Text(
               'my_assistants'.tr,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -40,7 +41,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
                       assistant.type == AssistantType.userDefined)
                   .toList()),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: dynDevicePadding(4),
             child: Text(
               'assistant_templates'.tr,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -62,11 +63,11 @@ class _AssistantsCardState extends State<AssistantsCard> {
       return Text('no_user_assistants_noted'.tr);
     }
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: dynDevicePadding(1),
       child: LayoutBuilder(
         builder: (context, constraints) {
           double totalWidth = constraints.maxWidth;
-          double cardWidth = 300.0;
+          double cardWidth = isMobile() ? 160.0 : 300.0;
           int maxCardCountPerRow = (totalWidth / cardWidth).toInt();
           // print('total $totalWidth, cardCount $maxCardCountPerRow');
 
@@ -106,7 +107,8 @@ class _AssistantsCardState extends State<AssistantsCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  avatarContainer(context, assistant.avatarUrl, size: 40),
+                  avatarContainer(context, assistant.avatarUrl,
+                      size: isMobile() ? 30 : 40),
                   Text(assistant.name),
                 ],
               ),

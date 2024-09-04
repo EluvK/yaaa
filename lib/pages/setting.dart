@@ -28,7 +28,7 @@ class _SettingPageState extends State<SettingPage> {
         title: Text('setting'.tr),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: dynDevicePadding(4),
         child: ListView(
           children: [
             _appSetting(context),
@@ -45,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -56,7 +56,7 @@ class _SettingPageState extends State<SettingPage> {
         ),
         // Language
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: dynDevicePadding(4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -83,7 +83,7 @@ class _SettingPageState extends State<SettingPage> {
         ),
         // ThemeMode
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: dynDevicePadding(4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -129,7 +129,7 @@ class _SettingPageState extends State<SettingPage> {
         ),
         // FontSize
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: dynDevicePadding(4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -153,9 +153,9 @@ class _SettingPageState extends State<SettingPage> {
         ),
         // Simple Contact List
         Visibility(
-          visible: !isMobile(context),
+          visible: !isMobile(),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: dynDevicePadding(4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -180,7 +180,7 @@ class _SettingPageState extends State<SettingPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: dynDevicePadding(2),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -190,7 +190,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: dynDevicePadding(1),
           child: DropdownButtonFormField(
             alignment: AlignmentDirectional.bottomEnd,
             decoration: InputDecoration(
@@ -212,11 +212,11 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: dynDevicePadding(1),
           child: Column(
             children: [
               // default model and base url
-              isMobile(context)
+              isMobile()
                   ? Column(
                       children: [
                         // choose provider default model
@@ -247,7 +247,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+          padding: dynDevicePadding(4),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text('model_setting_notes'.tr),
@@ -260,7 +260,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _editProviderDefaultModel(LLMProviderEnum cProvider) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: dynDevicePadding(2),
       child: DropdownButtonFormField(
         alignment: AlignmentDirectional.bottomEnd,
         decoration: InputDecoration(
@@ -287,7 +287,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _editProviderBaseUrl(LLMProviderEnum cProvider) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: dynDevicePadding(2),
       child: TextField(
         decoration: InputDecoration(
           labelText: 'base_url'.tr,
@@ -308,7 +308,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _editAPIKey(LLMProviderEnum cProvider) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: dynDevicePadding(2),
       child: TextField(
         decoration: InputDecoration(
           suffixIcon: IconButton(

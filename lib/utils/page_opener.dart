@@ -7,7 +7,7 @@ class PageOpener {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     // 如果是移动端，或者屏幕宽度较小，则全屏打开
-    if (isMobile(context)) {
+    if (isMobile()) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => page),

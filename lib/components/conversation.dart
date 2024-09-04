@@ -6,6 +6,7 @@ import 'package:yaaa/components/markdown_message.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/utils/double_click.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class ConversationCard extends StatefulWidget {
   const ConversationCard({super.key});
@@ -59,17 +60,32 @@ class _ConversationCardState extends State<ConversationCard> {
 
   Widget _compMessage(Message message) {
     final colorScheme = Theme.of(context).colorScheme;
+
     bool isUser = message.role == MessageRole.user;
     bool isAssistant = message.role == MessageRole.assistant;
-    return ListTile(
-      leading: isUser
+
+    Widget? leading;
+    Widget? trailing;
+    if (isMobile()) {
+      leading = isUser
+          ? const Icon(Icons.person, size: 20)
+          : isAssistant
+              ? const Icon(Icons.smart_toy, size: 20)
+              : const Icon(Icons.settings, size: 20);
+    } else {
+      leading = isUser
           ? const SizedBox(width: 25)
           : isAssistant
               ? const Icon(Icons.smart_toy, size: 25)
-              : const Icon(Icons.settings, size: 25),
-      trailing: isUser
+              : const Icon(Icons.settings, size: 25);
+      trailing = isUser
           ? const Icon(Icons.person, size: 25)
-          : const SizedBox(width: 25),
+          : const SizedBox(width: 25);
+    }
+
+    return ListTile(
+      leading: leading,
+      trailing: trailing,
       title: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         decoration: BoxDecoration(

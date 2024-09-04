@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class CodeWrapperWidget extends StatefulWidget {
   final Widget child;
@@ -30,7 +31,7 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
         Align(
           alignment: Alignment.topRight,
           child: Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: dynDevicePadding(4),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
