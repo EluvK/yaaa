@@ -23,10 +23,23 @@ class SettingController extends GetxController {
 
   static SettingController get to => Get.find<SettingController>();
 
+  // v0.0.4 fix v0.0.3 code typo
+  fix004() {
+    // providers['deepseek']?.model
+    // find name 'deepseek-code' , change it to 'deepseek-coder'
+    if (providers['deepseek']?.model.contains('deepseek-code') ?? false) {
+      providers['deepseek']?.model.remove('deepseek-code');
+      providers['deepseek']?.model.add('deepseek-coder');
+      saveModelSetting();
+    }
+  }
+
   @override
   Future<void> onInit() async {
     await getAppSetting();
     await getModelSetting();
+    fix004();
+
     super.onInit();
   }
 

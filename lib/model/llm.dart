@@ -43,7 +43,7 @@ class LLMProvider {
 
   static var deepSeek = LLMProvider(
     name: LLMProviderEnum.DeepSeek,
-    model: ['deepseek-chat', 'deepseek-code'],
+    model: ['deepseek-chat', 'deepseek-coder'],
     baseUrl: LLMProviderEnum.DeepSeek.defaultBaseUrl,
     defaultModel: 'deepseek-chat',
     apiKey: null,

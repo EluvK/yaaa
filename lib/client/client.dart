@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:yaaa/client/llm/deepseek.dart';
+import 'package:yaaa/client/llm/openai.dart';
+import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/model/llm.dart';
 
 class ClientManager {
   static final ClientManager _instance = ClientManager._internal();
@@ -10,13 +14,7 @@ class ClientManager {
     return _instance;
   }
 
-  ClientManager._internal() {
-    // try read from settings
-    // var openAiCLient = OpenAIClient(
-    //   apiKey: "SK_TEST",
-    //   baseUrl: "https://api.openai.com",
-    // );
-  }
+  ClientManager._internal();
 
   void postMessage(
     List<Message> messages,
@@ -25,6 +23,21 @@ class ClientManager {
     ValueChanged<Message> onError,
     ValueChanged<Message> onSuccess,
   ) {
-    Deepseek().chat(messages, definedModel, onStream, onError, onSuccess);
+    final settingController = Get.find<SettingController>();
+    LLMProviderEnum provider = settingController.getDefaultProvider();
+    if (definedModel != null && definedModel.enable) {
+      provider = definedModel.provider;
+    }
+
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        OpenAI().chat(messages, definedModel, onStream, onError, onSuccess);
+        break;
+      case LLMProviderEnum.DeepSeek:
+        Deepseek().chat(messages, definedModel, onStream, onError, onSuccess);
+        break;
+      default:
+        break;
+    }
   }
 }
