@@ -82,7 +82,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
               children: assistants.map((assistant) {
                 return SizedBox(
                   width: cardWidth,
-                  height: 136.0,
+                  height: (isMobile() ? 112 : 136),
                   child: _compAssistantCard(context, assistant),
                 );
               }).toList(),

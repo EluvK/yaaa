@@ -172,21 +172,18 @@ class ContactBar extends StatefulWidget {
 class _ContactBarState extends State<ContactBar> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56,
-      child: AppBar(
-        centerTitle: true,
-        title: Text('contact'.tr),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              PageOpener.openPage(context, const AssistantsPage());
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
+    return AppBar(
+      centerTitle: true,
+      title: Text('contact'.tr),
+      automaticallyImplyLeading: false,
+      actions: [
+        IconButton(
+          onPressed: () {
+            PageOpener.openPage(context, const AssistantsPage());
+          },
+          icon: const Icon(Icons.add),
+        ),
+      ],
     );
   }
 }

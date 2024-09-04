@@ -92,32 +92,21 @@ class _SettingPageState extends State<SettingPage> {
                 segments: [
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.light,
-                    label: Text(
-                      'mode_light'.tr,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.clip,
-                    ),
+                    tooltip: 'mode_light'.tr,
                     icon: const Icon(Icons.light_mode_sharp),
                   ),
                   ButtonSegment<ThemeMode>(
+                    tooltip: 'mode_system'.tr,
                     value: ThemeMode.system,
-                    label: Text(
-                      'mode_system'.tr,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.clip,
-                    ),
-                    icon: const Icon(Icons.settings_system_daydream_sharp),
+                    icon: const Icon(Icons.settings_applications_sharp),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.dark,
-                    label: Text(
-                      'mode_dark'.tr,
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.clip,
-                    ),
+                    tooltip: 'mode_dark'.tr,
                     icon: const Icon(Icons.dark_mode_sharp),
                   ),
                 ],
+                showSelectedIcon: false,
                 selected: {settingController.themeMode.value},
                 onSelectionChanged: (Set<ThemeMode> newSelection) {
                   settingController.setThemeMode(newSelection.first);

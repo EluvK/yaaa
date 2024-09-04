@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
         // scheme: FlexScheme.deepBlue,
         // scheme: FlexScheme.bahamaBlue,
         surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 7,
+        blendLevel: 14,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 20,
           useTextTheme: true,
