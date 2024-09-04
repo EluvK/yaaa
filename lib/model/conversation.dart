@@ -59,7 +59,7 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      uuid: map[ConversationRepository._columnMessageConversationUuid],
+      uuid: map[ConversationRepository._columnMessageUuid],
       conversationUuid:
           map[ConversationRepository._columnMessageConversationUuid],
       text: map[ConversationRepository._columnMessageText],
