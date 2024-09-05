@@ -6,12 +6,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:yaaa/model/llm.dart';
 
 class SettingController extends GetxController {
-  final box = GetStorage();
+  final box = GetStorage('YaaaGetStorage');
 
   // app settings
   final themeMode = ThemeMode.system.obs;
   final fontSize = 1.0.obs;
-  Locale? locale;
+  final locale = const Locale('en').obs;
   final expandContactList = true.obs;
 
   // model settings
@@ -23,24 +23,80 @@ class SettingController extends GetxController {
 
   static SettingController get to => Get.find<SettingController>();
 
-  // v0.0.4 fix v0.0.3 code typo
-  fix004() {
-    // providers['deepseek']?.model
-    // find name 'deepseek-code' , change it to 'deepseek-coder'
+  // v0.0.4 migrate box container to YaaaGetStorage
+  fix004Migrate() async {
+    print('========start fix004 Migrate========');
+    String? tryReadTheme = box.read('theme');
+    print('tryReadTheme $tryReadTheme');
+    if (tryReadTheme != null) {
+      print('migrate has been done');
+      return;
+    }
+
+    await GetStorage.init('GetStorage');
+    final oldBox = GetStorage('GetStorage');
+
+    // get app setting:
+    String themeText = oldBox.read('theme') ?? 'system';
+    print('read theme from old_box $themeText');
+    try {
+      themeMode.value =
+          ThemeMode.values.firstWhere((e) => e.toString() == themeText);
+    } catch (e) {
+      print('theme not found, setting to system $e');
+      themeMode.value = ThemeMode.system;
+    }
+
+    fontSize.value = oldBox.read('fontSize') ?? 1.0;
+    print('read fontSized from old_box $fontSize');
+
+    String? localeLanguage =
+        oldBox.read('locale') ?? Get.deviceLocale?.languageCode;
+    if (localeLanguage != null) {
+      locale.value = Locale(localeLanguage);
+    }
+    // locale = oldBox.read('locale') ?? Get.deviceLocale;
+    print('read locale from old_box $locale');
+
+    expandContactList.value = oldBox.read('expandContactList') ?? true;
+
+    var readValue = oldBox.read('providers');
+    print('read providers from old_box $readValue');
+    if (readValue != null) {
+      var jsonValue = jsonDecode(readValue);
+      print("getModelSetting $jsonValue");
+      // providers.value = jsonDecode(readValue);
+      jsonValue.forEach((key, value) {
+        providers[key] = LLMProvider.fromJson(value);
+      });
+    }
+
+    // v0.0.4 fix v0.0.3 code typo
     if (providers['deepseek']?.model.contains('deepseek-code') ?? false) {
       providers['deepseek']?.model.remove('deepseek-code');
       providers['deepseek']?.model.add('deepseek-coder');
-      saveModelSetting();
     }
+
+    print('============migrate finish============');
+    saveAppSetting();
+    saveModelSetting();
   }
 
   @override
   Future<void> onInit() async {
+    print('setting controller onInit');
     await getAppSetting();
     await getModelSetting();
-    fix004();
-
     super.onInit();
+    _initialized = true;
+  }
+
+  bool _initialized = false;
+  Future<void> ensureInitialization() async {
+    while (!_initialized) {
+      await onInit();
+    }
+    return;
   }
 
   getAppSetting() async {
@@ -57,10 +113,22 @@ class SettingController extends GetxController {
     fontSize.value = box.read('fontSize') ?? 1.0;
     print('read fontSized from box $fontSize');
 
-    locale = box.read('locale') ?? Get.deviceLocale;
+    String? localeLanguage =
+        box.read('locale') ?? Get.deviceLocale?.languageCode;
+    if (localeLanguage != null) {
+      locale.value = Locale(localeLanguage);
+    }
+    // locale = box.read('locale') ?? Get.deviceLocale;
     print('read locale from box $locale');
 
     expandContactList.value = box.read('expandContactList') ?? true;
+  }
+
+  saveAppSetting() {
+    box.write('theme', themeMode.value.toString());
+    box.write('fontSize', fontSize.value);
+    box.write('locale', locale.value.languageCode);
+    box.write('expandContactList', expandContactList.value);
   }
 
   setThemeMode(ThemeMode theme) {
@@ -79,8 +147,9 @@ class SettingController extends GetxController {
 
   setLocale(Locale locale) {
     print('setting locale: $locale');
-    this.locale = locale;
+    this.locale.value = locale;
     Get.updateLocale(locale);
+    box.write('locale', locale.languageCode);
   }
 
   setExpandContactList(bool expand) {

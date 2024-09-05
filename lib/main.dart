@@ -15,7 +15,7 @@ import 'package:yaaa/utils/init.dart';
 import 'package:yaaa/utils/translation.dart';
 
 void main() async {
-  await GetStorage.init();
+  await GetStorage.init('YaaaGetStorage');
 
   if (!Platform.isAndroid && !Platform.isIOS) {
     sqfliteFfiInit();
@@ -24,24 +24,29 @@ void main() async {
 
   await Get.putAsync(() async {
     final controller = SettingController();
-    await controller.onInit();
     return controller;
   });
   await Get.putAsync(() async {
     final controller = MessageController();
-    await controller.onInit();
     return controller;
   });
   await Get.putAsync(() async {
     final controller = ConversationController();
-    await controller.onInit();
     return controller;
   });
   await Get.putAsync(() async {
     final controller = AssistantController();
-    await controller.onInit();
     return controller;
   });
+
+  // should init before app start
+  final settingController = Get.find<SettingController>();
+  await settingController.ensureInitialization();
+
+  //! v0.0.4 compromise , could delete in the future
+  await settingController.fix004Migrate();
+
+  // init conversation message
   await initConversation();
 
   runApp(const MyApp());
@@ -62,7 +67,7 @@ class MyApp extends StatelessWidget {
     final scale = mediaQueryData.textScaler
         .clamp(minScaleFactor: fontSize, maxScaleFactor: fontSize + 0.1);
 
-    var locale = settingController.locale ?? Get.deviceLocale;
+    var locale = settingController.locale.value;
     print('load locale: $locale');
 
     var app = GetMaterialApp(

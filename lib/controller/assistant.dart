@@ -18,6 +18,15 @@ class AssistantController extends GetxController {
   Future<void> onInit() async {
     assistantList.value = await AssistantRepository().getAllAssistants();
     super.onInit();
+    _initialized = true;
+  }
+
+  bool _initialized = false;
+  Future<void> ensureInitialization() async {
+    while (!_initialized) {
+      await onInit();
+    }
+    return;
   }
 
   void duplicateAssistant(String uuid) {

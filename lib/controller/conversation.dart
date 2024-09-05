@@ -23,6 +23,15 @@ class ConversationController extends GetxController {
     conversationList.value =
         await ConversationRepository().getAllConversations();
     super.onInit();
+    _initialized = true;
+  }
+
+  bool _initialized = false;
+  Future<void> ensureInitialization() async {
+    while (!_initialized) {
+      await onInit();
+    }
+    return;
   }
 
   setCurrentConversation(Conversation conversation) async {
@@ -74,6 +83,15 @@ class MessageController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    _initialized = true;
+  }
+
+  bool _initialized = false;
+  Future<void> ensureInitialization() async {
+    while (!_initialized) {
+      await onInit();
+    }
+    return;
   }
 
   Future<void> loadMessages(String conversationUuid) async {

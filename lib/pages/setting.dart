@@ -62,18 +62,18 @@ class _SettingPageState extends State<SettingPage> {
             children: [
               Text('language'.tr),
               DropdownButton<Locale>(
-                value: settingController.locale ?? Get.deviceLocale,
+                value: settingController.locale.value,
                 onChanged: (Locale? newValue) {
                   settingController.setLocale(newValue!);
                   setState(() {});
                 },
                 items: const [
                   DropdownMenuItem(
-                    value: Locale('en', 'US'),
+                    value: Locale('en'),
                     child: Text('English'),
                   ),
                   DropdownMenuItem(
-                    value: Locale('zh', 'CN'),
+                    value: Locale('zh'),
                     child: Text('中文'),
                   ),
                 ],
