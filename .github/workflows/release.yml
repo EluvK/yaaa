@@ -57,7 +57,7 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: yaaa_desktop_windows_setup.exe
+          name: yaaa_desktop_windows_setup.exe.zip
           path: build/yaaa_desktop_windows_setup.exe
 
       - name: Upload windows setup exe to release
