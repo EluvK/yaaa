@@ -46,6 +46,7 @@ class _ContactPageState extends State<ContactPage> {
         children: [
           const ContactBar(),
           const Expanded(child: ContactCard()), // for contact list
+          const Divider(),
           TextButton(
             child: ListTile(
               title: Text('assistant'.tr),
@@ -82,7 +83,7 @@ class _ContactPageState extends State<ContactPage> {
   Container _buildContact(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: dynDevicePadding(2),
       margin: const EdgeInsets.only(right: 2.0),
       decoration: BoxDecoration(
         color: colorScheme.surface,
@@ -98,6 +99,7 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(
         children: [
           const Expanded(child: ContactCard()), // for contact list
+          const Divider(),
           IconButton(
             // icon: const Icon(Icons.line_axis),
             icon: const Icon(Icons.assistant),

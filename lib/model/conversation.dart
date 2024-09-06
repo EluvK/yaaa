@@ -8,21 +8,34 @@ class Conversation {
   String uuid;
   String assistantName;
   String assistantUuid;
+  bool like;
 
   Conversation({
     required this.name,
     required this.uuid,
     required this.assistantName,
     required this.assistantUuid,
+    this.like = false,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
-      'uuid': uuid,
-      'assistant_name': assistantName,
-      'assistant_uuid': assistantUuid,
+      ConversationRepository._columnName: name,
+      ConversationRepository._columnUuid: uuid,
+      ConversationRepository._columnAssistantName: assistantName,
+      ConversationRepository._columnAssistantUuid: assistantUuid,
+      ConversationRepository._columnLike: like ? 1 : 0,
     };
+  }
+
+  factory Conversation.fromMap(Map<String, dynamic> map) {
+    return Conversation(
+      name: map[ConversationRepository._columnName],
+      uuid: map[ConversationRepository._columnUuid],
+      assistantName: map[ConversationRepository._columnAssistantName],
+      assistantUuid: map[ConversationRepository._columnAssistantUuid],
+      like: map[ConversationRepository._columnLike] == 1,
+    );
   }
 }
 
@@ -99,10 +112,11 @@ class Usage {
 
 class ConversationRepository {
   static const String _tableConversationName = 'conversations';
-  static const String _columnUuid = 'uuid';
   static const String _columnName = 'name';
+  static const String _columnUuid = 'uuid';
   static const String _columnAssistantName = 'assistant_name';
   static const String _columnAssistantUuid = 'assistant_uuid';
+  static const String _columnLike = 'like';
 
   static const String _tableMessageName = 'messages';
   static const String _columnMessageUuid = 'uuid';
@@ -120,14 +134,22 @@ class ConversationRepository {
   Future<Database> _getDb() async {
     _database ??= await openDatabase(
       'yaaa_conversation.db',
-      version: 1,
+      version: 2,
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE $_tableConversationName ADD COLUMN like INTEGER DEFAULT 0;
+            ''');
+        }
+      },
       onCreate: (Database db, int version) async {
         await db.execute('''
             CREATE TABLE $_tableConversationName (
               $_columnUuid TEXT PRIMARY KEY,
               $_columnName TEXT NOT NULL,
               $_columnAssistantName TEXT NOT NULL,
-              $_columnAssistantUuid TEXT NOT NULL
+              $_columnAssistantUuid TEXT NOT NULL,
+              $_columnLike INTEGER DEFAULT 0
             )
           ''');
         await db.execute('''
@@ -169,26 +191,22 @@ class ConversationRepository {
     final List<Map<String, dynamic>> maps =
         await db.query(_tableConversationName);
 
-    return List.generate(maps.length, (i) {
-      return Conversation(
-        name: maps[i][_columnName],
-        uuid: maps[i][_columnUuid],
-        assistantName: maps[i][_columnAssistantName],
-        assistantUuid: maps[i][_columnAssistantUuid],
-      );
+    var result = List.generate(maps.length, (i) {
+      return Conversation.fromMap(maps[i]);
     });
+    result.sort((a, b) => a.like == b.like
+        ? 0
+        : a.like
+            ? -1
+            : 1);
+    return result;
   }
 
   Future<void> addConversation(Conversation conversation) async {
     final db = await _getDb();
     await db.insert(
       _tableConversationName,
-      {
-        _columnUuid: conversation.uuid,
-        _columnName: conversation.name,
-        _columnAssistantName: conversation.assistantName,
-        _columnAssistantUuid: conversation.assistantUuid,
-      },
+      conversation.toMap(),
     );
   }
 
@@ -196,12 +214,7 @@ class ConversationRepository {
     final db = await _getDb();
     await db.update(
       _tableConversationName,
-      {
-        _columnUuid: conversation.uuid,
-        _columnName: conversation.name,
-        _columnAssistantName: conversation.assistantName,
-        _columnAssistantUuid: conversation.assistantUuid,
-      },
+      conversation.toMap(),
       where: '$_columnUuid = ?',
       whereArgs: [conversation.uuid],
     );

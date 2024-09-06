@@ -125,14 +125,14 @@ class _AssistantsCardState extends State<AssistantsCard> {
                         context, EditAssistantPage(assistant: assistant));
                   },
                   icon: const Icon(Icons.edit),
-                  // label: const Text('Edit'),
+                  tooltip: 'tooltip_edit_assistant'.tr,
                 ),
                 IconButton(
                   onPressed: () {
                     assistantController.duplicateAssistant(assistant.uuid);
                   },
                   icon: const Icon(Icons.copy),
-                  // label: const Text('Duplicate'),
+                  tooltip: 'tooltip_duplicate_assistant'.tr,
                 ),
                 DoubleClickButton(
                   buttonBuilder: (onPressed) => IconButton(
@@ -140,7 +140,7 @@ class _AssistantsCardState extends State<AssistantsCard> {
                         ? null
                         : onPressed,
                     icon: const Icon(Icons.delete),
-                    // label: const Text('Delete'),
+                    tooltip: 'tooltip_delete_assistant'.tr,
                   ),
                   onDoubleClick: () {
                     assistantController.deleteAssistant(assistant.uuid);

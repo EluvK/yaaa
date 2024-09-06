@@ -50,6 +50,13 @@ class Translation extends Translations {
           'edit_conversation': 'Edit Conversation `@name`',
           'conversation_uuid': 'Conversation UUID',
           'conversation_name': 'Conversation Name',
+          'tooltip_edit_conversation': 'Edit Conversation',
+          'tooltip_delete_conversation': 'Delete Conversation',
+          'tooltip_duplicate_conversation': 'Duplicate Conversation',
+          'tooltip_edit_assistant': 'Edit Assistant',
+          'tooltip_delete_assistant': 'Delete Assistant',
+          'tooltip_duplicate_assistant': 'Duplicate Assistant',
+          'tooltip_like': 'Like',
           // double click
           'double_click_title': 'Double Click Check!',
           'double_click_delete_assistant_hint':
@@ -112,6 +119,13 @@ class Translation extends Translations {
           'edit_conversation': '编辑对话 `@name`',
           'conversation_uuid': '对话 ID',
           'conversation_name': '对话名称',
+          'tooltip_edit_conversation': '编辑对话',
+          'tooltip_delete_conversation': '删除对话',
+          'tooltip_duplicate_conversation': '复制对话',
+          'tooltip_edit_assistant': '编辑助手',
+          'tooltip_delete_assistant': '删除助手',
+          'tooltip_duplicate_assistant': '复制助手',
+          'tooltip_like': '收藏',
           // double click
           'double_click_title': '双击确认！',
           'double_click_delete_assistant_hint': '双击删除助手。',

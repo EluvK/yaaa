@@ -70,6 +70,18 @@ class ConversationController extends GetxController {
     PageOpener.openPage(
         context, EditConversationPage(conversation: conversation));
   }
+
+  int likeContactConversation(Conversation conversation) {
+    int newPos = conversationList.fold(
+        0, (previousValue, element) => previousValue + (element.like ? 1 : 0));
+    newPos = conversation.like ? newPos - 1 : newPos;
+    conversationList
+        .removeWhere((element) => element.uuid == conversation.uuid);
+    conversationList.insert(newPos, conversation);
+    conversation.like = !conversation.like;
+    ConversationRepository().updateConversation(conversation);
+    return newPos;
+  }
 }
 
 class MessageController extends GetxController {

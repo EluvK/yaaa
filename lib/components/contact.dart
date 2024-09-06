@@ -46,29 +46,32 @@ class _ContactCardState extends State<ContactCard> {
   }
 
   Widget _compConversation(Conversation conversation, int index) {
-    return Card(
-      color: _selectedIndex == index
-          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
-          : null,
-      child: settingController.getExpandContactList()
-          ? _compConversationCardExpanded(conversation, index)
-          : _compConversationCard(conversation, index),
-    );
-  }
-
-  Widget _compConversationCard(Conversation conversation, int index) {
-    return avatarContainer(
-      context,
-      assistantController.assistantList
-          .firstWhereOrNull(
-              (element) => element.uuid == conversation.assistantUuid)
-          ?.avatarUrl,
-      size: 48,
-      onTap: () {
-        _funcTabConversation(index);
-      },
-      color: _selectedIndex == index ? Colors.blue.shade100 : Colors.white,
-    );
+    var selectedColor =
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.1);
+    return settingController.getExpandContactList()
+        ? Card(
+            color: _selectedIndex == index ? selectedColor : null,
+            child: _compConversationCardExpanded(conversation, index))
+        : Align(
+            alignment: Alignment.centerLeft,
+            child: Card(
+              color: _selectedIndex == index ? selectedColor : null,
+              child: avatarContainer(
+                context,
+                assistantController.assistantList
+                    .firstWhereOrNull(
+                        (element) => element.uuid == conversation.assistantUuid)
+                    ?.avatarUrl,
+                size: _selectedIndex == index ? 56 : 48,
+                onTap: () {
+                  _funcTabConversation(index);
+                },
+                color: _selectedIndex == index
+                    ? Colors.blue.shade100
+                    : Colors.white,
+              ),
+            ),
+          );
   }
 
   Widget _compConversationCardExpanded(Conversation conversation, int index) {
@@ -110,33 +113,56 @@ class _ContactCardState extends State<ContactCard> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                  onPressed: () {
-                    conversationController.editContactConversation(
-                        context, conversation);
-                  },
-                  icon: const Icon(Icons.edit)),
+                onPressed: () {
+                  conversationController.editContactConversation(
+                      context, conversation);
+                },
+                icon: const Icon(Icons.edit),
+                tooltip: 'tooltip_edit_conversation'.tr,
+              ),
               IconButton(
-                  onPressed: () {
-                    assistantController.editConversationAssistant(
-                        context, conversation);
-                  },
-                  icon: const Icon(Icons.assistant)),
+                onPressed: () {
+                  assistantController.editConversationAssistant(
+                      context, conversation);
+                  setState(() {});
+                },
+                icon: const Icon(Icons.assistant),
+                tooltip: 'tooltip_edit_assistant'.tr,
+              ),
               IconButton(
-                  onPressed: () {
-                    assistantController
-                        .duplicationAssistantConversation(conversation);
-                    _moreInfoIndex = -1;
-                    // actually not need setState to refresh,
-                    // if success to duplicate, the conversation will be added to the list and set to current.
-                    // setState(() {});
-                  },
-                  icon: const Icon(Icons.copy)),
+                onPressed: () {
+                  assistantController
+                      .duplicationAssistantConversation(conversation);
+                  _moreInfoIndex = -1;
+                  // actually not need setState to refresh,
+                  // if success to duplicate, the conversation will be added to the list and set to current.
+                  // setState(() {});
+                },
+                icon: const Icon(Icons.copy),
+                tooltip: 'tooltip_duplicate_conversation'.tr,
+              ),
+              IconButton(
+                onPressed: () {
+                  _moreInfoIndex = conversationController
+                      .likeContactConversation(conversation);
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.star_rounded,
+                  color: conversation.like ? Colors.amber : null,
+                ),
+                tooltip: 'tooltip_like'.tr,
+              ),
               DoubleClickButton(
                 buttonBuilder: (onPressed) => IconButton(
                   // if is wait for response, delete should be banned for a moment.
                   onPressed:
-                      messageController.waitingForResponse ? null : onPressed,
+                      messageController.waitingForResponse || conversation.like
+                          ? null
+                          : onPressed,
                   icon: const Icon(Icons.delete),
+
+                  tooltip: 'tooltip_delete_conversation'.tr,
                 ),
                 onDoubleClick: () {
                   conversationController.deleteConversation(conversation.uuid);
