@@ -2,16 +2,28 @@ import 'package:openai_dart/openai_dart.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaaa/model/conversation.dart' as yaaa_model;
 
+class ModelParam {
+  String baseUrl;
+  String? apiKey;
+  String modelName;
+  double temperature;
+
+  ModelParam({
+    required this.baseUrl,
+    required this.apiKey,
+    required this.modelName,
+    required this.temperature,
+  });
+}
+
 void commonOpenAIClientChat(
-  String? apiKey,
-  String baseUrl,
-  String model,
+  ModelParam param,
   List<yaaa_model.Message> messages,
   Function(yaaa_model.Message) onStream,
   Function(yaaa_model.Message) onError,
   Function(yaaa_model.Message) onSuccess,
 ) {
-  var client = OpenAIClient(apiKey: apiKey, baseUrl: baseUrl);
+  var client = OpenAIClient(apiKey: param.apiKey, baseUrl: param.baseUrl);
 
   // map message to OpenAIChatCompletionChoiceMessageModel
   List<ChatCompletionMessage> sendMessages = messages.map((e) {
@@ -33,8 +45,9 @@ void commonOpenAIClientChat(
   );
   var chatStream = client.createChatCompletionStream(
     request: CreateChatCompletionRequest(
-      model: ChatCompletionModel.modelId(model),
+      model: ChatCompletionModel.modelId(param.modelName),
       messages: sendMessages,
+      temperature: param.temperature,
     ),
   );
   chatStream.listen(
@@ -50,7 +63,6 @@ void commonOpenAIClientChat(
         print("Content is null");
       }
       if (streamEvent.usage != null) {
-        //
         print("Usage: ${streamEvent.usage}");
         returnMessage.usage = yaaa_model.Usage(
           promptTokens: streamEvent.usage!.promptTokens,

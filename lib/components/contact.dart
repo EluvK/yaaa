@@ -62,7 +62,7 @@ class _ContactCardState extends State<ContactCard> {
                     .firstWhereOrNull(
                         (element) => element.uuid == conversation.assistantUuid)
                     ?.avatarUrl,
-                size: _selectedIndex == index ? 56 : 48,
+                size: _selectedIndex == index ? 44 : 36,
                 onTap: () {
                   _funcTabConversation(index);
                 },

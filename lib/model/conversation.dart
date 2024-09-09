@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:sqflite/sqflite.dart';
 import 'package:yaaa/utils/predefined.dart';
 
@@ -276,28 +274,5 @@ class ConversationRepository {
       where: '$_columnMessageConversationUuid = ?',
       whereArgs: [conversationUuid],
     );
-  }
-
-  // debug print all messsages in db
-  Future<void> printAllMessages() async {
-    final db = await _getDb();
-    final List<Map<String, dynamic>> maps = await db.query(_tableMessageName);
-
-    print((" - debug print all messages ", maps));
-
-    // delete all messages
-    // await db.delete(_tableMessageName);
-  }
-
-  // debug show all databases
-  Future<void> showAllDatabases() async {
-    final databasesPath = await getDatabasesPath();
-    print((" - debug show all databases ", databasesPath));
-
-    // list files in databasesPath
-    final files = Directory(databasesPath).listSync();
-    for (var file in files) {
-      print((" - debug show all databases ", file));
-    }
   }
 }

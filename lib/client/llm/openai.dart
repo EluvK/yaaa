@@ -23,11 +23,19 @@ class OpenAI {
         settingController.getCurrentProviderApiKey(LLMProviderEnum.OpenAI);
     var model = settingController
         .getCurrentProviderDefaultModel(LLMProviderEnum.OpenAI);
+    var temperature =
+        settingController.getCurrentProviderTemperature(LLMProviderEnum.OpenAI);
     if (definedModel != null && definedModel.enable) {
       model = definedModel.modelName;
+      temperature = definedModel.temperature;
     }
 
-    commonOpenAIClientChat(
-        apiKey, baseUrl, model, messages, onStream, onError, onSuccess);
+    final param = ModelParam(
+      baseUrl: baseUrl,
+      apiKey: apiKey,
+      modelName: model,
+      temperature: temperature,
+    );
+    commonOpenAIClientChat(param, messages, onStream, onError, onSuccess);
   }
 }

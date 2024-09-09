@@ -35,6 +35,8 @@ class Assistant {
       AssistantRepository._columnDefinedModelProvider:
           definedModel.provider.name,
       AssistantRepository._columnDefinedModelName: definedModel.modelName,
+      AssistantRepository._columnDefinedModelTemperature:
+          definedModel.temperature,
     };
   }
 
@@ -52,6 +54,7 @@ class Assistant {
         provider: LLMProviderEnum.values.firstWhere((e) =>
             e.name == map[AssistantRepository._columnDefinedModelProvider]),
         modelName: map[AssistantRepository._columnDefinedModelName],
+        temperature: map[AssistantRepository._columnDefinedModelTemperature],
       ),
     );
   }
@@ -66,11 +69,13 @@ class DefinedModel {
   bool enable;
   LLMProviderEnum provider;
   String modelName;
+  double temperature;
 
   DefinedModel({
     this.enable = true,
     required this.provider,
     required this.modelName,
+    required this.temperature,
   });
 
   static DefinedModel defaultDisable() {
@@ -78,6 +83,7 @@ class DefinedModel {
       enable: false,
       provider: LLMProviderEnum.OpenAI,
       modelName: 'gpt-4o-mini',
+      temperature: 1.0,
     );
   }
 }
@@ -117,6 +123,8 @@ class AssistantRepository {
   static const String _columnEnableDefinedModel = 'enableDefinedModel';
   static const String _columnDefinedModelProvider = 'definedModelProvider';
   static const String _columnDefinedModelName = 'definedModelName';
+  static const String _columnDefinedModelTemperature =
+      'definedModelTemperature';
 
   static Database? _database;
 
@@ -125,7 +133,14 @@ class AssistantRepository {
 
     _database ??= await openDatabase(
       'yaaa_assistant.db',
-      version: 1,
+      version: 2,
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE $_tableName ADD COLUMN definedModelTemperature REAL default 1.0;
+            ''');
+        }
+      },
       onCreate: (Database db, int version) async {
         await db.execute('''
             CREATE TABLE $_tableName (
@@ -137,7 +152,8 @@ class AssistantRepository {
               $_columnAvatarUrl TEXT,
               $_columnEnableDefinedModel INTEGER,
               $_columnDefinedModelProvider TEXT,
-              $_columnDefinedModelName TEXT
+              $_columnDefinedModelName TEXT,
+              $_columnDefinedModelTemperature REAL DEFAULT 1.0
             )
           ''');
       },
@@ -165,20 +181,7 @@ class AssistantRepository {
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
     return List.generate(maps.length, (i) {
-      return Assistant(
-        name: maps[i][_columnName],
-        uuid: maps[i][_columnUuid],
-        type: AssistantTypeExtension.fromStr(maps[i][_columnType]),
-        description: maps[i][_columnDescription],
-        prompt: maps[i][_columnPrompt],
-        avatarUrl: maps[i][_columnAvatarUrl],
-        definedModel: DefinedModel(
-          enable: maps[i][_columnEnableDefinedModel] == 1,
-          provider: LLMProviderEnum.values.firstWhere(
-              (e) => e.name == maps[i][_columnDefinedModelProvider]),
-          modelName: maps[i][_columnDefinedModelName],
-        ),
-      );
+      return Assistant.fromMap(maps[i]);
     });
   }
 
@@ -186,17 +189,7 @@ class AssistantRepository {
     final db = await _getDb();
     await db.insert(
       _tableName,
-      {
-        _columnUuid: assistant.uuid,
-        _columnName: assistant.name,
-        _columnType: assistant.type.toStr,
-        _columnDescription: assistant.description,
-        _columnPrompt: assistant.prompt,
-        _columnAvatarUrl: assistant.avatarUrl,
-        _columnEnableDefinedModel: assistant.definedModel.enable ? 1 : 0,
-        _columnDefinedModelProvider: assistant.definedModel.provider.name,
-        _columnDefinedModelName: assistant.definedModel.modelName,
-      },
+      assistant.toMap(),
     );
   }
 
@@ -204,17 +197,7 @@ class AssistantRepository {
     final db = await _getDb();
     await db.update(
       _tableName,
-      {
-        _columnUuid: assistant.uuid,
-        _columnName: assistant.name,
-        _columnType: assistant.type.toStr,
-        _columnDescription: assistant.description,
-        _columnPrompt: assistant.prompt,
-        _columnAvatarUrl: assistant.avatarUrl,
-        _columnEnableDefinedModel: assistant.definedModel.enable ? 1 : 0,
-        _columnDefinedModelProvider: assistant.definedModel.provider.name,
-        _columnDefinedModelName: assistant.definedModel.modelName,
-      },
+      assistant.toMap(),
       where: '$_columnUuid = ?',
       whereArgs: [assistant.uuid],
     );

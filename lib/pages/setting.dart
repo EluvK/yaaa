@@ -232,6 +232,7 @@ class _SettingPageState extends State<SettingPage> {
                     ),
               // api key
               _editAPIKey(cProvider),
+              _editModelTemperature(cProvider),
             ],
           ),
         ),
@@ -322,6 +323,37 @@ class _SettingPageState extends State<SettingPage> {
             value,
           );
         },
+      ),
+    );
+  }
+
+  Widget _editModelTemperature(LLMProviderEnum cProvider) {
+    return Padding(
+      padding: dynDevicePadding(1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('model_temperature'.tr),
+          SizedBox(
+            width: 280,
+            child: Slider(
+              label: settingController
+                  .getCurrentProviderTemperature(cProvider)
+                  .toString(),
+              value: settingController.getCurrentProviderTemperature(cProvider),
+              onChanged: (double newValue) {
+                settingController.setCurrentProviderTemperature(
+                  cProvider,
+                  newValue,
+                );
+                setState(() {});
+              },
+              min: 0.0,
+              max: 2.0,
+              divisions: 20,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -263,4 +263,25 @@ class SettingController extends GetxController {
     }
     saveModelSetting();
   }
+
+  double getCurrentProviderTemperature(LLMProviderEnum provider) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        return (providers['openai'] ?? LLMProvider.openAI).temperature;
+      case LLMProviderEnum.DeepSeek:
+        return (providers['deepseek'] ?? LLMProvider.deepSeek).temperature;
+    }
+  }
+
+  setCurrentProviderTemperature(LLMProviderEnum provider, double temperature) {
+    switch (provider) {
+      case LLMProviderEnum.OpenAI:
+        providers['openai']!.temperature = temperature;
+        break;
+      case LLMProviderEnum.DeepSeek:
+        providers['deepseek']!.temperature = temperature;
+        break;
+    }
+    saveModelSetting();
+  }
 }

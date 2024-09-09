@@ -23,11 +23,19 @@ class Deepseek {
         settingController.getCurrentProviderApiKey(LLMProviderEnum.DeepSeek);
     var model = settingController
         .getCurrentProviderDefaultModel(LLMProviderEnum.DeepSeek);
+    var temperature = settingController
+        .getCurrentProviderTemperature(LLMProviderEnum.DeepSeek);
     if (definedModel != null && definedModel.enable) {
       model = definedModel.modelName;
+      temperature = definedModel.temperature;
     }
 
-    commonOpenAIClientChat(
-        apiKey, baseUrl, model, messages, onStream, onError, onSuccess);
+    final param = ModelParam(
+      baseUrl: baseUrl,
+      apiKey: apiKey,
+      modelName: model,
+      temperature: temperature,
+    );
+    commonOpenAIClientChat(param, messages, onStream, onError, onSuccess);
   }
 }

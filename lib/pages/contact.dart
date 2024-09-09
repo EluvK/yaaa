@@ -95,7 +95,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
         ],
       ),
-      constraints: const BoxConstraints(maxWidth: 90),
+      constraints: const BoxConstraints(maxWidth: 76),
       child: Column(
         children: [
           const Expanded(child: ContactCard()), // for contact list

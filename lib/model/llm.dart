@@ -23,6 +23,7 @@ class LLMProvider {
   final List<String> model;
   String baseUrl;
   String defaultModel;
+  double temperature;
   String? apiKey;
 
   LLMProvider({
@@ -30,6 +31,7 @@ class LLMProvider {
     required this.model,
     required this.baseUrl,
     required this.defaultModel,
+    this.temperature = 1.0,
     this.apiKey,
   });
 
@@ -55,6 +57,7 @@ class LLMProvider {
       'model': model,
       'apiUrl': baseUrl,
       'defaultModel': defaultModel,
+      'temperature': temperature,
       'apiKey': apiKey,
     };
   }
@@ -65,6 +68,7 @@ class LLMProvider {
       model: List<String>.from(json['model']),
       baseUrl: json['apiUrl'],
       defaultModel: json['defaultModel'],
+      temperature: json['temperature'] ?? 1.0,
       apiKey: json['apiKey'],
     );
   }

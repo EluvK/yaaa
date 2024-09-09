@@ -234,20 +234,24 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           padding: dynDevicePadding(2),
           child: Visibility(
             visible: useUniqueModel,
-            child: isMobile()
-                ? Column(
-                    children: [
+            child: Column(
+              children: isMobile()
+                  ? [
                       editAssistantDefinedModelProvider(),
                       editAssistantDefinedModelName(),
+                      editAssistantDefinedModelTemperature(),
+                    ]
+                  : [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(child: editAssistantDefinedModelProvider()),
+                          Flexible(child: editAssistantDefinedModelName()),
+                        ],
+                      ),
+                      editAssistantDefinedModelTemperature(),
                     ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Flexible(child: editAssistantDefinedModelProvider()),
-                      Flexible(child: editAssistantDefinedModelName()),
-                    ],
-                  ),
+            ),
           ),
         ),
       ],
@@ -315,6 +319,33 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           assistantController.updateAssistant(widget.assistant);
           setState(() {});
         },
+      ),
+    );
+  }
+
+  Widget editAssistantDefinedModelTemperature() {
+    return Padding(
+      padding: dynDevicePadding(2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('model_temperature'.tr),
+          SizedBox(
+            width: 280,
+            child: Slider(
+              label: widget.assistant.definedModel.temperature.toString(),
+              value: widget.assistant.definedModel.temperature,
+              onChanged: (double newValue) {
+                widget.assistant.definedModel.temperature = newValue;
+                assistantController.updateAssistant(widget.assistant);
+                setState(() {});
+              },
+              min: 0.0,
+              max: 2.0,
+              divisions: 20,
+            ),
+          ),
+        ],
       ),
     );
   }
