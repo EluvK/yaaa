@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaaa/controller/assistant.dart';
+import 'package:yaaa/controller/chatbox.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
@@ -16,15 +17,14 @@ class ChatboxCard extends StatefulWidget {
 }
 
 class _ChatboxCardState extends State<ChatboxCard> {
-  final FocusNode _chatBoxFocusNode = FocusNode();
   final _textController = TextEditingController();
   final conversationController = Get.find<ConversationController>();
   final messageController = Get.find<MessageController>();
   final assistantController = Get.find<AssistantController>();
+  final chatBoxController = Get.find<ChatBoxController>();
+  late final FocusNode _focusNode; // get from chatBoxController
 
   bool _canSendMessage = false;
-
-  late final _focusNode = FocusNode(onKeyEvent: _handleKeyPress);
 
   KeyEventResult _handleKeyPress(FocusNode focusNode, KeyEvent event) {
     if (event is KeyUpEvent &&
@@ -48,7 +48,14 @@ class _ChatboxCardState extends State<ChatboxCard> {
   void initState() {
     super.initState();
     print("chatBoxFocusNode request focus");
-    _chatBoxFocusNode.requestFocus();
+    _focusNode = chatBoxController.chatBoxFocusNode;
+    _focusNode.onKeyEvent = _handleKeyPress;
+
+    _focusNode.addListener(() {
+      // if (!_focusNode.hasFocus) {
+      setState(() {});
+      // }
+    });
   }
 
   @override
@@ -83,35 +90,40 @@ class _ChatboxCardState extends State<ChatboxCard> {
     return Padding(
       padding: dynDevicePadding(4),
       child: Row(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const SizedBox(width: 8.0),
           Expanded(
-            child: TextField(
-              focusNode: _focusNode,
-              // autofocus: true,
-              controller: _textController,
-              onChanged: (text) {
-                if (!HardwareKeyboard.instance.isControlPressed) {
-                  print("text change, $text");
-                  setState(() {
-                    _canSendMessage = text.trim().isNotEmpty &&
-                        !messageController.waitingForResponse &&
-                        conversationController
-                            .currentConversationUuid.value.isNotEmpty;
-                  });
-                }
+            child: Shortcuts(
+              shortcuts: const <ShortcutActivator, Intent>{
+                SingleActivator(LogicalKeyboardKey.keyC):
+                    DoNothingAndStopPropagationTextIntent(),
               },
-              minLines: 1,
-              maxLines: 10,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                // hintText: 'Type a message',
-                labelText: 'type_message_hint'.tr,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              child: TextField(
+                focusNode: _focusNode,
+                autofocus: !isMobile(),
+                controller: _textController,
+                onChanged: (text) {
+                  if (!HardwareKeyboard.instance.isControlPressed) {
+                    print("text change, $text");
+                    setState(() {
+                      _canSendMessage = text.trim().isNotEmpty &&
+                          !messageController.waitingForResponse &&
+                          conversationController
+                              .currentConversationUuid.value.isNotEmpty;
+                    });
+                  }
+                },
+                minLines: 1,
+                maxLines: 10,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  hintText: _focusNode.hasFocus ? '' : 'type_message_hint'.tr,
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
+                  // prefixIcon: const Icon(Icons.keyboard),
+                  // filled: true,
                 ),
-                // prefixIcon: Icon(Icons.person),
-                // filled: true,
               ),
             ),
           ),

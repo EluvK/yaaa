@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:yaaa/controller/assistant.dart';
+import 'package:yaaa/controller/chatbox.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/pages/home.dart';
@@ -36,6 +37,10 @@ void main() async {
   });
   await Get.putAsync(() async {
     final controller = AssistantController();
+    return controller;
+  });
+  await Get.putAsync(() async {
+    final controller = ChatBoxController();
     return controller;
   });
 

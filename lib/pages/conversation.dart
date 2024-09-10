@@ -17,12 +17,12 @@ class ConversationPage extends StatelessWidget {
           ? null
           : const PreferredSize(
               preferredSize: Size.fromHeight(56.0),
-              child: ExcludeFocus(child: ConversationAppBar()),
+              child: ConversationAppBar(),
             ),
       body: const Padding(
         padding: EdgeInsets.all(4.0),
         child: Column(children: [
-          ExcludeFocus(child: Expanded(child: ConversationCard())),
+          Expanded(child: ConversationCard()),
           ChatboxCard(),
         ]),
       ),

@@ -7,6 +7,7 @@ import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/model/conversation.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/utils/double_click.dart';
+import 'package:yaaa/utils/editable_text.dart';
 import 'package:yaaa/utils/page_opener.dart';
 import 'package:yaaa/utils/utils.dart';
 
@@ -77,7 +78,13 @@ class _ContactCardState extends State<ContactCard> {
   Widget _compConversationCardExpanded(Conversation conversation, int index) {
     Widget cardExpanded = ListTile(
       title: Text(conversation.assistantName),
-      subtitle: Text(conversation.name),
+      subtitle: EditableTextWidget(
+        initialText: conversation.name,
+        onSave: (newName) {
+          conversation.name = newName;
+          conversationController.updateConversation(conversation);
+        },
+      ),
       onTap: () {
         _funcTabConversation(index);
       },
@@ -112,14 +119,6 @@ class _ContactCardState extends State<ContactCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                onPressed: () {
-                  conversationController.editContactConversation(
-                      context, conversation);
-                },
-                icon: const Icon(Icons.edit),
-                tooltip: 'tooltip_edit_conversation'.tr,
-              ),
               IconButton(
                 onPressed: () {
                   assistantController.editConversationAssistant(

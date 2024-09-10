@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/components/contact.dart';
+import 'package:yaaa/controller/chatbox.dart';
 import 'package:yaaa/controller/shortcuts.dart';
 import 'package:yaaa/pages/contact.dart';
 import 'package:yaaa/pages/conversation.dart';
@@ -37,10 +38,15 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    // chatbox focus node from controller
+    final chatBoxController = Get.find<ChatBoxController>();
+    final chatboxFocusNode = chatBoxController.chatBoxFocusNode;
+
     return Shortcuts.manager(
       manager: LoggingShortcutManager(),
       child: Shortcuts(
-        shortcuts: yaaaShortCuts,
+        shortcuts: yaaaShortCuts(chatboxFocusNode),
         child: Actions(
           dispatcher: LoggingActionDispatcher(),
           actions: yaaaActions,
@@ -49,7 +55,7 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ExcludeFocus(child: ContactPage()),
+                ContactPage(),
                 HiddenContactButton(),
                 Flexible(child: ConversationPage()),
               ],

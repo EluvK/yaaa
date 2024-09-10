@@ -8,21 +8,26 @@ import 'package:yaaa/utils/page_opener.dart';
 
 final conversationController = Get.find<ConversationController>();
 
-Map<ShortcutActivator, Intent> yaaaShortCuts = {
-  LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.tab):
-      const NextConversationIntent(),
-  LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.tab): const NextConversationIntent(reverse: true),
-  LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyN):
-      const NewConversationIntent(),
-  LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.comma):
-      const EditSettingIntent(),
-};
+Map<ShortcutActivator, Intent> yaaaShortCuts(FocusNode chatBoxFocusNode) {
+  return {
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.tab):
+        const NextConversationIntent(),
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.shift,
+        LogicalKeyboardKey.tab): const NextConversationIntent(reverse: true),
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyN):
+        const NewConversationIntent(),
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.comma):
+        const EditSettingIntent(),
+    const SingleActivator(LogicalKeyboardKey.keyC):
+        GetFocusIntent(chatBoxFocusNode),
+  };
+}
 
 Map<Type, Action<Intent>> yaaaActions = {
   NextConversationIntent: NextConversationAction(conversationController),
   NewConversationIntent: NewConversationAction(),
   EditSettingIntent: EditSettingAction(),
+  GetFocusIntent: GetFocusAction(),
 };
 
 // Ctrl (+ Shift) + Tab switch to next(pre) conversation
@@ -38,7 +43,7 @@ class NextConversationAction extends Action<NextConversationIntent> {
 
   @override
   void invoke(covariant NextConversationIntent intent) async {
-    print('handle switch to next conversation $intent');
+    print(' =================== handle switch to next conversation $intent');
 
     if (controller.currentConversationAssistantUuid.value != '') {
       // find next conversation to set to it
@@ -62,7 +67,7 @@ class NewConversationIntent extends Intent {
 class NewConversationAction extends Action<NewConversationIntent> {
   @override
   void invoke(covariant NewConversationIntent intent) {
-    print('handle new conversation $intent');
+    print(' =================== handle new conversation $intent');
     PageOpener.openPage(Get.context!, const AssistantsPage());
   }
 }
@@ -75,7 +80,35 @@ class EditSettingIntent extends Intent {
 class EditSettingAction extends Action<EditSettingIntent> {
   @override
   void invoke(covariant EditSettingIntent intent) {
-    print('handle new conversation $intent');
+    print(' =================== handle new conversation $intent');
     PageOpener.openPage(Get.context!, const SettingPage());
+  }
+}
+
+// S focus on chatbox
+class FocusOnChatBoxIntent extends Intent {
+  const FocusOnChatBoxIntent();
+}
+
+class FocusOnChatBoxAction extends Action<FocusOnChatBoxIntent> {
+  @override
+  void invoke(covariant FocusOnChatBoxIntent intent) {
+    print(' =================== handle focus on chatbox $intent');
+  }
+}
+
+// require focus Intent
+class GetFocusIntent extends Intent {
+  final FocusNode focus;
+  const GetFocusIntent(this.focus);
+}
+
+class GetFocusAction extends Action<GetFocusIntent> {
+  @override
+  void invoke(covariant GetFocusIntent intent) {
+    print(' =================== handle focus on chatbox $intent');
+    if (!intent.focus.hasFocus) {
+      intent.focus.requestFocus();
+    }
   }
 }
