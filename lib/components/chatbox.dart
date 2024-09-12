@@ -95,7 +95,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
           Expanded(
             child: Shortcuts(
               shortcuts: const <ShortcutActivator, Intent>{
-                SingleActivator(LogicalKeyboardKey.keyC):
+                SingleActivator(LogicalKeyboardKey.slash):
                     DoNothingAndStopPropagationTextIntent(),
               },
               child: TextField(

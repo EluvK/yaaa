@@ -27,7 +27,7 @@ class Translation extends Translations {
 ''',
           // chatbox
           'clear_context': ' Clear Context',
-          'type_message_hint': 'Type `C` to chat...',
+          'type_message_hint': 'Type `/` to chat...',
           // contact
           'contact': 'Contact',
           // assistant

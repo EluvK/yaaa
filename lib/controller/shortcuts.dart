@@ -18,7 +18,7 @@ Map<ShortcutActivator, Intent> yaaaShortCuts(FocusNode chatBoxFocusNode) {
         const NewConversationIntent(),
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.comma):
         const EditSettingIntent(),
-    const SingleActivator(LogicalKeyboardKey.keyC):
+    const SingleActivator(LogicalKeyboardKey.slash):
         GetFocusIntent(chatBoxFocusNode),
   };
 }

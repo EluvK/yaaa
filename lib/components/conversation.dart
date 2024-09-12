@@ -86,7 +86,7 @@ class _ConversationCardState extends State<ConversationCard> {
     return ListTile(
       leading: leading,
       trailing: trailing,
-      contentPadding: dynDevicePadding(2),
+      contentPadding: dynDevicePaddingSymmetric(horizontal: 2),
       minLeadingWidth: 2.0,
       title: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),

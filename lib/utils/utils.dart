@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // ignore: constant_identifier_names
 const String VERSION =
-    String.fromEnvironment('APP_VERSION', defaultValue: '0.0.1-alpha');
+    String.fromEnvironment('APP_VERSION', defaultValue: 'debug');
 
 // ignore: constant_identifier_names
 const String APP_BUILD_NUMBER =
@@ -28,6 +28,17 @@ EdgeInsets dynDevicePadding(double rate) {
     return EdgeInsets.all(2.0 * rate);
   } else {
     return EdgeInsets.all(4.0 * rate);
+  }
+}
+
+EdgeInsets dynDevicePaddingSymmetric(
+    {double horizontal = 0.0, double vertical = 0.0}) {
+  if (isMobile()) {
+    return EdgeInsets.symmetric(
+        horizontal: 2.0 * horizontal, vertical: 2.0 * vertical);
+  } else {
+    return EdgeInsets.symmetric(
+        horizontal: 4.0 * horizontal, vertical: 4.0 * vertical);
   }
 }
 
