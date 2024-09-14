@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:yaaa/client/client.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/model/assistant.dart';
@@ -86,7 +87,19 @@ class ConversationController extends GetxController {
 
 class MessageController extends GetxController {
   final messageList = <Message>[].obs;
+  final viewIndexStart = 0.obs;
+  final viewIndexEnd = 0.obs;
+  final focusMessageUuid = "".obs;
+  final hasMore = false.obs;
+  final viewMessageList = <Message>[].obs;
 
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ScrollOffsetController scrollOffsetController =
+      ScrollOffsetController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
+  final ScrollOffsetListener scrollOffsetListener =
+      ScrollOffsetListener.create();
   late final assistantController = Get.find<AssistantController>();
   late final conversationController = Get.find<ConversationController>();
 
@@ -110,34 +123,104 @@ class MessageController extends GetxController {
     print(("load message", conversationUuid));
     messageList.value =
         await ConversationRepository().getMessages(conversationUuid);
+
+    // separate the message list into parts conversation
+    // view only last full conversation, starts with the last system message
+    viewIndexStart.value = messageList
+        .lastIndexWhere((message) => message.role == MessageRole.system);
+    viewIndexEnd.value = messageList.length;
+    hasMore.value = viewIndexStart.value != -1 && viewIndexStart.value != 0;
+    viewMessageList.clear();
+    for (int i = viewIndexStart.value; i < viewIndexEnd.value; i++) {
+      viewMessageList.add(messageList[i]);
+    }
+    print('load message / viewMessageList size: ${viewMessageList.length}');
+    print('load message / messageList size: ${messageList.length}');
+    print('load message / viewIndexStart: ${viewIndexStart.value}');
+    print('load message / viewIndexEnd: ${viewIndexEnd.value}');
   }
 
-  void addMessage(Message message) async {
+  loadHistory() {
+    // load more history messages
+    if (!hasMore.value) {
+      return;
+    }
+    var newViewIndexStart = messageList.lastIndexWhere(
+        (message) => message.role == MessageRole.system,
+        viewIndexStart.value - 1);
+    if (newViewIndexStart == -1 || newViewIndexStart == 0) {
+      hasMore.value = false;
+    }
+
+    for (int i = viewIndexStart.value - 1; i >= newViewIndexStart; i--) {
+      viewMessageList.insert(0, messageList[i]);
+    }
+    // focusMessageUuid.value = messageList[viewIndexStart.value].uuid;
+    focusMessageUuid.value = messageList[newViewIndexStart].uuid;
+
+    viewIndexStart.value = newViewIndexStart;
+    print('load history / viewMessageList size: ${viewMessageList.length}');
+    print('load history / messageList size: ${messageList.length}');
+    print('load history / viewIndexStart: ${viewIndexStart.value}');
+    print('load history / viewIndexEnd: ${viewIndexEnd.value}');
+  }
+
+  focusMessage(String? messageUuid) {
+    messageUuid = messageUuid ??
+        (focusMessageUuid.value.isEmpty
+            ? messageList.last.uuid
+            : focusMessageUuid.value);
+    var index =
+        viewMessageList.indexWhere((message) => message.uuid == messageUuid);
+    print('focusMessage / messageUuid: $messageUuid ,index $index');
+    if (index == -1) {
+      loadHistory();
+      return focusMessage(messageUuid);
+    }
+    itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeOut,
+    );
+  }
+
+  insertNewMessageOnly(Message message) async {
+    await ConversationRepository().addMessage(message);
+  }
+
+  addMessageToCurrentConversation(Message message) async {
+    if (message.role == MessageRole.system &&
+        messageList.isNotEmpty &&
+        messageList.last.role == MessageRole.system) {
+      print("return because last message is system message");
+      return;
+    }
+    await insertNewMessageOnly(message);
+
+    // it's too heavy to fully reload, try to add message dynamically
+    // // await loadHistory();
+    messageList.add(message);
+    viewMessageList.add(message);
+    focusMessage(message.uuid);
+    viewIndexEnd.value = messageList.length;
+  }
+
+  updateRespMessage(Message message) {
+    messageList.last = message;
+    viewMessageList.last = message;
+  }
+
+  chatSendMessage(Message message) async {
     if (waitingForResponse) {
       return;
     }
-    if (message.role == MessageRole.system) {
-      // if the last message is system message, don't add another system message
-      if (messageList.isNotEmpty &&
-          messageList.last.role == MessageRole.system) {
-        print("return because last message is system message");
-        // print("last: ${messageList.last.uuid}");
-        return;
-      }
-      // save system message to db
-      await ConversationRepository().addMessage(message);
-      final messages =
-          await ConversationRepository().getMessages(message.conversationUuid);
-      messageList.value = messages;
-      return;
-    }
-    // save user message to db
-    await ConversationRepository().addMessage(message);
-    final messages =
-        await ConversationRepository().getMessages(message.conversationUuid);
-    messageList.value = messages;
+    await addMessageToCurrentConversation(message);
 
-    // print("message controller set waitingForResponse to true");
+    // reset this value
+    messageList.add(Message.emptyAssistantMessage());
+    viewMessageList.add(Message.emptyAssistantMessage());
+    viewIndexEnd.value = messageList.length;
+
     waitingForResponse = true;
 
     // the message that need to be sent through api,
@@ -164,17 +247,17 @@ class MessageController extends GetxController {
       messageListCopy,
       definedModel,
       (message) {
-        messageList.value = [...messages, message];
+        updateRespMessage(message);
       },
       (message) {
-        messageList.value = [...messages, message];
+        updateRespMessage(message);
       },
       (message) async {
         // on success save response message to db
-        await ConversationRepository().addMessage(message);
-        final messages = await ConversationRepository()
-            .getMessages(message.conversationUuid);
-        messageList.value = messages;
+        updateRespMessage(message);
+        await insertNewMessageOnly(message);
+        focusMessage(message.uuid);
+
         // print("message controller set waitingForResponse to false");
         waitingForResponse = false;
       },
@@ -192,6 +275,17 @@ class MessageController extends GetxController {
       if (message.uuid == messageUuid ||
           (messageList.indexOf(message) ==
                   messageList.indexWhere((m) => m.uuid == messageUuid) + 1 &&
+              message.role == MessageRole.assistant)) {
+        ConversationRepository().deleteMessage(message.uuid);
+        return true;
+      }
+      return false;
+    });
+    viewMessageList.removeWhere((message) {
+      if (message.uuid == messageUuid ||
+          (viewMessageList.indexOf(message) ==
+                  viewMessageList.indexWhere((m) => m.uuid == messageUuid) +
+                      1 &&
               message.role == MessageRole.assistant)) {
         ConversationRepository().deleteMessage(message.uuid);
         return true;

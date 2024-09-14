@@ -43,10 +43,14 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
     final chatBoxController = Get.find<ChatBoxController>();
     final chatboxFocusNode = chatBoxController.chatBoxFocusNode;
 
+    // searchBox focus node from controller
+    final searchBoxController = Get.find<SearchBoxController>();
+    final searchBoxFocusNode = searchBoxController.searchBoxFocusNode;
+
     return Shortcuts.manager(
       manager: LoggingShortcutManager(),
       child: Shortcuts(
-        shortcuts: yaaaShortCuts(chatboxFocusNode),
+        shortcuts: yaaaShortCuts(chatboxFocusNode, searchBoxFocusNode),
         child: Actions(
           dispatcher: LoggingActionDispatcher(),
           actions: yaaaActions,

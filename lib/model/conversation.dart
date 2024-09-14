@@ -54,6 +54,16 @@ class Message {
     this.usage,
   });
 
+  factory Message.emptyAssistantMessage() {
+    return Message(
+      uuid: '---',
+      conversationUuid: '---',
+      text: '...',
+      createdAt: DateTime.now(),
+      role: MessageRole.assistant,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       ConversationRepository._columnMessageUuid: uuid,

@@ -43,6 +43,10 @@ void main() async {
     final controller = ChatBoxController();
     return controller;
   });
+  await Get.putAsync(() async {
+    final controller = SearchBoxController();
+    return controller;
+  });
 
   // should init before app start
   final settingController = Get.find<SettingController>();

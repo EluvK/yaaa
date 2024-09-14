@@ -8,7 +8,8 @@ import 'package:yaaa/utils/page_opener.dart';
 
 final conversationController = Get.find<ConversationController>();
 
-Map<ShortcutActivator, Intent> yaaaShortCuts(FocusNode chatBoxFocusNode) {
+Map<ShortcutActivator, Intent> yaaaShortCuts(
+    FocusNode chatBoxFocusNode, FocusNode searchBoxFocusNode) {
   return {
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.tab):
         const NextConversationIntent(),
@@ -20,6 +21,8 @@ Map<ShortcutActivator, Intent> yaaaShortCuts(FocusNode chatBoxFocusNode) {
         const EditSettingIntent(),
     const SingleActivator(LogicalKeyboardKey.slash):
         GetFocusIntent(chatBoxFocusNode),
+    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
+        GetFocusIntent(searchBoxFocusNode),
   };
 }
 

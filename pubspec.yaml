@@ -47,6 +47,8 @@ dependencies:
   another_flushbar: ^1.12.30
   file_saver: ^0.2.14
   url_launcher: ^6.3.0
+  searchfield: ^1.1.0
+  scrollable_positioned_list: ^0.3.8
   # dart_openai: ^5.1.0
   # window_size:
   #   git:

@@ -75,13 +75,6 @@ class AssistantController extends GetxController {
 
   newAssistantConversation(Assistant assistant) async {
     final newConversationUuid = const Uuid().v4();
-    final conversation = Conversation(
-      name: "new ${newConversationUuid.substring(0, 8)}",
-      uuid: newConversationUuid,
-      assistantName: assistant.name,
-      assistantUuid: assistant.uuid,
-    );
-    await conversationController.addConversation(conversation);
 
     final newPromptMessage = Message(
       uuid: const Uuid().v4(),
@@ -90,14 +83,23 @@ class AssistantController extends GetxController {
       createdAt: DateTime.now(),
       role: MessageRole.system,
     );
-    messageController.addMessage(newPromptMessage);
+    await messageController.insertNewMessageOnly(newPromptMessage);
+    print('new assistant conversation $newPromptMessage');
+
+    final conversation = Conversation(
+      name: "new ${newConversationUuid.substring(0, 8)}",
+      uuid: newConversationUuid,
+      assistantName: assistant.name,
+      assistantUuid: assistant.uuid,
+    );
+    await conversationController.addConversation(conversation);
   }
 
   duplicationAssistantConversation(Conversation conversation) async {
     final assistant = assistantList.firstWhereOrNull(
         (element) => element.uuid == conversation.assistantUuid);
     if (assistant != null) {
-      newAssistantConversation(assistant);
+      await newAssistantConversation(assistant);
     } else {
       flushBar(FlushLevel.WARNING, 'error'.tr, 'assistant_not_found'.tr);
     }

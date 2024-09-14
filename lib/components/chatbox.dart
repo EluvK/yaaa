@@ -167,7 +167,7 @@ class _ChatboxCardState extends State<ChatboxCard> {
       createdAt: DateTime.now(),
       role: MessageRole.user,
     );
-    messageController.addMessage(newMessage);
+    messageController.chatSendMessage(newMessage);
   }
 
   void _addSeparator() {
@@ -195,6 +195,6 @@ class _ChatboxCardState extends State<ChatboxCard> {
       createdAt: DateTime.now(),
       role: MessageRole.system,
     );
-    messageController.addMessage(newPromptMessage);
+    messageController.addMessageToCurrentConversation(newPromptMessage);
   }
 }

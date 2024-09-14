@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yaaa/components/chatbox.dart';
 import 'package:yaaa/components/conversation.dart';
+import 'package:yaaa/components/searchbox.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/utils/save_conversation.dart';
 import 'package:yaaa/utils/utils.dart';
@@ -12,7 +13,7 @@ class ConversationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       appBar: isMobile()
           ? null
           : const PreferredSize(
@@ -22,7 +23,7 @@ class ConversationPage extends StatelessWidget {
       body: const Padding(
         padding: EdgeInsets.all(4.0),
         child: Column(children: [
-          Expanded(child: ConversationCard()),
+          Expanded(child: ConversationView()),
           ChatboxCard(),
         ]),
       ),
@@ -53,6 +54,7 @@ class _ConversationAppBarState extends State<ConversationAppBar> {
         flexibleSpace: Container(color: colorScheme.surface),
         actions: [
           // todo
+          const SearchBox(),
           IconButton(
             onPressed: () {
               if (conversationController
