@@ -17,6 +17,7 @@ class _SearchBoxState extends State<SearchBox> {
 
   final searchBoxController = Get.find<SearchBoxController>();
   late final FocusNode _focusNode; // get from chatBoxController
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -52,11 +53,12 @@ class _SearchBoxState extends State<SearchBox> {
             ),
           )
           .toList(),
-      onSubmit: (val) => {print(val)},
+      controller: _controller,
       onSuggestionTap: (SearchFieldListItem<Message> item) {
         print("onSuggestionTap, ${item.item?.uuid}");
         messageController.focusMessage(item.item?.uuid);
       },
+      applySuggestionsSearchKey: false, // my draft property
       focusNode: _focusNode,
       dynamicHeight: true,
     );

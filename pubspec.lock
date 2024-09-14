@@ -459,10 +459,11 @@ packages:
   searchfield:
     dependency: "direct main"
     description:
-      name: searchfield
-      sha256: efb2197f17c13a1fb1a0d4dc89d2b89dfcc91d8c0be4cd3916cfdd8a6dc1c008
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "6d916fbca5ccbee7e085280124bdcd1ea953d5e2"
+      url: "https://github.com/EluvK/searchfield"
+    source: git
     version: "1.1.0"
   sky_engine:
     dependency: transitive
