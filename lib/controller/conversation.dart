@@ -177,6 +177,12 @@ class MessageController extends GetxController {
       loadHistory();
       return focusMessage(messageUuid);
     }
+    // 重置所有消息的高亮状态
+    for (var message in viewMessageList) {
+      message.isHighlighted = false;
+    }
+    viewMessageList[index].isHighlighted = true;
+    viewMessageList.refresh();
     itemScrollController.scrollTo(
       index: index,
       duration: const Duration(seconds: 1),

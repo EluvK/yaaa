@@ -45,6 +45,9 @@ class Message {
   MessageRole role;
   Usage? usage;
 
+  // UI only
+  bool isHighlighted;
+
   Message({
     required this.uuid,
     required this.conversationUuid,
@@ -52,6 +55,7 @@ class Message {
     required this.createdAt,
     required this.role,
     this.usage,
+    this.isHighlighted = false,
   });
 
   factory Message.emptyAssistantMessage() {

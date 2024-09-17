@@ -4,6 +4,7 @@ import 'package:searchfield/searchfield.dart';
 import 'package:yaaa/controller/chatbox.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/utils.dart';
 
 class SearchBox extends StatefulWidget {
   const SearchBox({super.key});
@@ -18,6 +19,7 @@ class _SearchBoxState extends State<SearchBox> {
   final searchBoxController = Get.find<SearchBoxController>();
   late final FocusNode _focusNode; // get from chatBoxController
   final TextEditingController _controller = TextEditingController();
+  String _lastSearchKey = "";
 
   @override
   void initState() {
@@ -26,20 +28,17 @@ class _SearchBoxState extends State<SearchBox> {
     _focusNode = searchBoxController.searchBoxFocusNode;
 
     _focusNode.addListener(() {
-      // if (!_focusNode.hasFocus) {
-      setState(() {});
-      // }
+      if (!_focusNode.hasFocus) {
+        setState(() {});
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 500,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 8.0),
-        child: _searchBox(),
-      ),
+      width: isMobile() ? 250 : 500,
+      child: _searchBox(),
     );
   }
 
@@ -54,11 +53,39 @@ class _SearchBoxState extends State<SearchBox> {
           )
           .toList(),
       controller: _controller,
+      onSearchTextChanged: (query) {
+        _lastSearchKey = query;
+        print("onSearchTextChanged, $query");
+        List<Message> filter;
+        query = query.trim();
+        // todo can add some commands and operator here.
+        filter = messageController.messageList
+            .where((message) =>
+                message.text.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        return filter
+            .map((message) =>
+                SearchFieldListItem<Message>(message.text, item: message))
+            .toList();
+      },
+      searchInputDecoration: SearchInputDecoration(
+        hintText: 'find_history'.tr,
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: _focusNode.hasFocus
+            ? IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  _controller.clear();
+                  _lastSearchKey = "";
+                },
+              )
+            : null,
+      ),
       onSuggestionTap: (SearchFieldListItem<Message> item) {
-        print("onSuggestionTap, ${item.item?.uuid}");
+        _controller.text = _lastSearchKey;
+        // print("onSuggestionTap, ${item.item?.uuid}");
         messageController.focusMessage(item.item?.uuid);
       },
-      applySuggestionsSearchKey: false, // my draft property
       focusNode: _focusNode,
       dynamicHeight: true,
     );

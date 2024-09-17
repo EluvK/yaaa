@@ -30,9 +30,12 @@ class _ConversationViewState extends State<ConversationView> {
                   onPressed: () {
                     messageController.loadHistory();
                   },
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.arrow_upward), Text('view history')],
+                    children: [
+                      const Icon(Icons.arrow_upward),
+                      Text('view_history'.tr)
+                    ],
                   )),
             ),
           ),

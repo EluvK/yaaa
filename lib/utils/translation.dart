@@ -25,7 +25,9 @@ class Translation extends Translations {
 - The BaseURL and APIKey can still be used in Defined Model Assistant, even if it's not the default model here.
 - Temperature: Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 ''',
-          // chatbox
+          // chatbox && conversation
+          'find_history': ' Chat History',
+          'view_history': ' View History',
           'clear_context': ' Clear Context',
           'type_message_hint': 'Type `/` to chat...',
           // contact
@@ -99,7 +101,9 @@ class Translation extends Translations {
 - 即使不是默认模型，BaseURL 和 APIKey 仍然可以在自定义模型助手中使用。
 - 模型温度设置越高，输出会更随机；模型温度设置越低，输出会更确定。
 ''',
-          // chatbox
+          // chatbox && conversation
+          'find_history': ' 搜索历史对话',
+          'view_history': ' 加载历史记录',
           'clear_context': ' 清除上下文',
           'type_message_hint': '输入消息...',
           // contact

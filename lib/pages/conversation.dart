@@ -53,7 +53,6 @@ class _ConversationAppBarState extends State<ConversationAppBar> {
         centerTitle: false,
         flexibleSpace: Container(color: colorScheme.surface),
         actions: [
-          // todo
           const SearchBox(),
           IconButton(
             onPressed: () {

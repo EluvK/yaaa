@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.6+68
+version: 0.0.7+74
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -47,10 +47,10 @@ dependencies:
   another_flushbar: ^1.12.30
   file_saver: ^0.2.14
   url_launcher: ^6.3.0
-  # searchfield: ^1.1.0
-  searchfield:
-    git:
-      url: https://github.com/EluvK/searchfield
+  searchfield: ^1.1.1
+  # searchfield:
+  #   git:
+  #     url: https://github.com/EluvK/searchfield
   scrollable_positioned_list: ^0.3.8
   # dart_openai: ^5.1.0
   # window_size:

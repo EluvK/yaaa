@@ -45,7 +45,7 @@ class _MessageCardState extends State<MessageCard> {
           : const SizedBox(width: 25);
     }
 
-    return ListTile(
+    var message = ListTile(
       leading: leading,
       trailing: trailing,
       contentPadding: dynDevicePaddingSymmetric(horizontal: 2),
@@ -114,6 +114,13 @@ class _MessageCardState extends State<MessageCard> {
           ],
         ),
       ),
+    );
+
+    return Container(
+      color: widget.message.isHighlighted
+          ? colorScheme.onInverseSurface
+          : Colors.transparent,
+      child: message,
     );
   }
 }
