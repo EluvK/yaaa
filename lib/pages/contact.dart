@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yaaa/components/contact.dart';
 import 'package:yaaa/controller/setting.dart';
 import 'package:yaaa/pages/assistants.dart';
+import 'package:yaaa/pages/info.dart';
 import 'package:yaaa/pages/setting.dart';
 import 'package:yaaa/utils/page_opener.dart';
 import 'package:get/get.dart';
@@ -67,7 +68,7 @@ class _ContactPageState extends State<ContactPage> {
             scale: 0.8,
             child: TextButton(
               onPressed: () {
-                launchRepo();
+                PageOpener.openPage(context, const InfoPage(), sizeRate: 0.6);
               },
               child: ListTile(
                 title: Text('version'.trParams({'version': VERSION})),

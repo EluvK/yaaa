@@ -5,8 +5,6 @@ import 'package:yaaa/client/client.dart';
 import 'package:yaaa/controller/assistant.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
-import 'package:yaaa/pages/edit_conversation.dart';
-import 'package:yaaa/utils/page_opener.dart';
 
 class ConversationController extends GetxController {
   final conversationList = <Conversation>[].obs;
@@ -65,11 +63,6 @@ class ConversationController extends GetxController {
       conversationList[index] = conversation;
       ConversationRepository().updateConversation(conversation);
     }
-  }
-
-  editContactConversation(BuildContext context, Conversation conversation) {
-    PageOpener.openPage(
-        context, EditConversationPage(conversation: conversation));
   }
 
   int likeContactConversation(Conversation conversation) {

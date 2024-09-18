@@ -78,6 +78,16 @@ class Translation extends Translations {
           'error': 'Error',
           'copy_to_clipboard': 'Copy to Clipboard',
           'file_saved': 'File saved to @path',
+          // info page
+          'shortcut': 'ShortCuts',
+          'shortcut_chat': 'Chat',
+          'shortcut_search': 'Search',
+          'shortcut_clear_context': 'Clear Context',
+          'shortcut_next_conversation': 'Next Conversation',
+          'shortcut_previous_conversation': 'Previous Conversation',
+          'shortcut_new_conversation': 'New Conversation',
+          'shortcut_settings': 'Open Settings',
+          'about': 'About',
         },
         'zh_CN': {
           'version': 'Yaaa 版本: @version',
@@ -150,6 +160,16 @@ class Translation extends Translations {
           'error': '错误',
           'copy_to_clipboard': '已复制到剪贴板',
           'file_saved': '文件已保存至 @path',
+          // info page
+          'shortcut': '快捷键',
+          'shortcut_chat': '聊天',
+          'shortcut_search': '搜索',
+          'shortcut_clear_context': '清除上下文',
+          'shortcut_next_conversation': '下一个对话',
+          'shortcut_previous_conversation': '上一个对话',
+          'shortcut_new_conversation': '新建对话',
+          'shortcut_settings': '打开设置',
+          'about': '关于',
         }
       };
 }
