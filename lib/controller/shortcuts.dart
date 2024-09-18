@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/pages/assistants.dart';
 import 'package:yaaa/pages/setting.dart';
+import 'package:yaaa/utils/key_intents.dart';
 import 'package:yaaa/utils/page_opener.dart';
 
 final conversationController = Get.find<ConversationController>();
@@ -34,11 +35,6 @@ Map<Type, Action<Intent>> yaaaActions = {
 };
 
 // Ctrl (+ Shift) + Tab switch to next(pre) conversation
-class NextConversationIntent extends Intent {
-  final bool reverse;
-  const NextConversationIntent({this.reverse = false});
-}
-
 class NextConversationAction extends Action<NextConversationIntent> {
   NextConversationAction(this.controller);
 
@@ -85,18 +81,6 @@ class EditSettingAction extends Action<EditSettingIntent> {
   void invoke(covariant EditSettingIntent intent) {
     print(' =================== handle new conversation $intent');
     PageOpener.openPage(Get.context!, const SettingPage());
-  }
-}
-
-// S focus on chatbox
-class FocusOnChatBoxIntent extends Intent {
-  const FocusOnChatBoxIntent();
-}
-
-class FocusOnChatBoxAction extends Action<FocusOnChatBoxIntent> {
-  @override
-  void invoke(covariant FocusOnChatBoxIntent intent) {
-    print(' =================== handle focus on chatbox $intent');
   }
 }
 

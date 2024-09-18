@@ -163,6 +163,7 @@ class MessageController extends GetxController {
     print('load history / messageList size: ${messageList.length}');
     print('load history / viewIndexStart: ${viewIndexStart.value}');
     print('load history / viewIndexEnd: ${viewIndexEnd.value}');
+    focusMessage(focusMessageUuid.value);
   }
 
   focusMessage(String? messageUuid) {
@@ -173,7 +174,11 @@ class MessageController extends GetxController {
     var index =
         viewMessageList.indexWhere((message) => message.uuid == messageUuid);
     print('focusMessage / messageUuid: $messageUuid ,index $index');
+
     if (index == -1) {
+      if (viewIndexStart.value == 0) {
+        return;
+      }
       loadHistory();
       return focusMessage(messageUuid);
     }

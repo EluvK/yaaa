@@ -35,6 +35,26 @@ class HomePageDesktop extends StatefulWidget {
 }
 
 class _HomePageDesktopState extends State<HomePageDesktop> {
+  final _globalFocusNode = FocusNode(debugLabel: 'Global Focus Node');
+
+  @override
+  void initState() {
+    super.initState();
+    // 确保应用启动时，焦点设置到全局焦点节点上
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_globalFocusNode);
+    });
+    // 监听焦点变化
+    FocusManager.instance.addListener(() {
+      FocusNode? focusedNode = FocusManager.instance.primaryFocus;
+      if (focusedNode != null) {
+        print('Current focus is on: ${focusedNode.debugLabel}');
+      } else {
+        print('No widget is currently focused.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -47,6 +67,19 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
     final searchBoxController = Get.find<SearchBoxController>();
     final searchBoxFocusNode = searchBoxController.searchBoxFocusNode;
 
+    // main page layout
+    var container = Container(
+      color: colorScheme.surface,
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ContactPage(),
+          HiddenContactButton(),
+          Flexible(child: ConversationPage()),
+        ],
+      ),
+    );
+
     return Shortcuts.manager(
       manager: LoggingShortcutManager(),
       child: Shortcuts(
@@ -54,15 +87,11 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
         child: Actions(
           dispatcher: LoggingActionDispatcher(),
           actions: yaaaActions,
-          child: Container(
-            color: colorScheme.surface,
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ContactPage(),
-                HiddenContactButton(),
-                Flexible(child: ConversationPage()),
-              ],
+          child: FocusScope(
+            child: Focus(
+              autofocus: true,
+              focusNode: _globalFocusNode,
+              child: container,
             ),
           ),
         ),

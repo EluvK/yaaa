@@ -7,6 +7,7 @@ import 'package:yaaa/controller/chatbox.dart';
 import 'package:yaaa/controller/conversation.dart';
 import 'package:yaaa/model/assistant.dart';
 import 'package:yaaa/model/conversation.dart';
+import 'package:yaaa/utils/key_intents.dart';
 import 'package:yaaa/utils/utils.dart';
 
 class ChatboxCard extends StatefulWidget {
@@ -26,35 +27,40 @@ class _ChatboxCardState extends State<ChatboxCard> {
 
   bool _canSendMessage = false;
 
-  KeyEventResult _handleKeyPress(FocusNode focusNode, KeyEvent event) {
-    if (event is KeyUpEvent &&
-        event.logicalKey == LogicalKeyboardKey.enter &&
-        HardwareKeyboard.instance.isControlPressed) {
-      _sendMessage();
-      return KeyEventResult.handled;
-    }
-    // ctrl + r
-    if (event is KeyUpEvent &&
-        event.logicalKey == LogicalKeyboardKey.keyR &&
-        HardwareKeyboard.instance.isControlPressed) {
-      print("add separator");
-      _addSeparator();
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
+  late final KCallbackAction<UnFocusIntent> _unFocusAction;
+  late final KCallbackAction<ClearContextIntent> _clearContextAction;
+  late final KCallbackAction<SendTextIntent> _sendTextAction;
+  late final Map<Type, Action<Intent>> actions = <Type, Action<Intent>>{
+    UnFocusIntent: _unFocusAction,
+    ClearContextIntent: _clearContextAction,
+    SendTextIntent: _sendTextAction,
+  };
 
   @override
   void initState() {
     super.initState();
     print("chatBoxFocusNode request focus");
     _focusNode = chatBoxController.chatBoxFocusNode;
-    _focusNode.onKeyEvent = _handleKeyPress;
+
+    _unFocusAction =
+        KCallbackAction<UnFocusIntent>(onInvoke: (UnFocusIntent intent) {
+      _focusNode.unfocus();
+    });
+    _clearContextAction = KCallbackAction<ClearContextIntent>(
+      onInvoke: (ClearContextIntent intent) {
+        _addSeparator();
+      },
+    );
+    _sendTextAction = KCallbackAction<SendTextIntent>(
+      onInvoke: (SendTextIntent intent) {
+        _sendMessage();
+      },
+    );
 
     _focusNode.addListener(() {
-      // if (!_focusNode.hasFocus) {
+      if (!_focusNode.hasFocus) {
       setState(() {});
-      // }
+      }
     });
   }
 
@@ -87,6 +93,29 @@ class _ChatboxCardState extends State<ChatboxCard> {
   }
 
   Widget buildChatBoxCard(BuildContext context) {
+    var chatTextField = TextField(
+      focusNode: _focusNode,
+      controller: _textController,
+      onChanged: (text) {
+        print("text change, $text");
+        setState(() {
+          _canSendMessage = text.trim().isNotEmpty &&
+              !messageController.waitingForResponse &&
+              conversationController.currentConversationUuid.value.isNotEmpty;
+        });
+      },
+      minLines: 1,
+      maxLines: 10,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        hintText: 'type_message_hint'.tr,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        // prefixIcon: const Icon(Icons.keyboard),
+        // filled: true,
+      ),
+    );
     return Padding(
       padding: dynDevicePadding(4),
       child: Row(
@@ -94,37 +123,19 @@ class _ChatboxCardState extends State<ChatboxCard> {
         children: [
           Expanded(
             child: Shortcuts(
-              shortcuts: const <ShortcutActivator, Intent>{
-                SingleActivator(LogicalKeyboardKey.slash):
-                    DoNothingAndStopPropagationTextIntent(),
+              shortcuts: <ShortcutActivator, Intent>{
+                const SingleActivator(LogicalKeyboardKey.slash):
+                    const DoNothingAndStopPropagationTextIntent(),
+                const SingleActivator(LogicalKeyboardKey.escape):
+                    const UnFocusIntent(),
+                LogicalKeySet(
+                        LogicalKeyboardKey.control, LogicalKeyboardKey.keyR):
+                    const ClearContextIntent(),
+                LogicalKeySet(
+                        LogicalKeyboardKey.control, LogicalKeyboardKey.enter):
+                    const SendTextIntent()
               },
-              child: TextField(
-                focusNode: _focusNode,
-                autofocus: !isMobile(),
-                controller: _textController,
-                onChanged: (text) {
-                  if (!HardwareKeyboard.instance.isControlPressed) {
-                    print("text change, $text");
-                    setState(() {
-                      _canSendMessage = text.trim().isNotEmpty &&
-                          !messageController.waitingForResponse &&
-                          conversationController
-                              .currentConversationUuid.value.isNotEmpty;
-                    });
-                  }
-                },
-                minLines: 1,
-                maxLines: 10,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  hintText: _focusNode.hasFocus ? '' : 'type_message_hint'.tr,
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  // prefixIcon: const Icon(Icons.keyboard),
-                  // filled: true,
-                ),
-              ),
+              child: Actions(actions: actions, child: chatTextField),
             ),
           ),
           const SizedBox(width: 8.0),
