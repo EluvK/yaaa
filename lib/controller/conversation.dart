@@ -195,8 +195,9 @@ class MessageController extends GetxController {
   addMessageToCurrentConversation(Message message) async {
     if (message.role == MessageRole.system &&
         messageList.isNotEmpty &&
-        messageList.last.role == MessageRole.system) {
-      print("return because last message is system message");
+        messageList.last.role == MessageRole.system &&
+        messageList.last.text == message.text) {
+      print("return because last message is system message and it's same");
       return;
     }
     await insertNewMessageOnly(message);

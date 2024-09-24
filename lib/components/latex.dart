@@ -12,7 +12,7 @@ SpanNodeGeneratorWithTag latexGenerator = SpanNodeGeneratorWithTag(
 const _latexTag = 'latex';
 
 class LatexSyntax extends md.InlineSyntax {
-  LatexSyntax() : super(r'(\$\$[\s\S]+\$\$)|(\$.+?\$)');
+  LatexSyntax() : super(r'(\$\$[\s\S]+?\$\$)|(\$.+?\$)|(\\\[[\s\S]+?\\\])');
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
@@ -20,10 +20,17 @@ class LatexSyntax extends md.InlineSyntax {
     final matchValue = input.substring(match.start, match.end);
     String content = '';
     bool isInline = true;
-    const blockSyntax = '\$\$';
+    const texBlockSyntax = '\$\$';
     const inlineSyntax = '\$';
-    if (matchValue.startsWith(blockSyntax) &&
-        matchValue.endsWith(blockSyntax) &&
+    const latexBlockSyntaxSt = '\\[';
+    const latexBlockSyntaxEd = '\\]';
+    if (matchValue.startsWith(texBlockSyntax) &&
+        matchValue.endsWith(texBlockSyntax) &&
+        (matchValue.length > 4)) {
+      content = matchValue.substring(2, matchValue.length - 2);
+      isInline = false;
+    } else if (matchValue.startsWith(latexBlockSyntaxSt) &&
+        matchValue.endsWith(latexBlockSyntaxEd) &&
         (matchValue.length > 4)) {
       content = matchValue.substring(2, matchValue.length - 2);
       isInline = false;
