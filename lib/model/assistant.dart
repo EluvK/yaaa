@@ -34,7 +34,7 @@ class Assistant {
           definedModel.enable ? 1 : 0,
       AssistantRepository._columnDefinedModelProvider:
           definedModel.provider.name,
-      AssistantRepository._columnDefinedModelName: definedModel.modelName,
+      AssistantRepository._columnDefinedModelName: definedModel.modelSpec.name,
       AssistantRepository._columnDefinedModelTemperature:
           definedModel.temperature,
     };
@@ -53,7 +53,9 @@ class Assistant {
         enable: map[AssistantRepository._columnEnableDefinedModel] == 1,
         provider: LLMProviderEnum.values.firstWhere((e) =>
             e.name == map[AssistantRepository._columnDefinedModelProvider]),
-        modelName: map[AssistantRepository._columnDefinedModelName],
+        // modelName: map[AssistantRepository._columnDefinedModelName],
+        modelSpec: ModelSpecEnumExtension.fromStr(
+            map[AssistantRepository._columnDefinedModelName]),
         temperature: map[AssistantRepository._columnDefinedModelTemperature],
       ),
     );
@@ -68,21 +70,24 @@ enum AssistantType {
 class DefinedModel {
   bool enable;
   LLMProviderEnum provider;
-  String modelName;
-  double temperature;
+  // String modelName;
+  ModelSpecEnum modelSpec;
+  double? temperature;
 
   DefinedModel({
     this.enable = true,
     required this.provider,
-    required this.modelName,
-    required this.temperature,
+    // required this.modelName,
+    required this.modelSpec,
+    this.temperature,
   });
 
   static DefinedModel defaultDisable() {
     return DefinedModel(
       enable: false,
-      provider: LLMProviderEnum.OpenAI,
-      modelName: 'gpt-4o-mini',
+      provider: LLMProviderEnum.DeepSeek,
+      // modelName: ModelSpecEnum.deepseekChat.name,
+      modelSpec: ModelSpecEnum.deepseekChat,
       temperature: 1.0,
     );
   }

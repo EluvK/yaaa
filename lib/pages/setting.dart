@@ -260,7 +260,7 @@ class _SettingPageState extends State<SettingPage> {
           (e) {
             return DropdownMenuItem(
               value: e,
-              child: Text(e),
+              child: Text(e.name),
             );
           },
         ).toList(),

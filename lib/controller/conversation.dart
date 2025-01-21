@@ -234,7 +234,8 @@ class MessageController extends GetxController {
     int latestSystemMessageIndex =
         messageList.lastIndexWhere((msg) => msg.role == MessageRole.system);
     assert(latestSystemMessageIndex != -1);
-    final messageListCopy = messageList.sublist(latestSystemMessageIndex);
+    final messageListCopy =
+        messageList.sublist(latestSystemMessageIndex, messageList.length - 1);
     print(("messageTobeSent", messageListCopy));
 
     // find the assistant setting, could have defined model

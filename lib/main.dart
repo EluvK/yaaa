@@ -54,6 +54,8 @@ void main() async {
 
   //! v0.0.4 compromise , could delete in the future
   await settingController.fix004Migrate();
+  //! v0.0.10 compromise , could delete in the future
+  await settingController.fix0010Migrate();
 
   // init conversation message
   await initConversation();

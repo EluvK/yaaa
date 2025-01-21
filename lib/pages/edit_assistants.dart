@@ -279,7 +279,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           if (value != null) {
             if (widget.assistant.definedModel.provider != value) {
               widget.assistant.definedModel.provider = value;
-              widget.assistant.definedModel.modelName =
+              widget.assistant.definedModel.modelSpec =
                   settingController.getCurrentProviderList(value).first;
             }
           } else {
@@ -305,14 +305,14 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
           (e) {
             return DropdownMenuItem(
               value: e,
-              child: Text(e),
+              child: Text(e.name),
             );
           },
         ).toList(),
-        value: widget.assistant.definedModel.modelName,
+        value: widget.assistant.definedModel.modelSpec,
         onChanged: (value) {
           if (value != null) {
-            widget.assistant.definedModel.modelName = value;
+            widget.assistant.definedModel.modelSpec = value;
           } else {
             widget.assistant.definedModel.enable = false;
           }
@@ -334,7 +334,7 @@ class _EditAssistantCardState extends State<EditAssistantCard> {
             width: 280,
             child: Slider(
               label: widget.assistant.definedModel.temperature.toString(),
-              value: widget.assistant.definedModel.temperature,
+              value: widget.assistant.definedModel.temperature ?? 1.0,
               onChanged: (double newValue) {
                 widget.assistant.definedModel.temperature = newValue;
                 assistantController.updateAssistant(widget.assistant);

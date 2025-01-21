@@ -23,6 +23,16 @@ class SettingController extends GetxController {
 
   static SettingController get to => Get.find<SettingController>();
 
+  // v0.0.10 migrate remove deepseek coder, add reasoner
+  fix0010Migrate() async {
+    if (providers['deepseek']?.model.contains(ModelSpecEnum.deepseekCoder) ??
+        false) {
+      providers['deepseek']?.model.remove(ModelSpecEnum.deepseekCoder);
+      providers['deepseek']?.model.add(ModelSpecEnum.deepseekReasoner);
+      saveModelSetting();
+    }
+  }
+
   // v0.0.4 migrate box container to YaaaGetStorage
   fix004Migrate() async {
     print('========start fix004 Migrate========');
@@ -72,10 +82,10 @@ class SettingController extends GetxController {
     }
 
     // v0.0.4 fix v0.0.3 code typo
-    if (providers['deepseek']?.model.contains('deepseek-code') ?? false) {
-      providers['deepseek']?.model.remove('deepseek-code');
-      providers['deepseek']?.model.add('deepseek-coder');
-    }
+    // if (providers['deepseek']?.model.contains('deepseek-code') ?? false) {
+    //   providers['deepseek']?.model.remove('deepseek-code');
+    //   providers['deepseek']?.model.add('deepseek-coder');
+    // }
 
     print('============migrate finish============');
     saveAppSetting();
@@ -87,6 +97,7 @@ class SettingController extends GetxController {
     print('setting controller onInit');
     await getAppSetting();
     await getModelSetting();
+    await getDefaultProvider();
     super.onInit();
     _initialized = true;
   }
@@ -162,7 +173,7 @@ class SettingController extends GetxController {
     return expandContactList.value;
   }
 
-  getModelSetting() async {
+  getModelSetting() {
     var readValue = box.read('providers');
     print('read providers from box $readValue');
     if (readValue != null) {
@@ -176,13 +187,14 @@ class SettingController extends GetxController {
   }
 
   saveModelSetting() {
-    print('setModelSettingNew ${jsonEncode(providers.value)}');
+    print('setModelSettingNew ${jsonEncode(providers)}');
     box.write('providers', jsonEncode(providers));
   }
 
-  LLMProviderEnum getDefaultProvider() {
-    String defaultProvider = box.read('defaultProvider') ?? 'OpenAI';
-    return LLMProviderEnum.values.firstWhere((e) => e.name == defaultProvider);
+  getDefaultProvider() {
+    String defaultProviderString = box.read('defaultProvider') ?? 'OpenAI';
+    defaultProvider.value = LLMProviderEnum.values
+        .firstWhere((e) => e.name == defaultProviderString);
   }
 
   setDefaultProvider(LLMProviderEnum? provider) {
@@ -191,7 +203,7 @@ class SettingController extends GetxController {
     box.write('defaultProvider', defaultProvider.value.name);
   }
 
-  List<String> getCurrentProviderList(LLMProviderEnum provider) {
+  List<ModelSpecEnum> getCurrentProviderList(LLMProviderEnum provider) {
     switch (provider) {
       case LLMProviderEnum.OpenAI:
         return (providers['openai'] ?? LLMProvider.openAI).model;
@@ -242,7 +254,7 @@ class SettingController extends GetxController {
     saveModelSetting();
   }
 
-  String getCurrentProviderDefaultModel(LLMProviderEnum provider) {
+  ModelSpecEnum getCurrentProviderDefaultModel(LLMProviderEnum provider) {
     switch (provider) {
       case LLMProviderEnum.OpenAI:
         return (providers['openai'] ?? LLMProvider.openAI).defaultModel;
@@ -252,7 +264,9 @@ class SettingController extends GetxController {
   }
 
   setCurrentProviderDefaultModel(
-      LLMProviderEnum provider, String defaultModel) {
+    LLMProviderEnum provider,
+    ModelSpecEnum defaultModel,
+  ) {
     switch (provider) {
       case LLMProviderEnum.OpenAI:
         providers['openai']!.defaultModel = defaultModel;

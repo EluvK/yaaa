@@ -24,7 +24,7 @@ class ClientManager {
     ValueChanged<Message> onSuccess,
   ) {
     final settingController = Get.find<SettingController>();
-    LLMProviderEnum provider = settingController.getDefaultProvider();
+    LLMProviderEnum provider = settingController.defaultProvider.value;
     if (definedModel != null && definedModel.enable) {
       provider = definedModel.provider;
     }
@@ -35,8 +35,6 @@ class ClientManager {
         break;
       case LLMProviderEnum.DeepSeek:
         Deepseek().chat(messages, definedModel, onStream, onError, onSuccess);
-        break;
-      default:
         break;
     }
   }

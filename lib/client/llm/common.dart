@@ -6,13 +6,17 @@ class ModelParam {
   String baseUrl;
   String? apiKey;
   String modelName;
-  double temperature;
+  double? temperature;
+  double? presencePenalty;
+  double? frequencyPenalty;
 
   ModelParam({
     required this.baseUrl,
     required this.apiKey,
     required this.modelName,
-    required this.temperature,
+    this.temperature,
+    this.presencePenalty,
+    this.frequencyPenalty,
   });
 }
 
@@ -43,16 +47,19 @@ void commonOpenAIClientChat(
     createdAt: DateTime.now(),
     role: yaaa_model.MessageRole.assistant,
   );
+  print(param);
   var chatStream = client.createChatCompletionStream(
     request: CreateChatCompletionRequest(
       model: ChatCompletionModel.modelId(param.modelName),
       messages: sendMessages,
       temperature: param.temperature,
+      presencePenalty: param.presencePenalty,
+      frequencyPenalty: param.frequencyPenalty,
     ),
   );
   chatStream.listen(
     (streamEvent) async {
-      // print("Received stream event: $streamEvent");
+      print("Received stream event: $streamEvent");
       if (streamEvent.choices.first.delta.content != null) {
         // todo check here. !
         print(returnMessage.text);

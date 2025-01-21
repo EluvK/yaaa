@@ -18,11 +18,59 @@ extension LLMProviderEnumExtension on LLMProviderEnum {
   }
 }
 
+enum ModelSpecEnum {
+  gpt4o,
+  gpt4oMini,
+  gpt4Turbo,
+  deepseekChat,
+  // deprecated
+  deepseekCoder,
+  deepseekReasoner,
+}
+
+extension ModelSpecEnumExtension on ModelSpecEnum {
+  String get name {
+    switch (this) {
+      case ModelSpecEnum.gpt4o:
+        return 'gpt-4o';
+      case ModelSpecEnum.gpt4oMini:
+        return 'gpt-4o-mini';
+      case ModelSpecEnum.gpt4Turbo:
+        return 'gpt-4-turbo';
+      case ModelSpecEnum.deepseekChat:
+        return 'deepseek-chat';
+      case ModelSpecEnum.deepseekCoder:
+        return 'deepseek-coder';
+      case ModelSpecEnum.deepseekReasoner:
+        return 'deepseek-reasoner';
+    }
+  }
+
+  static ModelSpecEnum fromStr(String str) {
+    switch (str) {
+      case 'gpt-4o':
+        return ModelSpecEnum.gpt4o;
+      case 'gpt-4o-mini':
+        return ModelSpecEnum.gpt4oMini;
+      case 'gpt-4-turbo':
+        return ModelSpecEnum.gpt4Turbo;
+      case 'deepseek-chat':
+        return ModelSpecEnum.deepseekChat;
+      case 'deepseek-coder':
+        return ModelSpecEnum.deepseekCoder;
+      case 'deepseek-reasoner':
+        return ModelSpecEnum.deepseekReasoner;
+      default:
+        return ModelSpecEnum.gpt4oMini;
+    }
+  }
+}
+
 class LLMProvider {
   final LLMProviderEnum name;
-  final List<String> model;
+  final List<ModelSpecEnum> model;
   String baseUrl;
-  String defaultModel;
+  ModelSpecEnum defaultModel;
   double temperature;
   String? apiKey;
 
@@ -37,37 +85,44 @@ class LLMProvider {
 
   static var openAI = LLMProvider(
     name: LLMProviderEnum.OpenAI,
-    model: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'],
+    model: [
+      ModelSpecEnum.gpt4o,
+      ModelSpecEnum.gpt4oMini,
+      ModelSpecEnum.gpt4Turbo,
+    ],
     baseUrl: LLMProviderEnum.OpenAI.defaultBaseUrl,
-    defaultModel: 'gpt-4o',
+    defaultModel: ModelSpecEnum.gpt4o,
     apiKey: null,
   );
 
   static var deepSeek = LLMProvider(
     name: LLMProviderEnum.DeepSeek,
-    model: ['deepseek-chat', 'deepseek-coder'],
+    model: [ModelSpecEnum.deepseekChat, ModelSpecEnum.deepseekReasoner],
     baseUrl: LLMProviderEnum.DeepSeek.defaultBaseUrl,
-    defaultModel: 'deepseek-chat',
+    defaultModel: ModelSpecEnum.deepseekChat,
     apiKey: null,
   );
 
   Map<String, dynamic> toJson() {
-    return {
+    var result = {
       'name': name.name,
-      'model': model,
+      'model': model.map((e) => e.name).toList(),
       'apiUrl': baseUrl,
-      'defaultModel': defaultModel,
+      'defaultModel': defaultModel.name,
       'temperature': temperature,
       'apiKey': apiKey,
     };
+    return result;
   }
 
   factory LLMProvider.fromJson(Map<String, dynamic> json) {
     return LLMProvider(
       name: LLMProviderEnum.values.firstWhere((e) => e.name == json['name']),
-      model: List<String>.from(json['model']),
+      model: List<ModelSpecEnum>.from(
+        json['model'].map((e) => ModelSpecEnumExtension.fromStr(e)),
+      ),
       baseUrl: json['apiUrl'],
-      defaultModel: json['defaultModel'],
+      defaultModel: ModelSpecEnumExtension.fromStr(json['defaultModel']),
       temperature: json['temperature'] ?? 1.0,
       apiKey: json['apiKey'],
     );
