@@ -41,6 +41,7 @@ class Message {
   String uuid;
   String conversationUuid;
   String text;
+  String? reasoningText;
   DateTime createdAt;
   MessageRole role;
   Usage? usage;
@@ -52,6 +53,7 @@ class Message {
     required this.uuid,
     required this.conversationUuid,
     required this.text,
+    this.reasoningText,
     required this.createdAt,
     required this.role,
     this.usage,
@@ -73,6 +75,7 @@ class Message {
       ConversationRepository._columnMessageUuid: uuid,
       ConversationRepository._columnMessageConversationUuid: conversationUuid,
       ConversationRepository._columnMessageText: text,
+      ConversationRepository._columnMessageReasoningText: reasoningText,
       ConversationRepository._columnMessageCreatedAt:
           createdAt.toIso8601String(),
       ConversationRepository._columnMessageRole: role.toString(),
@@ -88,6 +91,7 @@ class Message {
       conversationUuid:
           map[ConversationRepository._columnMessageConversationUuid],
       text: map[ConversationRepository._columnMessageText],
+      reasoningText: map[ConversationRepository._columnMessageReasoningText],
       createdAt:
           DateTime.parse(map[ConversationRepository._columnMessageCreatedAt]),
       role: MessageRole.values.firstWhere((e) =>
@@ -134,6 +138,7 @@ class ConversationRepository {
   static const String _columnMessageUuid = 'uuid';
   static const String _columnMessageConversationUuid = 'conversation_uuid';
   static const String _columnMessageText = 'text';
+  static const String _columnMessageReasoningText = 'reasoning_text';
   static const String _columnMessageCreatedAt = 'created_at';
   static const String _columnMessageRole = 'role';
   // optional usage
@@ -146,11 +151,17 @@ class ConversationRepository {
   Future<Database> _getDb() async {
     _database ??= await openDatabase(
       'yaaa_conversation.db',
-      version: 2,
+      version: 3,
       onUpgrade: (Database db, int oldVersion, int newVersion) async {
         if (oldVersion < 2) {
           await db.execute('''
             ALTER TABLE $_tableConversationName ADD COLUMN like INTEGER DEFAULT 0;
+            ''');
+        }
+        if (oldVersion < 3) {
+          /// add reasoning text
+          await db.execute('''
+            ALTER TABLE $_tableMessageName ADD COLUMN reasoning_text TEXT;
             ''');
         }
       },
@@ -169,6 +180,7 @@ class ConversationRepository {
               $_columnMessageUuid TEXT PRIMARY KEY,
               $_columnMessageConversationUuid TEXT NOT NULL,
               $_columnMessageText TEXT NOT NULL,
+              $_columnMessageReasoningText TEXT,
               $_columnMessageCreatedAt TEXT NOT NULL,
               $_columnMessageRole TEXT NOT NULL,
               $_columnPromptTokens INTEGER,

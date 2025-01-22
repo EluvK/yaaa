@@ -63,6 +63,27 @@ class _MessageCardState extends State<MessageCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // reasoning text with expand/collapse functionality and indentation
+            Visibility(
+              visible: widget.message.reasoningText != null,
+              child: ExpansionTile(
+                initiallyExpanded: true,
+                title: const Text(
+                  'Reasoning',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue, // Customize the title color
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding: dynDevicePaddingSymmetric(horizontal: 8.0),
+                    child: MarkdownRenderer(
+                        data: widget.message.reasoningText ?? ''),
+                  ),
+                ],
+              ),
+            ),
             MarkdownRenderer(data: widget.message.text),
             const SizedBox(height: 5),
             Row(

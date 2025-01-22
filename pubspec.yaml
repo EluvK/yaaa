@@ -42,12 +42,15 @@ dependencies:
   sqflite_common_ffi: ^2.3.3
   markdown_widget: ^2.3.2+6
   flex_color_scheme: ^7.3.1
-  openai_dart: ^0.4.0
+  # openai_dart: ^0.4.0
   flutter_math_fork: ^0.7.3
   another_flushbar: ^1.12.30
   file_saver: ^0.2.14
   url_launcher: ^6.3.0
   searchfield: ^1.2.2
+  deepseek_client:
+    git:
+      url: https://github.com/EluvK/deepseek_client
   # searchfield:
   #   git:
   #     url: https://github.com/EluvK/searchfield

@@ -1,6 +1,7 @@
-import 'package:openai_dart/openai_dart.dart';
+// import 'package:openai_dart/openai_dart.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaaa/model/conversation.dart' as yaaa_model;
+import 'package:deepseek_client/deepseek_client.dart';
 
 class ModelParam {
   String baseUrl;
@@ -27,7 +28,7 @@ void commonOpenAIClientChat(
   Function(yaaa_model.Message) onError,
   Function(yaaa_model.Message) onSuccess,
 ) {
-  var client = OpenAIClient(apiKey: param.apiKey, baseUrl: param.baseUrl);
+  var client = DeepSeekClient(apiKey: param.apiKey, baseUrl: param.baseUrl);
 
   // map message to OpenAIChatCompletionChoiceMessageModel
   List<ChatCompletionMessage> sendMessages = messages.map((e) {
@@ -36,8 +37,8 @@ void commonOpenAIClientChat(
         ChatCompletionMessage.system(content: e.text),
       yaaa_model.MessageRole.assistant =>
         ChatCompletionMessage.assistant(content: e.text),
-      yaaa_model.MessageRole.user => ChatCompletionMessage.user(
-          content: ChatCompletionUserMessageContent.string(e.text)),
+      yaaa_model.MessageRole.user =>
+        ChatCompletionMessage.user(content: e.text),
     };
   }).toList();
   var returnMessage = yaaa_model.Message(
@@ -60,7 +61,17 @@ void commonOpenAIClientChat(
   chatStream.listen(
     (streamEvent) async {
       print("Received stream event: $streamEvent");
-      if (streamEvent.choices.first.delta.content != null) {
+      if (streamEvent.choices.first.delta.reasoningContent != null) {
+        print(returnMessage.reasoningText);
+        if (returnMessage.reasoningText != null) {
+          returnMessage.reasoningText = returnMessage.reasoningText! +
+              streamEvent.choices.first.delta.reasoningContent!;
+        } else {
+          returnMessage.reasoningText =
+              streamEvent.choices.first.delta.reasoningContent!;
+        }
+        onStream(returnMessage);
+      } else if (streamEvent.choices.first.delta.content != null) {
         // todo check here. !
         print(returnMessage.text);
         returnMessage.text =
