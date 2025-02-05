@@ -87,9 +87,10 @@ jobs:
         run: |
           md5sum android/app/yaaa_release.jks
 
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v4
         with:
-          java-version: "12.x"
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
