@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 Container avatarContainer(BuildContext context, String? avatarUrl,
@@ -17,9 +18,13 @@ Container avatarContainer(BuildContext context, String? avatarUrl,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: avatarUrl != null
-            ? Image.network(avatarUrl,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.error, color: Colors.black87))
+            ? CachedNetworkImage(
+                imageUrl: avatarUrl,
+                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.black87),
+                fit: BoxFit.cover,
+                fadeInDuration: const Duration(milliseconds: 300),
+                fadeOutDuration: const Duration(milliseconds: 300))
             : const Icon(Icons.question_answer_rounded, color: Colors.black87),
       ),
     ),

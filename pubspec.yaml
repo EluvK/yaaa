@@ -55,6 +55,7 @@ dependencies:
   #   git:
   #     url: https://github.com/EluvK/searchfield
   scrollable_positioned_list: ^0.3.8
+  cached_network_image: ^3.4.1
   # dart_openai: ^5.1.0
   # window_size:
   #   git:
